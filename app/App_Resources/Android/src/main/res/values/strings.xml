@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="_test_escaped_percent_followed_by_placeholder_Z1B9wgT">"%%%1$s"</string>
+  <string name="_test_escaped_percent_followed_by_s_Z14aERG">"%%s"</string>
+  <string name="_test_escaped_percent_2w8byv">"%%"</string>
+  <string name="_test_percent_Z1IKlxu">"%%"</string>
+  <string name="tab">"Tab \t is working"</string>
+  <string name="_sprintf_numbered_placeholders_IRoX8">"format $2: %2$s, $1: %1$s"</string>
+  <string name="sprintf">"format me %1$s : %2$s"</string>
+  <string name="_special_keys___ZER4vH">"\""</string>
+  <string name="_special_keys___ZER4vC">"\'"</string>
+  <string name="_special_keys___ZER4uK">"\\"</string>
+  <string name="_special_keys___ZER4w7">"t"</string>
+  <string name="_special_keys___ZER4w3">"r"</string>
+  <string name="_special_keys___ZER4w6">"n"</string>
+  <string name="_special_characters_double_quote_2kCqME">"char \": \" END"</string>
+  <string name="_special_characters_single_quote_Z1PzEr5">"char \': \' END"</string>
+  <string name="_special_characters_backslash_1zL9ty">"char \\: \\ END"</string>
+  <string name="_special_characters_t_LTTqi">"char \\t: \t END"</string>
+  <string name="_special_characters_r_LTTqg">"char \\r: \r END"</string>
+  <string name="_special_characters_n_LTTqc">"char \\n: \n END"</string>
+  <string name="_new_line_1zbCfy">"Let\'s try with a new \n line"</string>
+  <string name="html">"Text with &lt;b>HTML&lt;/b> &lt;wrong &amp; Hi"</string>
+  <string name="_hello_world_Z2tF6Gu">"Hello World !"</string>
+  <string name="array">"split the translation into multiples lines"</string>
+  <string name="_nav_news_2pUJC0">"Nieuws"</string>
+  <string name="_nav_points_1xAD9o">"Punten"</string>
+  <string name="_nav_routes_1BKuwv">"Routes"</string>
+  <string name="_app_name_1k3Sbz">"75 jaar bevrijding"</string>
+  <string name="app_name">"75 jaar bevrijding"</string>
+  <string name="title_activity_kimera">"75 jaar bevrijding"</string>
+  <string name="_75_jaar_bevrijding_Z2wmU9D">"75 jaar bevrijding"</string>
+</resources>

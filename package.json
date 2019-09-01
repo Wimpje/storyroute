@@ -1,0 +1,43 @@
+{
+  "name": "storyroute",
+  "version": "1.0.0",
+  "description": "Tell stories with geolocation",
+  "author": "nosmallthing.nl",
+  "license": "MIT",
+  "nativescript": {
+    "id": "nl.nosmallthing.storyroute",
+    "templateVersion": "v2",
+    "tns-android": {
+      "version": "6.4.1"
+    },
+    "tns-ios": {
+      "version": "6.4.2"
+    }
+  },
+  "dependencies": {
+    "@nativescript/theme": "^2.3.2",
+    "@vue/devtools": "^5.0.6",
+    "nativescript-geolocation": "^5.1.0",
+    "nativescript-google-maps-sdk": "^2.9.1",
+    "nativescript-localize": "^4.2.1",
+    "nativescript-plugin-firebase": "^10.5.0",
+    "nativescript-socketio": "^3.3.1",
+    "nativescript-toasty": "^3.0.0-alpha.2",
+    "nativescript-vue": "^2.4.0",
+    "nativescript-vue-devtools": "^1.2.0",
+    "nativescript-xml2js": "^0.5.2",
+    "tns-core-modules": "^6.4.1",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.2",
+    "nativescript-dev-webpack": "^1.5.0",
+    "nativescript-vue-template-compiler": "^2.0.0",
+    "nativescript-worker-loader": "^0.11.0",
+    "node-sass": "^4.9.2",
+    "typescript": "^3.5.3",
+    "vue-loader": "^15.4.0"
+  }
+}
