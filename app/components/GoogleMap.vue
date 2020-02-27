@@ -1,17 +1,20 @@
 <template>
-  <MapView
-    iosOverflowSafeArea="true"
-    :latitude="latitude"
-    :longitude="longitude"
-    :zoom="zoom"
-    :bearing="bearing"
-    :tilt="tilt"
-    height="100%"
-    width="100%"
-    @mapReady="onMapReady"
-    @markerSelect="onMarkerSelect"
-    @markerInfoWindowTapped="onMarkerInfoWindowTapped"
-  ></MapView>
+  <StackLayout>
+    <MapView
+      iosOverflowSafeArea="true"
+      :latitude="latitude"
+      :longitude="longitude"
+      :zoom="zoom"
+      :bearing="bearing"
+      :tilt="tilt"
+      height="80%"
+      width="100%"
+      @mapReady="onMapReady"
+      @markerSelect="onMarkerSelect"
+      @markerInfoWindowTapped="onMarkerInfoWindowTapped"
+    ></MapView>
+    <Button text="getPoints" @tap="getPoints()"></Button>
+  </StackLayout>
 </template>
 
 <script>
@@ -21,6 +24,7 @@ import { isAndroid, isIOS } from "tns-core-modules/platform";
 import { mapGetters } from "vuex";
 
 export default {
+  props: ["pois"],
   data() {
     return {
       latitude: "",
@@ -32,11 +36,7 @@ export default {
       markers: []
     };
   },
-  computed: {
-    ...mapGetters({
-      pois: "getPois"
-    })
-  },
+
   mounted() {
     let that = this;
     geolocation.isEnabled().then(
@@ -105,6 +105,9 @@ export default {
     );
   },
   methods: {
+    getPoints() {
+      this.addMarkersFromPois(this.pois);
+    },
     addMarkersFromPois(pois) {
       this.mapView.removeAllMarkers();
       this.markers = [];
@@ -116,14 +119,13 @@ export default {
       }
     },
     addMarkerFromPoi(poi) {
-      let poiMarker = new Marker();
+      const poiMarker = new Marker();
       poiMarker.position = Position.positionFromLatLng(
-        poi.latitude,
-        poi.longitude
+        poi.position.latitude,
+        poi.position.longitude
       );
       poiMarker.title = poi.title;
       poiMarker.snippet = poi.description;
-      poiMarker.color = "#6B8E23";
       this.mapView.addMarker(poiMarker);
       return poiMarker;
     },
@@ -159,7 +161,7 @@ export default {
       }
       this.markers = [];
       console.log(
-        "MAPREADY< ADDING POINTS: " + (this.pois ? this.pois.lenght : "NONE")
+        "MAPREADY< ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
       );
       this.addMarkersFromPois(this.pois);
     },

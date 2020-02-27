@@ -1,23 +1,35 @@
 <template>
-  <Page class="page" actionBarHidden="true">
+  <Page class="page">
+    <AppActionBar page="Home"></AppActionBar>
+
     <StackLayout>
-      <ListView for="route in routes" height="100">
+      <ListView ref="routesListView" for="route in routes" height="90%">
         <v-template>
-          <Label :text="route.title" @tap="loadRoute(route)" />
+          <RouteListItem :route="route" @onTapped="loadRoute(route)"></RouteListItem>
         </v-template>
       </ListView>
-      <Button :text="'refresh routes' | L" @tap="refreshRoutes()" />
+      <Button class="-outline" :text="'refresh routes' | L" @tap="refreshRoutes()" />
     </StackLayout>
   </Page>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import RouteListItem from "~/components/RouteListItem";
+import RouteInfoModal from "~/components/RouteInfoModal";
+import Route from "~/pages/Route";
 
 export default {
-  data() {
-    return {};
+  components: {
+    RouteListItem,
+    RouteInfoModal
   },
+  data() {
+    return {
+      cache: null
+    };
+  },
+  created() {},
   computed: {
     ...mapGetters({
       routes: "getRoutes"
@@ -26,6 +38,18 @@ export default {
   methods: {
     loadRoute(item) {
       console.log("should load", item.title);
+      this.$showModal(RouteInfoModal, { props: { route: item } }).then(
+        result => {
+          if (result) {
+            console.log("start route");
+            this.$navigateTo(Route, { props: route }).catch(err =>
+              console.log("error navigating to route + ", err)
+            );
+          } else {
+            console.log("closed route");
+          }
+        }
+      );
     },
     refreshRoutes() {
       this.$store.dispatch("initRoutes");

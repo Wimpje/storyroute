@@ -1,7 +1,8 @@
 <template>
-  <Page class="page" actionBarHidden="true">
+  <Page class="page">
+    <AppActionBar page="Home"></AppActionBar>
     <GridLayout>
-      <GoogleMap />
+      <GoogleMap :pois="pois" />
     </GridLayout>
   </Page>
 </template>
@@ -19,7 +20,11 @@ export default {
       markers: []
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      pois: "getPois"
+    })
+  },
   created() {},
   methods: {
     refreshPoints() {

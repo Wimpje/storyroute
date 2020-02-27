@@ -1,5 +1,7 @@
 <template>
-  <Page class="page" actionBarHidden="true">
+  <Page class="page">
+    <AppActionBar page="Home"></AppActionBar>
+
     <FlexBoxLayout flexDirection="column">
       <Label text="foobar"></Label>
       <ListView for="item in newsArticles" height="40%">
@@ -7,8 +9,6 @@
           <Label height="50" :text="item.title" @tap="loadArticle(item)" />
         </v-template>
       </ListView>
-      <WebView height="40%" v-if="currentItem" :src="currentItem.text" />
-
       <Button height="50" :text="'Reload artikelen' | L" @tap="reloadArticles()" />
     </FlexBoxLayout>
   </Page>
@@ -16,6 +16,8 @@
 
 <script>
 import { NewsService } from "~/services/newsService";
+import * as utils from "tns-core-modules/utils/utils";
+
 const service = new NewsService();
 export default {
   data() {
@@ -37,6 +39,7 @@ export default {
     loadArticle(item) {
       console.log("open native browser with URL", item.url);
       this.currentItem = item;
+      utils.openUrl(item.url);
     }
   }
 };

@@ -1,8 +1,8 @@
 <template>
   <Page class="page">
-     <StackLayout>
-       <h1>Config</h1>
-     </StackLayout>
+    <StackLayout>
+      <Label text="Config"></Label>
+    </StackLayout>
   </Page>
 </template>
 
@@ -11,8 +11,7 @@ import * as application from "tns-core-modules/application";
 
 export default {
   computed: {},
-  methods: {
-  }
+  methods: {}
 };
 </script>
 

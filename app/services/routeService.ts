@@ -9,6 +9,17 @@ export class RouteService {
     this.collection = firebase.firestore().collection('routes')
   }
 
+  public async getRoute(route) {
+    const doc = await this.collection.doc(route.id)
+    if (doc.exists) {
+      return doc.data()
+    }
+    else {
+      console.log("could not find route in firebase")
+      return { err: 'No such document', doc: route }
+    }
+  }
+
   public async getRoutes(force: boolean = false) {
     if (this.documents && this.documents.length > 0 && !force)
       return this.documents
