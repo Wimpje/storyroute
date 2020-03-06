@@ -5,6 +5,10 @@
     "points": "Punten",
     "news": "Nieuws"
   },
+  "route": {
+    "moreinfo": "Meer info",
+    "start": "Start"
+  },
   "array": [
     "split the translation into ",
     "multiples lines"

@@ -24,7 +24,7 @@
   </Page>
 </template>
 <script>
-import router from "~/router";
+import { routes } from "~/router";
 export default {
   props: ["route"],
   methods: {

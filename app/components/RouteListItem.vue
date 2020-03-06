@@ -11,10 +11,10 @@
       :placeholder-image-uri="placeholder"
       :failure-image-uri="placeholder"
     />
-    <GridLayout class="routeItem" verticalAlignment="bottom">
-      <Label :text="route.title" class="routeName" textwrap="true"></Label>
-      <Button @tap="startRoute" :text="'route.start' | L"></Button>
-      <Button @tap="moreInfo" :text="'route.moreinfo' | L"></Button>
+    <GridLayout class="routeItem" columns="*,100,100" rows="*,*,*">
+      <Label row="0" :text="route.title" class="routeName" textwrap="true"></Label>
+      <Button row="1" column="1" class="rounded" @tap="startRoute" :text="'route.start' | L"></Button>
+      <Button row="1" column="2" class="rounded" @tap="moreInfo" :text="'route.moreinfo' | L"></Button>
     </GridLayout>
   </GridLayout>
 </template>
@@ -24,10 +24,10 @@ export default {
   methods: {},
   computed: {
     moreInfo(event) {
-      console.log('more info', event)
+      console.log("more info");
     },
     startRoute(event) {
-      console.log('start route', event)
+      console.log("start route");
     },
     image: function() {
       if (this.route.leadImage) {
@@ -60,5 +60,7 @@ export default {
 
 .routeItem {
   color: #bdbdbd;
+  background-color: white;
+  opacity: 0.5;
 }
 </style>

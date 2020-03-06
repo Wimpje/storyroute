@@ -3,10 +3,10 @@
     <AppActionBar page="Home"></AppActionBar>
 
     <FlexBoxLayout flexDirection="column">
-      <Label text="foobar"></Label>
+      <Label text="Nieuws" class="h1"></Label>
       <ListView for="item in newsArticles" height="40%">
         <v-template>
-          <Label height="50" :text="item.title" @tap="loadArticle(item)" />
+          <Label height="50" class="h2" :text="item.title" @tap="loadArticle(item)" />
         </v-template>
       </ListView>
       <Button height="50" :text="'Reload artikelen' | L" @tap="reloadArticles()" />
@@ -16,7 +16,7 @@
 
 <script>
 import { NewsService } from "~/services/newsService";
-import * as utils from "tns-core-modules/utils/utils";
+import * as utils from "@nativescript/core/utils/utils";
 
 const service = new NewsService();
 export default {

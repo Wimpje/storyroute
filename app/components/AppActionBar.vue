@@ -20,23 +20,6 @@ export default {
   methods: {
     onDrawerButtonTap() {
       utils.showDrawer();
-    },
-    login() {
-      firebase
-        .login({
-          type: firebase.LoginType.ANONYMOUS
-        })
-        .then(user => {
-          //store.dispatch("getPois")
-          console.log("getPois called from app start");
-          //store.dispatch("initRoutes")
-          console.log("initRoutes called from app start");
-          console.log("User uid: " + user.uid);
-        })
-        .catch(error => {
-          // TODO handle errors on connections
-          console.log("Issue with logging in: " + error);
-        });
     }
   }
 };

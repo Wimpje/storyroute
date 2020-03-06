@@ -21,6 +21,8 @@
 "html" = "Text with <b>HTML</b> <wrong & Hi";
 "_hello_world_Z2tF6Gu" = "Hello World !";
 "array" = "split the translation into multiples lines";
+"_route_start_1k1oqJ" = "Start";
+"_route_moreinfo_ZeWsVn" = "Meer info";
 "_nav_news_2pUJC0" = "Nieuws";
 "_nav_points_1xAD9o" = "Punten";
 "_nav_routes_1BKuwv" = "Routes";

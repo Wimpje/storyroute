@@ -3,5 +3,9 @@
   "75 jaar bevrijding": "75 year liberty",
   "nav.routes": "Routes",
   "nav.points": "Points",
-  "nav.news": "News"
+  "nav.news": "News",
+  "route": {
+    "moreinfo": "More info",
+    "start": "Start"
+  }
 }

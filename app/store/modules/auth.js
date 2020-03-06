@@ -32,31 +32,6 @@ export const actions = {
       commit('clearUser')
       commit('setMessage', { title: 'Error', message: err, duration: 15000 }, { root: true })
     }
-  },
-  // eslint-disable-next-line object-shorthand
-  googleSignIn: async function ({ commit }) {
-    const result = await this.$app.$firebase.auth().signInWithPopup(new this.$app.$firebase.auth.GoogleAuthProvider())
-    try {
-      const user = createUserFromGoogleResponse(result)
-      const token = result.credential.accessToken
-      commit('setUser', user)
-
-    } catch (error) {
-      commit('setMessage', { title: 'Error', message: error.message, duration: 15000 }, { root: true })
-    }
-  },
-  // eslint-disable-next-line object-shorthand
-  googleSignOut: async function ({ commit }, payload) {
-
-    try {
-      await this.$app.$firebase.auth().signOut()
-      // Removes user from Store
-      commit('clearUser')
-
-      console.log('Logout Successful')
-    } catch (error) {
-      console.log('Logout error', error)
-    }
   }
 }
 
