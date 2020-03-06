@@ -1,8 +1,8 @@
 <template>
   <Page class="page">
-    <AppActionBar page="Home"></AppActionBar>
+    <AppActionBar page="Route"></AppActionBar>
     <GridLayout>
-      <GoogleMap :pois="getPois(this.route)" />
+      <GoogleMap :pois="this.route.pois" />
     </GridLayout>
   </Page>
 </template>

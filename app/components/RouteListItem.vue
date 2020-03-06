@@ -1,30 +1,34 @@
 <template>
   <!-- TODO optimize, very nested layouts are slow they say -->
-  <GridLayout rows="*" columns="*" @tap="onTapped">
-    <Image
+  <GridLayout rows="*" columns="*">
+    <NsImg
       height="150"
       width="100%"
       class="routeImage"
       marginBottom="10"
       stretch="aspectFill"
       :src="image"
+      :placeholder-image-uri="placeholder"
+      :failure-image-uri="placeholder"
     />
-    <GridLayout verticalAlignment="bottom">
-      <StackLayout class="routeItem" backgroundColor="#489e9e9e">
-        <Label :text="route.title" class="routeName" textwrap="true"></Label>
-      </StackLayout>
+    <GridLayout class="routeItem" verticalAlignment="bottom">
+      <Label :text="route.title" class="routeName" textwrap="true"></Label>
+      <Button @tap="startRoute" :text="'route.start' | L"></Button>
+      <Button @tap="moreInfo" :text="'route.moreinfo' | L"></Button>
     </GridLayout>
   </GridLayout>
 </template>
 <script>
 export default {
   props: ["route", "cache"],
-  methods: {
-    onTapped() {
-      this.$emit("onTapped", this.route.id);
-    }
-  },
+  methods: {},
   computed: {
+    moreInfo(event) {
+      console.log('more info', event)
+    },
+    startRoute(event) {
+      console.log('start route', event)
+    },
     image: function() {
       if (this.route.leadImage) {
         return this.route.leadImage;

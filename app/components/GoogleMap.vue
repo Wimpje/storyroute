@@ -1,19 +1,18 @@
 <template>
   <StackLayout>
     <MapView
-      iosOverflowSafeArea="true"
       :latitude="latitude"
       :longitude="longitude"
       :zoom="zoom"
       :bearing="bearing"
       :tilt="tilt"
-      height="80%"
-      width="100%"
+      compassEnabled="true"
       @mapReady="onMapReady"
+      height="100%"
+      width="100%"
       @markerSelect="onMarkerSelect"
       @markerInfoWindowTapped="onMarkerInfoWindowTapped"
     ></MapView>
-    <Button text="getPoints" @tap="getPoints()"></Button>
   </StackLayout>
 </template>
 

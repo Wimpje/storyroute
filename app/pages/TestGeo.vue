@@ -1,5 +1,5 @@
 <template>
-  <Page class="page" actionBarHidden="true">
+  <Page class="page">
     <GridLayout rows="auto, auto, *,auto, auto">
       <GridLayout row="0" columns="*, *, *,*, *">
         <Button text="Enable Location" col="0" textWrap="true" @tap="enableLocationTap" />

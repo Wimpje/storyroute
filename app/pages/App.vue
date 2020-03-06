@@ -1,7 +1,6 @@
 <template lang="html">
 <Page>
-    <AppActionBar name="Home"></AppActionBar>
-
+    <AppActionBar page="Home"></AppActionBar>
     <StackLayout>
       <BottomNavigation>
         <TabStrip>
@@ -53,6 +52,7 @@ export default {
   data() {
     return {};
   },
+  created() {},
   methods: {}
 };
 </script>

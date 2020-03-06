@@ -1,14 +1,13 @@
 <template>
   <Page class="page">
-    <AppActionBar page="Home"></AppActionBar>
+    <AppActionBar page="Routes"></AppActionBar>
 
     <StackLayout>
-      <ListView ref="routesListView" for="route in routes" height="90%">
+      <ListView ref="routesListView" @itemTap="loadRoute" for="route in routes">
         <v-template>
-          <RouteListItem :route="route" @onTapped="loadRoute(route)"></RouteListItem>
+          <RouteListItem :route="route"></RouteListItem>
         </v-template>
       </ListView>
-      <Button class="-outline" :text="'refresh routes' | L" @tap="refreshRoutes()" />
     </StackLayout>
   </Page>
 </template>
@@ -16,13 +15,13 @@
 <script>
 import { mapGetters } from "vuex";
 import RouteListItem from "~/components/RouteListItem";
-import RouteInfoModal from "~/components/RouteInfoModal";
+import RouteInfo from "~/components/RouteInfo";
 import Route from "~/pages/Route";
 
 export default {
   components: {
     RouteListItem,
-    RouteInfoModal
+    RouteInfo
   },
   data() {
     return {
@@ -36,20 +35,13 @@ export default {
     })
   },
   methods: {
-    loadRoute(item) {
-      console.log("should load", item.title);
-      this.$showModal(RouteInfoModal, { props: { route: item } }).then(
-        result => {
-          if (result) {
-            console.log("start route");
-            this.$navigateTo(Route, { props: route }).catch(err =>
-              console.log("error navigating to route + ", err)
-            );
-          } else {
-            console.log("closed route");
-          }
+    loadRoute(event) {
+      console.log("should load", event.item.title);
+      this.$navigateTo(RouteInfo, {
+        props: {
+          route: event.item
         }
-      );
+      });
     },
     refreshRoutes() {
       this.$store.dispatch("initRoutes");

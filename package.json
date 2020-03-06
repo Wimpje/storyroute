@@ -7,18 +7,20 @@
   "nativescript": {
     "id": "nl.nosmallthing.storyroute",
     "templateVersion": "v2",
-    "tns-ios": {
-      "version": "6.4.2"
-    },
     "tns-android": {
       "version": "6.4.1"
+    },
+    "tns-ios": {
+      "version": "6.4.2"
     }
   },
   "dependencies": {
+    "@nativescript/core": "^6.4.2",
     "@nativescript/theme": "^2.3.2",
     "@vue/devtools": "^5.0.6",
     "nativescript-geolocation": "^5.1.0",
     "nativescript-google-maps-sdk": "^2.9.1",
+    "nativescript-image": "^3.0.1",
     "nativescript-localize": "^4.2.1",
     "nativescript-plugin-firebase": "^10.5.0",
     "nativescript-socketio": "^3.3.1",
@@ -27,7 +29,6 @@
     "nativescript-vue": "^2.4.0",
     "nativescript-vue-devtools": "^1.2.0",
     "nativescript-xml2js": "^0.5.2",
-    "tns-core-modules": "^6.4.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
