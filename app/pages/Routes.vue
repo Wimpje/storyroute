@@ -3,7 +3,13 @@
     <AppActionBar page="Routes"></AppActionBar>
 
     <StackLayout>
-      <ListView height="100%" ref="routesListView" @itemTap="loadRoute" for="route in routes">
+      <ListView
+        height="100%"
+        ref="routesListView"
+        @itemTap="loadRoute"
+        for="route in routes"
+        rowHeight="215"
+      >
         <v-template>
           <RouteListItem :route="route"></RouteListItem>
         </v-template>

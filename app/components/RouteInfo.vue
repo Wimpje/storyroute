@@ -12,10 +12,10 @@
         :failure-image-uri="placeholder"
         row="0"
       />
-      <StackLayout class="routeInfo" backgroundColor="#489e9e9e" row="1">
-        <Label :text="route.title" class="routeName" textwrap="true"></Label>
-        <Label :text="route.description" class="routeDescription" textwrap="true"></Label>
-      </StackLayout>
+      <GridLayout class="routeInfo" backgroundColor="#489e9e9e" row="1" rows="50, *">
+        <Label row="0" :text="route.title" class="routeName" textWrap="true"></Label>
+        <Label row="1" :text="route.description" class="routeDescription" textWrap="true"></Label>
+      </GridLayout>
 
       <StackLayout class="actions" row="2">
         <Button class="-outline" text="Start Route" @tap="startRoute()"></Button>
@@ -55,6 +55,11 @@ export default {
 }
 .routeImage {
   margin-bottom: 10;
+}
+.routeDescription {
+  horizontal-align: top;
+  vertical-align: top;
+  padding: 20 20 20 20;
 }
 .routeName {
   color: #f00;

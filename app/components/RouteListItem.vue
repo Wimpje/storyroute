@@ -1,7 +1,7 @@
 <template>
-  <!-- TODO optimize, very nested layouts are slow they say -->
-  <GridLayout rows="*, auto">
+  <GridLayout rows="160, 50">
     <NsImg
+      row="0"
       height="150"
       width="100%"
       class="routeImage"
@@ -11,7 +11,7 @@
       :placeholder-image-uri="placeholder"
       :failure-image-uri="placeholder"
     />
-    <GridLayout class="routeItem" columns="*,100,100">
+    <GridLayout row="1" class="routeItem" columns="*,100,100">
       <Label row="0" :text="route.title" class="routeName" textwrap="true"></Label>
       <Button column="1" class="-rounded action" @tap="startRoute" :text="'route.start' | L"></Button>
       <Button column="2" class="-rounded action" @tap="moreInfo" :text="'route.moreinfo' | L"></Button>
