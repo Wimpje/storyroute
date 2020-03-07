@@ -1,5 +1,5 @@
-<template lang="html">
-<RadSideDrawer ref="drawer" gesturesEnabled="true" drawerLocation="left">
+<template>
+  <RadSideDrawer ref="drawer" gesturesEnabled="true" drawerLocation="left">
     <StackLayout ~drawerContent class="drawer">
       <slot name="drawerContent"></slot>
     </StackLayout>
@@ -7,7 +7,6 @@
       <slot name="mainContent"></slot>
     </Frame>
   </RadSideDrawer>
-
 </template>
 
 <script>
@@ -18,7 +17,8 @@ export default {
     return {
       transition: new SlideInOnTopTransition()
     };
-  }
+  },
+  methods: {}
 };
 </script>
 

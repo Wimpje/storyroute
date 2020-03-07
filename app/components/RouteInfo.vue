@@ -29,7 +29,7 @@ export default {
   props: ["route"],
   methods: {
     startRoute() {
-      this.$navigateTo(router.route, { props: { route: this.route } });
+      this.$navigateTo(routes.route, { props: { route: this.route } });
     },
     close() {
       this.$modal.close();

@@ -18,6 +18,7 @@
 import * as geolocation from "nativescript-geolocation";
 import { Accuracy } from "tns-core-modules/ui/enums";
 const firebase = require("nativescript-plugin-firebase/app");
+import SelectedPageService from "~/plugins/selected-page-service";
 
 class POI {
   constructor(loc) {

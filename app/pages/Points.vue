@@ -10,8 +10,13 @@
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters, mapActions } from "vuex";
+import SelectedPageService from "~/plugins/selected-page-service";
 
 export default {
+  mounted() {
+    // this feels hacky - improve
+    SelectedPageService.getInstance().updateSelectedPage("points");
+  },
   components: {
     GoogleMap
   },

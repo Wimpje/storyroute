@@ -14,12 +14,12 @@ const routes = {
   news: News,
 };
 
+// this is also ordered according to the tab-view :( - can't get it cooperating with sidedrawer, so 
 const routeInfo = {
-  home: { icon: "0xf4d7", text: "Home", page: routes.home },
-  routes: { icon: "0xf4d7", text: "Routes", page: routes.routes },
-  points: { icon: "0xf893", text: "Kaart", page: routes.points },
-  news: { icon: "0xf4d7", text: "News", page: routes.news },
-  config: { icon: "0xf4d7", text: "Config", page: routes.config }
+  routes: { icon: "0xf4d7", text: "Routes", page: routes.routes, isTabView: true, tabIndex: 0 },
+  points: { icon: "0xf893", text: "Kaart", page: routes.points, isTabView: true, tabIndex: 1 },
+  news: { icon: "0xf4d7", text: "News", page: routes.news, isTabView: true, tabIndex: 2 },
+  config: { icon: "0xf4d7", text: "Config", page: routes.config, isTabView: false, isModal: true }
 }
 
 export {

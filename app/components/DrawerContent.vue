@@ -49,7 +49,7 @@ export default {
     },
     goToPage(item) {
       console.log("Navigating to page:", item.text);
-      this.$navigateTo(item.page, {
+      /*this.$navigateTo(item.page, {
         clearHistory: true
       })
         .catch(err => {
@@ -57,7 +57,8 @@ export default {
         })
         .then(res => {
           SelectedPageService.getInstance().updateSelectedPage(item.text);
-        });
+        });*/
+      utils.navigateTo(this, item);
       utils.closeDrawer();
     }
   }
@@ -66,6 +67,10 @@ export default {
 
 <style scoped lang="scss">
 @import "~@nativescript/theme/scss/variables/grey";
+
+.nt-drawer__header {
+  background-color: white;
+}
 
 .listItem {
   color: white;

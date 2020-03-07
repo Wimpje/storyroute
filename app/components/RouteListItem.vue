@@ -1,6 +1,6 @@
 <template>
   <!-- TODO optimize, very nested layouts are slow they say -->
-  <GridLayout rows="*" columns="*">
+  <GridLayout rows="*, auto">
     <NsImg
       height="150"
       width="100%"
@@ -11,10 +11,10 @@
       :placeholder-image-uri="placeholder"
       :failure-image-uri="placeholder"
     />
-    <GridLayout class="routeItem" columns="*,100,100" rows="*,*,*">
+    <GridLayout class="routeItem" columns="*,100,100">
       <Label row="0" :text="route.title" class="routeName" textwrap="true"></Label>
-      <Button row="1" column="1" class="rounded" @tap="startRoute" :text="'route.start' | L"></Button>
-      <Button row="1" column="2" class="rounded" @tap="moreInfo" :text="'route.moreinfo' | L"></Button>
+      <Button column="1" class="-rounded action" @tap="startRoute" :text="'route.start' | L"></Button>
+      <Button column="2" class="-rounded action" @tap="moreInfo" :text="'route.moreinfo' | L"></Button>
     </GridLayout>
   </GridLayout>
 </template>
@@ -49,6 +49,9 @@ export default {
 .routeImage {
   margin-bottom: 10;
 }
+.action {
+  background-color: #ddd;
+}
 .routeName {
   color: #f00;
   font-size: 14;
@@ -58,9 +61,14 @@ export default {
   margin: 5 0 15 0;
 }
 
-.routeItem {
-  color: #bdbdbd;
+.routeItemBackground {
   background-color: white;
   opacity: 0.5;
+  width: 100%;
+  height: 100%;
+}
+
+.routeItem {
+  color: #bdbdbd;
 }
 </style>

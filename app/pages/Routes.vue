@@ -3,7 +3,7 @@
     <AppActionBar page="Routes"></AppActionBar>
 
     <StackLayout>
-      <ListView ref="routesListView" @itemTap="loadRoute" for="route in routes">
+      <ListView height="100%" ref="routesListView" @itemTap="loadRoute" for="route in routes">
         <v-template>
           <RouteListItem :route="route"></RouteListItem>
         </v-template>
@@ -17,8 +17,13 @@ import { mapGetters } from "vuex";
 import RouteListItem from "~/components/RouteListItem";
 import RouteInfo from "~/components/RouteInfo";
 import Route from "~/pages/Route";
+import SelectedPageService from "~/plugins/selected-page-service";
 
 export default {
+  mounted() {
+    // this feels hacky - improve
+    SelectedPageService.getInstance().updateSelectedPage("routes");
+  },
   components: {
     RouteListItem,
     RouteInfo

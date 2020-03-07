@@ -1,4 +1,9 @@
 import { getRootView } from "tns-core-modules/application"
+import Vue from 'nativescript-vue'
+import { Frame } from '@nativescript/core/ui/frame';
+
+import { routes, routeInfo } from "~/router";
+import SelectedPageService from "~/plugins/selected-page-service";
 
 export const showDrawer = () => {
   let drawerNativeView = getRootView();
@@ -12,6 +17,33 @@ export const closeDrawer = () => {
   if (drawerNativeView && drawerNativeView.showDrawer) {
     drawerNativeView.closeDrawer();
   }
+}
+export function findParentFrame(vm) {
+  if (!vm) {
+    return false
+  }
+  let entry = vm.$parent
+  while (entry && entry.$options.name !== 'Frame') {
+    console.log(entry.$options.name)
+    entry = entry.$parent
+
+  }
+
+  return entry
+}
+export const navigateTo = (page, item) => {
+  const topFrame = Frame.topmost();
+
+  if (item.isTabView) {
+    // ugly, fix
+    const bottomNav = topFrame.parent.parent;
+    bottomNav.selectedIndex = item.tabIndex
+  }
+  else
+    page.$showModal(item.page, {
+      fullscreen: true
+    })
+
 }
 
 

@@ -1,5 +1,5 @@
 <template>
-  <StackLayout>
+  <StackLayout width="100%" height="100%">
     <MapView
       :latitude="latitude"
       :longitude="longitude"
@@ -130,6 +130,16 @@ export default {
     },
     onMapReady(args) {
       this.mapView = args.object;
+      if (isIOS) {
+        setTimeout(
+          () =>
+            (this.mapView.height = {
+              unit: "%",
+              value: 0.999
+            }),
+          1
+        );
+      }
       var gMap = this.mapView.gMap;
       this.mapView.settings.myLocationEnabled = true;
       this.mapView.settings.myLocationButtonEnabled = true;

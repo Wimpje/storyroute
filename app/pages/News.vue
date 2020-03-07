@@ -1,6 +1,6 @@
 <template>
-  <Page class="page">
-    <AppActionBar page="Home"></AppActionBar>
+  <Page class="page" loaded="loadNews">
+    <AppActionBar page="News"></AppActionBar>
 
     <FlexBoxLayout flexDirection="column">
       <Label text="Nieuws" class="h1"></Label>
@@ -17,9 +17,15 @@
 <script>
 import { NewsService } from "~/services/newsService";
 import * as utils from "@nativescript/core/utils/utils";
+import SelectedPageService from "~/plugins/selected-page-service";
 
 const service = new NewsService();
+
 export default {
+  mounted() {
+    // this feels hacky - improve
+    SelectedPageService.getInstance().updateSelectedPage("news");
+  },
   data() {
     return {
       newsArticles: [],
@@ -28,11 +34,11 @@ export default {
   },
   created() {
     this.currentItem = null;
-    service.getNews(true).then(articles => {
-      this.newsArticles = articles;
-    });
   },
   methods: {
+    async loadNews() {
+      this.newsArticles = await service.getNews(true);
+    },
     async reloadArticles() {
       this.newsArticles = await service.getNews(true);
     },

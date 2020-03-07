@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout>
-      <BottomNavigation>
+      <BottomNavigation id="bottomNavigation">
         <TabStrip>
           <TabStripItem>
             <Label :text="'nav.routes' | L"></Label>
@@ -17,17 +17,17 @@
           </TabStripItem>
         </TabStrip>
         <TabContentItem>
-          <Frame>
+          <Frame id="frameTab0">
             <Routes />
           </Frame>
         </TabContentItem>
         <TabContentItem>
-          <Frame>
+          <Frame id="frameTab1">
             <Points />
           </Frame>
         </TabContentItem>
         <TabContentItem>
-          <Frame>
+          <Frame id="frameTab2">
             <News />
           </Frame>
         </TabContentItem>
