@@ -1,6 +1,6 @@
 <template>
   <ActionBar class="action-bar">
-    <NavigationButton text="back" android.systemIcon="ic_menu_back"></NavigationButton>
+    <!-- <NavigationButton text="back" android.systemIcon="ic_menu_back"></NavigationButton> -->
     <ActionItem
       position="left"
       icon="res://baseline_menu_24"

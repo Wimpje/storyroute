@@ -2,7 +2,12 @@
   <Page class="page">
     <StackLayout>
       <Label text="Config"></Label>
+
       <Button @tap="$modal.close()" text="Close" />
+      <!-- <StackLayout orientation="horizontal">
+        <Switch checked="true" @checkedChange="toggleDark" />
+        <Label :text="'Dark mode' | L"></Label>
+      </StackLayout>-->
     </StackLayout>
   </Page>
 </template>
@@ -10,6 +15,7 @@
 <script>
 import * as application from "tns-core-modules/application";
 import SelectedPageService from "~/plugins/selected-page-service";
+import Theme from "@nativescript/theme";
 
 export default {
   mounted() {
@@ -17,7 +23,11 @@ export default {
     SelectedPageService.getInstance().updateSelectedPage("config");
   },
   computed: {},
-  methods: {}
+  methods: {
+    toggleDark() {
+      Theme.toggleMode(); // to toggle between the modes
+    }
+  }
 };
 </script>
 

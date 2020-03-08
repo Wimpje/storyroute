@@ -1,7 +1,7 @@
 <template>
   <Page actionBarHidden="true">
     <StackLayout>
-      <BottomNavigation id="bottomNavigation">
+      <BottomNavigation class="bottomNavigation">
         <TabStrip>
           <TabStripItem>
             <Label :text="'nav.routes' | L"></Label>
@@ -55,7 +55,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.info {
-  font-size: 20;
+.bottomNavigation {
+  padding-top: 20;
+  color: red;
 }
 </style>

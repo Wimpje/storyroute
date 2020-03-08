@@ -1,6 +1,6 @@
 <template>
   <Page class="page">
-    <GridLayout rows="auto, auto, *,auto, auto">
+    <GridLayout rows="100, *, 50, 50">
       <GridLayout row="0" columns="*, *, *,*, *">
         <Button text="Enable Location" col="0" textWrap="true" @tap="enableLocationTap" />
         <Button text="Get Current Location" col="1" textWrap="true" @tap="buttonGetLocationTap" />
@@ -8,7 +8,12 @@
         <Button text="Stop Monitoring" col="3" textWrap="true" @tap="buttonStopTap" />
         <Button text="Store to Firebase" col="4" textWrap="true" @tap="buttonSave" />
       </GridLayout>
-
+      <ListView row="1" for="location in locations" height="100%">
+        <v-template>
+          <Label :text="location.latitude + ', ' + location.longitude + ', ' + location.altitude" />
+        </v-template>
+      </ListView>
+      <Button row="2" @tap="$modal.close()" text="Close" />
       <Button text="Clear" row="3" @tap="buttonClearTap" />
     </GridLayout>
   </Page>
@@ -35,15 +40,14 @@ export default {
     };
   },
   methods: {
-    buttonSave: function() {
-      console.log("saveing");
+    buttonSave: function(e) {
+      console.log("saveing", e);
     },
     enableLocationTap: function() {
       geolocation.isEnabled().then(
         function(isEnabled) {
           if (!isEnabled) {
-            geolocation.enab;
-            leLocationRequest().then(
+            geolocation.enableLocationRequest().then(
               function() {},
               function(e) {
                 console.log("Error: " + (e.message || e));

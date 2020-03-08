@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page class="page">
     <AppActionBar page="Route info"></AppActionBar>
     <GridLayout rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
       <NsImg
@@ -12,13 +12,13 @@
         :failure-image-uri="placeholder"
         row="0"
       />
-      <GridLayout class="routeInfo" backgroundColor="#489e9e9e" row="1" rows="50, *">
-        <Label row="0" :text="route.title" class="routeName" textWrap="true"></Label>
-        <Label row="1" :text="route.description" class="routeDescription" textWrap="true"></Label>
+      <GridLayout class="routeInfo" row="1" rows="80, *">
+        <Label row="0" :text="route.title" class="h1 routeName" textWrap="true"></Label>
+        <Label row="1" :text="route.description" class="body routeDescription" textWrap="true"></Label>
       </GridLayout>
 
       <StackLayout class="actions" row="2">
-        <Button class="-outline" text="Start Route" @tap="startRoute()"></Button>
+        <Button class="-outline" text="Start Route" @tap="startRoute"></Button>
       </StackLayout>
     </GridLayout>
   </Page>
@@ -50,27 +50,18 @@ export default {
 };
 </script>
 <style scoped>
-.default-img {
-  color: #d1cece5b;
-}
 .routeImage {
   margin-bottom: 10;
 }
+.routeInfo {
+  background-color: #489e9e9e;
+}
 .routeDescription {
-  horizontal-align: top;
   vertical-align: top;
   padding: 20 20 20 20;
+  font-size: 18;
 }
 .routeName {
-  color: #f00;
-  font-size: 14;
-  font-weight: bold;
-  horizontal-align: center;
-  vertical-align: center;
-  margin: 5 0 15 0;
-}
-
-.routeItem {
-  color: #bdbdbd;
+  padding: 5 20 5 20;
 }
 </style>

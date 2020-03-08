@@ -1,16 +1,19 @@
 <template>
-  <Page class="page" loaded="loadNews">
+  <Page class="page" @loaded="loadNews()">
     <AppActionBar page="News"></AppActionBar>
-
-    <FlexBoxLayout flexDirection="column">
+    <StackLayout>
       <Label text="Nieuws" class="h1"></Label>
-      <ListView for="item in newsArticles" height="40%">
+      <ActivityIndicator verticalAlignment="center" :busy="newsArticles.length == 0" />
+
+      <ListView v-if="newsArticles.length" for="item in newsArticles" height="100%">
         <v-template>
-          <Label height="50" class="h2" :text="item.title" @tap="loadArticle(item)" />
+          <StackLayout @tap="loadArticle(item)">
+            <Label height="50" class="h2" :text="item.title"></Label>
+            <Label height="10" class="date" :text="item.date"></Label>
+          </StackLayout>
         </v-template>
       </ListView>
-      <Button height="50" :text="'Reload artikelen' | L" @tap="reloadArticles()" />
-    </FlexBoxLayout>
+    </StackLayout>
   </Page>
 </template>
 
@@ -36,8 +39,10 @@ export default {
     this.currentItem = null;
   },
   methods: {
-    async loadNews() {
-      this.newsArticles = await service.getNews(true);
+    loadNews() {
+      service.getNews(true).then(n => {
+        this.newsArticles = n;
+      });
     },
     async reloadArticles() {
       this.newsArticles = await service.getNews(true);

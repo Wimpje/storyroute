@@ -9,7 +9,7 @@
       />
       <Label text="75 jaar bevrijding - Ommen" class="nt-drawer__header-brand"></Label>
     </StackLayout>
-    <ListView for="item in navItems">
+    <ListView for="item in navItems" height="100%">
       <v-template>
         <GridLayout
           columns="auto, *"
@@ -17,7 +17,7 @@
           @tap="goToPage(item)"
         >
           <Label col="0" :text="iconFromCode(item.icon)" class="nt-icon fas"></Label>
-          <Label col="1" :text="item.text" class="p-r-10"></Label>
+          <Label col="1" :text="item.text" class="h1 p-r-10"></Label>
         </GridLayout>
       </v-template>
     </ListView>
