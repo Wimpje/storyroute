@@ -20,5 +20,6 @@ module.exports = {
     'vue',
   ],
   rules: {
+    "vue/attribute-hyphenation": ["never"]
   },
 };

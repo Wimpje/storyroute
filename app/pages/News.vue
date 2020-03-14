@@ -1,19 +1,18 @@
 <template>
   <Page class="page" @loaded="loadNews()">
     <AppActionBar page="News"></AppActionBar>
-    <StackLayout>
-      <Label text="Nieuws" class="h1"></Label>
-      <ActivityIndicator verticalAlignment="center" :busy="newsArticles.length == 0" />
-
-      <ListView v-if="newsArticles.length" for="item in newsArticles" height="100%">
+    <GridLayout rows="auto, *">
+      <Label row="0" :text="'nav.news' | L" class="h1 p-10"></Label>
+      <ActivityIndicator row="1" verticalAlignment="center" :busy="newsArticles.length == 0" />
+      <ListView row="1" v-if="newsArticles.length" for="item in newsArticles" height="100%">
         <v-template>
           <StackLayout @tap="loadArticle(item)">
             <Label height="50" class="h2" :text="item.title"></Label>
-            <Label height="10" class="date" :text="item.date"></Label>
+            <Label height="10" class="date" :text="toPrettyDate(item.date)"></Label>
           </StackLayout>
         </v-template>
       </ListView>
-    </StackLayout>
+    </GridLayout>
   </Page>
 </template>
 
@@ -21,6 +20,7 @@
 import { NewsService } from "~/services/newsService";
 import * as utils from "@nativescript/core/utils/utils";
 import SelectedPageService from "~/plugins/selected-page-service";
+const moment = require("moment");
 
 const service = new NewsService();
 
@@ -39,6 +39,9 @@ export default {
     this.currentItem = null;
   },
   methods: {
+    toPrettyDate(date) {
+      return moment(date).format("dddd, D MMMM YYYY, h:mm");
+    },
     loadNews() {
       service.getNews(true).then(n => {
         this.newsArticles = n;

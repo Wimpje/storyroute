@@ -9,15 +9,16 @@
       />
       <Label text="75 jaar bevrijding - Ommen" class="nt-drawer__header-brand"></Label>
     </StackLayout>
-    <ListView for="item in navItems" height="100%">
+    <ListView for="item in navItems" height="100%" rowHeight="60">
       <v-template>
         <GridLayout
           columns="auto, *"
+          rows="*"
           :class="'nt-drawer__list-item' + (selectedPage === item.text ? ' -selected': '')"
           @tap="goToPage(item)"
         >
-          <Label col="0" :text="iconFromCode(item.icon)" class="nt-icon fas"></Label>
-          <Label col="1" :text="item.text" class="h1 p-r-10"></Label>
+          <Label row="0" col="0" :text="iconFromCode(item.icon)" class="nt-icon fas"></Label>
+          <Label row="0" col="1" :text="item.text" class="p-r-10"></Label>
         </GridLayout>
       </v-template>
     </ListView>
@@ -67,6 +68,11 @@ export default {
 
 <style scoped lang="scss">
 @import "~@nativescript/theme/scss/variables/grey";
+
+.nt-drawer__header-brand {
+}
+.nt-icon {
+}
 
 .nt-drawer__header {
   background-color: white;

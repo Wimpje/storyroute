@@ -2,10 +2,14 @@
   "app.name": "75 year liberty",
   "75 jaar bevrijding": "75 year liberty",
   "nav.routes": "Routes",
-  "nav.points": "Points",
+  "nav.points": "Map",
   "nav.news": "News",
   "route": {
     "moreinfo": "More info",
     "start": "Start"
+  },
+  "point": {
+    "info": "info",
+    "more": "more"
   }
 }

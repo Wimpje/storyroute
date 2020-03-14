@@ -2,17 +2,16 @@
   <Page class="page">
     <AppActionBar page="Route info"></AppActionBar>
     <GridLayout rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
-      <NsImg
+      <CachedImage
         width="100%"
         class="routeImage"
         marginBottom="10"
         stretch="aspectFill"
-        :src="image"
-        :placeholder-image-uri="placeholder"
-        :failure-image-uri="placeholder"
+        :source="image"
+        placeholder= "~/assets/images/route-placeholder.png"
         row="0"
       />
-      <GridLayout class="routeInfo" row="1" rows="80, *">
+      <GridLayout class="routeInfo" row="1" rows="auto, *">
         <Label row="0" :text="route.title" class="h1 routeName" textWrap="true"></Label>
         <Label row="1" :text="route.description" class="body routeDescription" textWrap="true"></Label>
       </GridLayout>
@@ -25,7 +24,12 @@
 </template>
 <script>
 import { routes } from "~/router";
+
+import CachedImage from "~/components/CachedImage"
 export default {
+  components: {
+    CachedImage
+  },
   props: ["route"],
   methods: {
     startRoute() {
@@ -37,14 +41,17 @@ export default {
   },
   computed: {
     image() {
-      if (this.route && this.route.leadImage) {
-        return this.route.leadImage;
-      } else return this.placeholder;
+      if (this.route) {
+        const file = this.route.files.filter(file => file.type == 'image' && file.lead)
+        if (file.length)
+          return file[0].firebaseUrl;
+      }
+      return ''
     }
   },
   data() {
     return {
-      placeholder: "~/assets/images/route-placeholder.png"
+
     };
   }
 };
@@ -53,6 +60,7 @@ export default {
 .routeImage {
   margin-bottom: 10;
 }
+
 .routeInfo {
   background-color: #489e9e9e;
 }

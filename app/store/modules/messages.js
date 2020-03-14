@@ -1,24 +1,29 @@
+import { Toasty } from 'nativescript-toasty';
+// this is silly but whatevs
+
 const TIMEOUT = 5000
 export const state = () => ({
-  message: '',
-  title: '',
+  text: '',
   duration: TIMEOUT
 })
 
 // mutations
 export const mutations = {
   setMessage (state, payload) {
-    if (payload.message) 
-      state.message = payload.message 
+    if (payload.text) 
+      state.text = payload.text 
     else
-      state.message = ''
+      state.text = ''
 
-    if (payload.title) 
-      state.title = payload.title 
-    else
-      state.title = ''
+    state.duration = payload.duration || TIMEOUT  
 
-    state.duration = payload.duration || TIMEOUT
+    new Toasty({ text: state.text  })
+    .setToastDuration(ToastDuration.LONG)
+    .setToastPosition(ToastPosition.BOTTOM)
+    .setTextColor(new Color('white'))
+    .setBackgroundColor('#ff9999')
+    .show();
+
   },
   clearMessage (state) {
     state.title = ''

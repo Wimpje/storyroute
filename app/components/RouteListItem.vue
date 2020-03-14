@@ -1,24 +1,35 @@
 <template>
-  <GridLayout rows="160, 50">
-    <NsImg
+  <GridLayout rows="160, 30, 20" columns="*,100">
+    <CachedImage
       row="0"
+      colSpan="2"
       height="150"
       width="100%"
       class="routeImage"
       marginBottom="10"
       stretch="aspectFill"
-      :src="image"
-      :placeholder-image-uri="placeholder"
-      :failure-image-uri="placeholder"
+      :source="image"
+      placeholder= "~/assets/images/route-placeholder.png"
     />
-    <GridLayout row="1" class="routeItem" columns="*,100">
-      <Label row="0" :text="route.title" class="routeName" textwrap="true"></Label>
-      <Label column="1" text.decode="&#xf0a9;" class="fas fabButton" @tap="startRoute()"></Label>
-    </GridLayout>
+    <Label row="1" col="0" height="30" :text="route.title" class="routeTitle" textwrap="true"></Label>
+    <Label row="2" col="0" height="20" :text="route.subtitle" class="routeSubTitle" textwrap="true"></Label>
+    <Label
+      row="1"
+      rowSpan="2"
+      col="1"
+      @loaded="center"
+      text.decode="&#xf0a9;"
+      class="fas fabButton"
+      @tap="startRoute()"
+    ></Label>
   </GridLayout>
 </template>
 <script>
+import CachedImage from '~/components/CachedImage'
 export default {
+  components: {
+    CachedImage
+  },
   props: ["route", "cache"],
   methods: {
     moreInfo(event) {
@@ -26,18 +37,27 @@ export default {
     },
     startRoute(event) {
       console.log("start route");
+    },
+    center(args) {
+      if (args.object.android) {
+        args.object.android.setGravity(17);
+      }
     }
   },
   computed: {
-    image: function() {
-      if (this.route.leadImage) {
-        return this.route.leadImage;
-      } else return this.placeholder;
+    image() {
+      if (this.route) {
+        const file = this.route.files.filter(
+          file => file.type == "image" && file.lead
+        );
+        if (file.length) return file[0].firebaseUrl;
+      }
+      return ''
     }
   },
   data() {
     return {
-      placeholder: "~/assets/images/route-placeholder.png"
+      
     };
   }
 };
@@ -50,12 +70,11 @@ export default {
   color: white;
 }
 .fabButton {
-  height: 100;
-  width: 100;
+  height: 50;
+  width: 50;
   border-radius: 100;
-  font-size: 18;
-  padding: 10;
-  horizontal-align: center;
+  font-size: 15;
+  text-align: center;
   vertical-align: center;
 }
 .ns-dark .fabButton {
@@ -72,14 +91,17 @@ export default {
 .action {
   background-color: #ddd;
 }
-.routeName {
+.routeSubTitle {
+  font-size: 14;
+}
+.routeTitle {
   font-size: 18;
   font-weight: bold;
   horizontal-align: left;
   vertical-align: center;
   margin: 5 0 15 0;
 }
-.ns-dark .routeName {
+.ns-dark .routeSubTitle {
   color: white;
 }
 

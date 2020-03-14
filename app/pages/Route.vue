@@ -1,24 +1,36 @@
 <template>
   <Page class="page">
     <AppActionBar page="Route"></AppActionBar>
-    <GridLayout rows="*, 250">
-      <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder" />
-      <!-- <GoogleMap :pois="this.route.pois"></GoogleMap> -->
-      <Button @tap="goTo()" text="go"></Button>
-      <ScrollView row="1" class="points" ref="points" @scroll="onScroll">
-        <StackLayout class="pointsContainer" ref="pointsContainer">
-          <Label height="150" class="empty"></Label>
-          <GridLayout v-for="(poi, index) in this.route.pois"
-            height="50" rows="*" columns="70, 0, *, 100" 
+    <GridLayout rows="*, 100">
+      <!-- <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder"></Label> -->
+      <GoogleMap row="0" rowSpan="2" :pois="this.route.pois" @markerSelect="selectMarker" :currentPoi="currentPoi"></GoogleMap> 
+      <RadListView row="1" class="points" ref="listView" 
+                   for="(poi, index) in this.route.pois" 
+                   @itemTap="openPoint"
+                   @loaded="listLoaded"
+                   itemHeight="50"
+                   itemInsertAnimation="Fade" itemDeleteAnimation="Fade">
+        <v-template>          
+          <GridLayout
+            rows="*"
+            columns="70, 0, *, 100"
             :key="poi.id"
             :id="poi.id"
-            class="point">
-            <Button row="0" col="0" class="-rounded-lg" :text="index + 1"></Button>
-            <Label row="0" col="2" class="pointElement" :text="poi.title" autoWrap="true"></Label>
-            <Button col="3" class="-rounded-lg" text="info" @tap="getInfoFor(poi)"></button>
+            class="point"            
+          >
+            <Button row="0" col="0" class="-rounded-lg pointIndex" :text="index + 1"></Button>
+            <Label
+              row="0"
+              col="2"
+              class="-rounded pointDescription"
+              :text="poi.title"
+              @loaded="center"
+              autoWrap="true"
+            ></Label>
+            <Button col="3" class="pointButton" :text="'point.info' | L" @tap="getInfoFor(poi)"></Button>
           </GridLayout>
-        </StackLayout>
-      </ScrollView>
+        </v-template>
+      </RadListView>
     </GridLayout>
   </Page>
 </template>
@@ -33,44 +45,43 @@ export default {
     // this feels hacky - improve
     SelectedPageService.getInstance().updateSelectedPage("route");
   },
-  props: ["route"],
+  props: ["route", "activePoi"],
   components: {
     GoogleMap
   },
   data() {
     return {
-      markers: []
+      markers: [],
+      currentPoi: null
     };
   },
   computed: {},
   created() {},
   methods: {
-    onScroll(args) {
-      const scrollView = args.object;
-      
-      // now check all elements and set opacity if they are higher
-      this.$refs.pointsContainer.nativeView.eachChild(n => {
-        const pos = n.getLocationInWindow(this.$refs.pointsContainer.nativeView)
-        console.log(pos.y)
-        if(pos.y < 500) {
-          n.opacity = 0.5
-        }
-        else {
-          n.opacity = 1
-        }
-
+    openPoint({item, index}) {
+      console.log('tapped poi', item, index)
+      this.currentPoi = item
+    },
+    center (args) {
+      if (args.object.android) {
+        args.object.android.setGravity(16);
+      }
+    },
+    listLoaded (args) {
+      this.$nextTick(() => {
+        this.$refs.listView.scrollToIndex(0);
       })
+    },
+    getInfoFor (poi) {},
+    selectMarker (marker) { 
+      const poi = marker.poi
+      this.currentPoi = poi
+      const idx = this.route.pois.findIndex(p => poi.id === p.id)
+      if (idx > -1)
+        this.$refs.listView.scrollToIndex(idx, true);
+    },
+    refreshPoints() {},
 
-    },
-    getInfoFor(poi) {
-
-    },
-    goTo(id) {
-      const scroller = this.$refs.points.nativeView;
-      id = this.$refs.pointsContainer
-      scroller.scrollToVerticalOffset(40)
-    },
-    refreshPoints() {}
   }
 };
 </script>
@@ -79,23 +90,33 @@ export default {
 .info {
   font-size: 20;
 }
+.pushDown {
+  height:10;
+}
 .index {
   horizontal-align: center;
 }
+.outside {
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 1) 36%,
+    rgba(0, 212, 255, 0) 100%
+  );
+}
 .points {
-  background-color: yellow;
 }
 .pointsContainer {
-  background-color: purple;
 }
 .point {
   margin: 5;
-  
   color: black;
 }
-.pointElement {
-  background-color: white;
-  padding: 5;  
+.pointDescription {
+  padding: 5;
+  line-height: 100%;
+  width: 100%;
+  height: 40;
 }
 .mapPlaceholder {
   background-color: green;

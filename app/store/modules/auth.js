@@ -30,7 +30,7 @@ export const actions = {
       commit('setUser', data)
     } catch (err) {
       commit('clearUser')
-      commit('setMessage', { title: 'Error', message: err, duration: 15000 }, { root: true })
+      commit('setMessage', { text: 'Error' + err, duration: 15000 }, { root: true })
     }
   }
 }

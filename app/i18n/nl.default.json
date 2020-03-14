@@ -2,12 +2,17 @@
   "app.name": "75 jaar bevrijding",
   "nav": {
     "routes": "Routes",
-    "points": "Punten",
+    "points": "Kaart",
     "news": "Nieuws"
   },
   "route": {
     "moreinfo": "Meer info",
     "start": "Start"
+  },
+  
+  "point": {
+    "info": "info",
+    "more": "meer"
   },
   "array": [
     "split the translation into ",

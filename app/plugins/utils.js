@@ -18,12 +18,12 @@ export const closeDrawer = () => {
     drawerNativeView.closeDrawer();
   }
 }
-export function findParentFrame(vm) {
+export function findNav(vm) {
   if (!vm) {
     return false
   }
   let entry = vm.$parent
-  while (entry && entry.$options.name !== 'Frame') {
+  while (entry && entry.$options.name !== 'BottomNavigation') {
     console.log(entry.$options.name)
     entry = entry.$parent
 
@@ -31,12 +31,15 @@ export function findParentFrame(vm) {
 
   return entry
 }
+
+
+
 export const navigateTo = (page, item) => {
   const topFrame = Frame.topmost();
 
   if (item.isTabView) {
     // ugly, fix
-    const bottomNav = topFrame.parent.parent;
+    const bottomNav = findNav(topFrame);
     bottomNav.selectedIndex = item.tabIndex
   }
   else
