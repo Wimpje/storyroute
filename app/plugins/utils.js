@@ -1,9 +1,8 @@
 import { getRootView } from "tns-core-modules/application"
-import Vue from 'nativescript-vue'
 import { Frame } from '@nativescript/core/ui/frame';
+import store from '~/store/index.js'
+import Vue from 'nativescript-vue'
 
-import { routes, routeInfo } from "~/router";
-import SelectedPageService from "~/plugins/selected-page-service";
 
 export const showDrawer = () => {
   let drawerNativeView = getRootView();
@@ -18,36 +17,40 @@ export const closeDrawer = () => {
     drawerNativeView.closeDrawer();
   }
 }
-export function findNav(vm) {
-  if (!vm) {
+export function findNav(frame) {
+  if (!frame) {
     return false
   }
-  let entry = vm.$parent
-  while (entry && entry.$options.name !== 'BottomNavigation') {
-    console.log(entry.$options.name)
-    entry = entry.$parent
-
+  while (frame && frame.typeName !== 'BottomNavigation') {
+    frame = frame.parent
   }
-
-  return entry
+  return frame
 }
 
-
-
-export const navigateTo = (page, item) => {
+export const navigateTo = (page, props) => {
   const topFrame = Frame.topmost();
+  console.log('topframe = ', topFrame.id)
+  const pagesInfo = store.getters.pagesInfo
+  
+  const item = pagesInfo[page];
+
+  // ideas, open routeinfo / route in same frame as routes
+  // same for pointInfo, open it in points (except if route is active...)
 
   if (item.isTabView) {
-    // ugly, fix
-    const bottomNav = findNav(topFrame);
+    const bottomNav = findNav(topFrame)
     bottomNav.selectedIndex = item.tabIndex
   }
-  else
-    page.$showModal(item.page, {
+  else {
+    Vue.showMyModal(item.page, { 
+      ...props,
       fullscreen: true
     })
-
+  }
 }
+
+export const filterObject = (obj, predicate) => 
+                  Object.fromEntries(Object.entries(obj).filter(predicate));
 
 
 // https://github.com/vuejs/vuex/tree/dev/src/util.js

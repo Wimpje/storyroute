@@ -19,15 +19,14 @@
 <script>
 import { NewsService } from "~/services/newsService";
 import * as utils from "@nativescript/core/utils/utils";
-import SelectedPageService from "~/plugins/selected-page-service";
+
 const moment = require("moment");
 
 const service = new NewsService();
 
 export default {
   mounted() {
-    // this feels hacky - improve
-    SelectedPageService.getInstance().updateSelectedPage("news");
+    this.$store.commit('setCurrentPage', 'news')
   },
   data() {
     return {

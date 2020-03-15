@@ -4,6 +4,9 @@
   "nav.routes": "Routes",
   "nav.points": "Map",
   "nav.news": "News",
+  "drawer": {
+    "title": "75 year liberty - Ommen"
+  },
   "route": {
     "moreinfo": "More info",
     "start": "Start"

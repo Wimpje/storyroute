@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { routes } from "~/router";
 import * as application from "tns-core-modules/application";
 import Routes from "~/pages/Routes.vue";
 import Points from "~/pages/Points.vue";

@@ -1,8 +1,10 @@
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex'
 import store from './store/index.js'
-import { routes } from "./router";
+import Home from './pages/Home'
+import App from './pages/App'
 import { isIOS } from "tns-core-modules/platform"
+import { Frame } from '@nativescript/core/ui/frame';
 
 import { localize } from "nativescript-localize";
 
@@ -15,20 +17,18 @@ import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 
 import RadListView from 'nativescript-ui-listview/vue';
 
+
 if (TNS_ENV !== 'production') {
   Vue.use(VueDevtools)
 }
 // Prints Vue logs when --env.production is *NOT* set while building
 Vue.config.silent = (TNS_ENV === 'production')
 
-
 Vue.use(RadListView);
 Vue.use(RadSideDrawer);
 
 Vue.registerElement('MapView', () => MapView)
 Vue.component('AppActionBar', AppActionBar)
-
-
 
 console.log("I'm here, will load firebase stuff now!")
 const firebase = require("nativescript-plugin-firebase");
@@ -50,19 +50,19 @@ Vue.use(Vuex);
 
 Vue.prototype.$store = store;
 
-new Vue({
+const vueApp = new Vue({
   store,
   render(h) {
     return h(
-      routes.app,
+      App,
       [
         h(DrawerContent, { slot: 'drawerContent' }),
-        h(routes.home, { slot: 'mainContent' })
+        h(Home, { slot: 'mainContent' })
       ]
     )
   },
   created() {
-    // load the FB stuff when Vue is done creating itself
+    // load the FB stuff when Vue is done creating itself (?needed)
     fbInit.then((resp) => {
       console.log("Firebase initialized", resp)
       firebase.login(
@@ -83,4 +83,41 @@ new Vue({
     })
     .catch(error => console.log("Error initializing Firebase: " + error));
   }
-}).$start();
+})
+
+Vue.showMyModal = function(component, options) {
+  return new Promise((resolve) => {
+    
+    let resolved = false
+    const closeCb = function(data) {
+      if (resolved) return
+      resolved = true
+      resolve(data)
+      modalPage.closeModal()
+      modalInstance.$destroy()
+    }
+
+    const opts = Object.assign({}, options,  {
+      context: null,
+      closeCallback: closeCb
+    })
+
+    const modalInstance = new Vue({
+      name: 'ModalEntry',
+      methods: {
+        closeCb: closeCb
+      },
+      render: function(h) {
+        return h(component, {
+          props: opts.props
+        })
+      }
+    })
+    const modalPage = modalInstance.$mount().$el.nativeView
+    Frame.topmost().showModal(modalPage, opts)
+
+
+  })
+}
+
+vueApp.$start();

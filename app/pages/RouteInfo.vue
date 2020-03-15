@@ -23,17 +23,22 @@
   </Page>
 </template>
 <script>
-import { routes } from "~/router";
 
 import CachedImage from "~/components/CachedImage"
+import * as utils from "~/plugins/utils";
+
+
 export default {
   components: {
     CachedImage
   },
+  mounted() {
+    this.$store.commit('setCurrentPage', 'routeinfo')
+  },
   props: ["route"],
   methods: {
     startRoute() {
-      this.$navigateTo(routes.route, { props: { route: this.route } });
+      utils.navigateTo('route', { props: { route: this.route } });
     },
     close() {
       this.$modal.close();

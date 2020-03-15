@@ -3,30 +3,32 @@
     <AppActionBar page="Route"></AppActionBar>
     <GridLayout rows="*, 100">
       <!-- <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder"></Label> -->
-      <GoogleMap row="0" rowSpan="2" :pois="this.route.pois" @markerSelect="selectMarker" :currentPoi="currentPoi"></GoogleMap> 
+      <GoogleMap row="0" rowSpan="2" :pois="this.route.pois" :path="this.route.path" @markerSelect="selectMarker" :currentPoi="currentPoi">
+        
+      </GoogleMap> 
       <RadListView row="1" class="points" ref="listView" 
                    for="(poi, index) in this.route.pois" 
                    @itemTap="openPoint"
                    @loaded="listLoaded"
                    itemHeight="50"
                    itemInsertAnimation="Fade" itemDeleteAnimation="Fade">
-        <v-template>          
+        <v-template>
           <GridLayout
             rows="*"
             columns="70, 0, *, 100"
             :key="poi.id"
             :id="poi.id"
-            class="point"            
+            class="point"
           >
             <Button row="0" col="0" class="-rounded-lg pointIndex" :text="index + 1"></Button>
-            <Label
+            <CenterLabel
               row="0"
               col="2"
               class="-rounded pointDescription"
               :text="poi.title"
-              @loaded="center"
+              :centerMethod="16"
               autoWrap="true"
-            ></Label>
+            ></CenterLabel>
             <Button col="3" class="pointButton" :text="'point.info' | L" @tap="getInfoFor(poi)"></Button>
           </GridLayout>
         </v-template>
@@ -37,17 +39,17 @@
 
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
+import CenterLabel from "~/components/CenterLabel.vue";
 import { mapGetters, mapActions } from "vuex";
-import SelectedPageService from "~/plugins/selected-page-service";
 
 export default {
   mounted() {
-    // this feels hacky - improve
-    SelectedPageService.getInstance().updateSelectedPage("route");
+    this.$store.commit('setCurrentPage', 'route')
   },
   props: ["route", "activePoi"],
   components: {
-    GoogleMap
+    GoogleMap,
+    CenterLabel
   },
   data() {
     return {
@@ -62,11 +64,7 @@ export default {
       console.log('tapped poi', item, index)
       this.currentPoi = item
     },
-    center (args) {
-      if (args.object.android) {
-        args.object.android.setGravity(16);
-      }
-    },
+   
     listLoaded (args) {
       this.$nextTick(() => {
         this.$refs.listView.scrollToIndex(0);

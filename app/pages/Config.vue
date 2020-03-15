@@ -14,13 +14,11 @@
 
 <script>
 import * as application from "tns-core-modules/application";
-import SelectedPageService from "~/plugins/selected-page-service";
 import Theme from "@nativescript/theme";
 
 export default {
   mounted() {
-    // this feels hacky - improve
-    SelectedPageService.getInstance().updateSelectedPage("config");
+    this.$store.commit('setCurrentPage', 'news')
   },
   computed: {},
   methods: {

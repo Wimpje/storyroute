@@ -3,14 +3,15 @@
     row="0"
     ref="image"
     class="cachedImage"
-    :src="source"
+    :src="resolvedImage"
     @loaded="imageLoaded">
   </Image>
 </template>
 
 <script>
+// TODO - store in filesystem for subsequent app loads ... 
 import { Cache } from "tns-core-modules/ui/image-cache";
-import { fromFileSync, fromResource, fromNativeSource } from "tns-core-modules/image-source";
+import { ImageSource, fromNativeSource } from "tns-core-modules/image-source";
 
 const cache = new Cache()
 cache.maxRequests = 10;
@@ -21,17 +22,22 @@ export default {
     return {
       imageLoading: true,
       imageFailed: false,
+      resolvedImage: ''
     };
   },
   created() {
-    cache.placeholder = fromFileSync(this.placeholder)
-    
-    console.log('creating img', this.source)
+    cache.placeholder = ImageSource.fromFileSync(this.placeholder)
     if (this.source && this.source.indexOf('http') == 0) {
+      console.log('img - URL >> trying cache:', this.source)
       this.getFromCache(this.source)
     }
+    else if(this.source) {
+      console.log('img - from file or resource:', this.source)
+      this.resolvedImage = ImageSource.fromFileOrResourceSync(this.source)
+    }
     else {
-      this.source = fromResource(this.source)
+      console.log('img - loading placeholder, original src:', this.source)
+      this.resolvedImage = cache.placeholder
     }
   },
   methods: {
@@ -40,8 +46,8 @@ export default {
         let image = cache.get(imageURL)
         if (image) {
           this.imageLoading = false
-          this.source = fromNativeSource(image);
-          console.log('from cache')
+          this.resolvedImage = new ImageSource(image);
+          console.log('from cache') 
         } else {
             console.log('loading from URL')
             cache.push({
@@ -50,7 +56,7 @@ export default {
                 completed: (image, key) => {
                     if (imageURL === key) {
                       this.imageLoading = false
-                      this.source = fromNativeSource(image);
+                      this.resolvedImage = new ImageSource(image);
                       console.log('loaded, stored in cache')
                     }
                 }

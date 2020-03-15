@@ -2,7 +2,7 @@
   <Page class="page">
     <AppActionBar page="Home"></AppActionBar>
     <GridLayout>
-      <GoogleMap :pois="pois" />
+      <GoogleMap :pois="pois" @markerSelect="showPointInfo"/>
     </GridLayout>
   </Page>
 </template>
@@ -10,12 +10,11 @@
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters, mapActions } from "vuex";
-import SelectedPageService from "~/plugins/selected-page-service";
+
 
 export default {
   mounted() {
-    // this feels hacky - improve
-    SelectedPageService.getInstance().updateSelectedPage("points");
+    this.$store.commit('setCurrentPage', 'points')
   },
   components: {
     GoogleMap
@@ -32,6 +31,14 @@ export default {
   },
   created() {},
   methods: {
+    showPointInfo(marker) {
+      console.log("should load", marker.poi.title);
+      utils.navigateTo('pointinfo', {
+        props: {
+          point: marker.poi
+        }
+      });
+    },
     refreshPoints() {
       this.$store.dispatch("updatePois");
     }

@@ -7,14 +7,14 @@
         width="100"
         height="100"
       />
-      <Label text="75 jaar bevrijding - Ommen" class="nt-drawer__header-brand"></Label>
+      <Label :text="'drawer.title' | L" class="nt-drawer__header-brand"></Label>
     </StackLayout>
-    <ListView for="item in navItems" height="100%" rowHeight="60">
+    <ListView for="item in pages" height="100%" rowHeight="60">
       <v-template>
         <GridLayout
           columns="auto, *"
           rows="*"
-          :class="'nt-drawer__list-item' + (selectedPage === item.text ? ' -selected': '')"
+          :class="'nt-drawer__list-item' + (currentPage === item.text ? ' -selected': '')"
           @tap="goToPage(item)"
         >
           <Label row="0" col="0" :text="iconFromCode(item.icon)" class="nt-icon fas"></Label>
@@ -26,39 +26,27 @@
 </template>
 
 <script>
-import { routes, routeInfo } from "~/router";
-
+import { mapGetters, mapActions } from "vuex";
 import * as utils from "~/plugins/utils";
-import Routes from "~/pages/Routes";
-import SelectedPageService from "~/plugins/selected-page-service";
 
 export default {
-  mounted() {
-    SelectedPageService.getInstance().selectedPage$.subscribe(
-      selectedPage => (this.selectedPage = selectedPage)
-    );
-  },
   data() {
     return {
-      selectedPage: "",
-      navItems: Object.values(routeInfo)
+      pages:[]
     };
+  },
+  computed: {
+    ...mapGetters([ "pagesInSideDrawer"] )
+  },
+  mounted() {
+    console.log('sidebar - ', this.pagesInSideDrawer)
+    this.pages = this.pagesInSideDrawer
   },
   methods: {
     iconFromCode: function(code) {
       return String.fromCharCode(code);
     },
     goToPage(item) {
-      console.log("Navigating to page:", item.text);
-      /*this.$navigateTo(item.page, {
-        clearHistory: true
-      })
-        .catch(err => {
-          console.log("Error navigating to " + item.text, err);
-        })
-        .then(res => {
-          SelectedPageService.getInstance().updateSelectedPage(item.text);
-        });*/
       utils.navigateTo(this, item);
       utils.closeDrawer();
     }

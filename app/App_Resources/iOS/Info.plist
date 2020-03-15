@@ -5,13 +5,13 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>nl</string>
     <key>CFBundleDisplayName</key>
-    <string>75 jaar bevrijding</string>
+    <string>75 jaar bevrijding - Ommen</string>
     <key>CFBundleExecutable</key>
     <string>${EXECUTABLE_NAME}</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>75 jaar bevrijding</string>
+    <string>75 jaar bevrijding - Ommen</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

@@ -21,14 +21,13 @@
 <script>
 import { mapGetters } from "vuex";
 import RouteListItem from "~/components/RouteListItem";
-import RouteInfo from "~/components/RouteInfo";
+import RouteInfo from "~/pages/RouteInfo";
 import Route from "~/pages/Route";
-import SelectedPageService from "~/plugins/selected-page-service";
+import * as utils from "~/plugins/utils";
 
 export default {
   mounted() {
-    // this feels hacky - improve
-    SelectedPageService.getInstance().updateSelectedPage("routes");
+    this.$store.commit('setCurrentPage', 'routes')
   },
   components: {
     RouteListItem,
@@ -48,7 +47,7 @@ export default {
   methods: {
     loadRoute(event) {
       console.log("should load", event.item.title);
-      this.$navigateTo(RouteInfo, {
+      utils.navigateTo('routeinfo', {
         props: {
           route: event.item
         }

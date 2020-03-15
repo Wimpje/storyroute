@@ -16,9 +16,11 @@
 
 <script>
 import * as geolocation from "nativescript-geolocation";
-import { MapView, Marker, Position } from "nativescript-google-maps-sdk";
+import { MapView, Marker, Position, Polyline } from "nativescript-google-maps-sdk";
 import { isAndroid, isIOS } from "tns-core-modules/platform";
 import { mapGetters } from "vuex";
+import { Color } from "tns-core-modules/color";
+
 const Image = require("tns-core-modules/ui/image").Image;
 import {
   ImageSource,
@@ -28,7 +30,7 @@ import {
 } from "tns-core-modules/image-source";
 
 export default {
-  props: ["pois", "currentPoi"],
+  props: ["pois", "currentPoi", "path"],
   data() {
     return {
       latitude: "",
@@ -236,6 +238,24 @@ export default {
       if (isIOS) {
         var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
         this.mapView.gMap.animateWithCameraUpdate(update);
+      }
+
+      if(this.path && this.path.length) {
+        this.mapView.removeAllShapes();
+
+        // draw the polyline 
+        const polyline = new Polyline();
+        console.log('want to create a line...', this.path.length)
+        
+        this.path.forEach(geoPoint => {
+          const pos = Position.positionFromLatLng(geoPoint.latitude, geoPoint.longitude)
+          polyline.addPoint(pos);
+        })
+        polyline.visible = true;
+        polyline.width = 5;
+        polyline.geodesic = false;
+        polyline.color = new Color("#8ABF5F");
+        this.mapView.addPolyline(polyline);
       }
 
       this.$emit("mapReady");

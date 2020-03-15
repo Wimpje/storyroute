@@ -1,5 +1,5 @@
 {
-  "app.name": "75 jaar bevrijding",
+  "app.name": "75 jaar bevrijding - Ommen",
   "nav": {
     "routes": "Routes",
     "points": "Kaart",
@@ -9,7 +9,9 @@
     "moreinfo": "Meer info",
     "start": "Start"
   },
-  
+  "drawer": {
+    "title": "75 jaar bevrijding - Ommen"
+  },
   "point": {
     "info": "info",
     "more": "meer"

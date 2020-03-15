@@ -1,5 +1,5 @@
 <template>
-  <GridLayout rows="160, 30, 20" columns="*,100">
+  <GridLayout rows="160, 30, 20" columns="*, 50">
     <CachedImage
       row="0"
       colSpan="2"
@@ -13,22 +13,24 @@
     />
     <Label row="1" col="0" height="30" :text="route.title" class="routeTitle" textwrap="true"></Label>
     <Label row="2" col="0" height="20" :text="route.subtitle" class="routeSubTitle" textwrap="true"></Label>
-    <Label
+    <CenterLabel
       row="1"
       rowSpan="2"
       col="1"
-      @loaded="center"
+      :centerMethod="17"
       text.decode="&#xf0a9;"
       class="fas fabButton"
       @tap="startRoute()"
-    ></Label>
+    ></CenterLabel>
   </GridLayout>
 </template>
 <script>
 import CachedImage from '~/components/CachedImage'
+import CenterLabel from '~/components/CenterLabel'
 export default {
   components: {
-    CachedImage
+    CachedImage,
+    CenterLabel
   },
   props: ["route", "cache"],
   methods: {
@@ -37,12 +39,7 @@ export default {
     },
     startRoute(event) {
       console.log("start route");
-    },
-    center(args) {
-      if (args.object.android) {
-        args.object.android.setGravity(17);
-      }
-    }
+    }    
   },
   computed: {
     image() {
@@ -70,12 +67,10 @@ export default {
   color: white;
 }
 .fabButton {
-  height: 50;
-  width: 50;
+  height: 40;
+  width: 40;
   border-radius: 100;
   font-size: 15;
-  text-align: center;
-  vertical-align: center;
 }
 .ns-dark .fabButton {
   background-color: white;
@@ -86,21 +81,21 @@ export default {
   color: #d1cece5b;
 }
 .routeImage {
-  margin-bottom: 10;
+  
 }
 .action {
   background-color: #ddd;
 }
+
 .routeSubTitle {
   font-size: 14;
 }
+
 .routeTitle {
   font-size: 18;
   font-weight: bold;
-  horizontal-align: left;
-  vertical-align: center;
-  margin: 5 0 15 0;
 }
+
 .ns-dark .routeSubTitle {
   color: white;
 }

@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { routes } from "~/router";
 
 export default {
   components: {},
