@@ -7,16 +7,19 @@
       @tap="onDrawerButtonTap"
       ios.position="right"
     ></ActionItem>
-    <Label class="action-bar-title" :text="page"></Label>
+    <Label class="action-bar-title" :text="currentPageText | L"></Label>
   </ActionBar>
 </template>
 
 <script>
 import * as utils from "~/plugins/utils";
 import firebase from "nativescript-plugin-firebase";
+import { mapGetters } from "vuex";
 
 export default {
-  props: ["page"],
+  computed: {
+    ...mapGetters(['currentPageText'])
+  },
   methods: {
     onDrawerButtonTap() {
       utils.showDrawer();

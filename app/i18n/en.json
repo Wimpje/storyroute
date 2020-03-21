@@ -1,9 +1,15 @@
 {
-  "app.name": "75 year liberty",
-  "75 jaar bevrijding": "75 year liberty",
-  "nav.routes": "Routes",
-  "nav.points": "Map",
-  "nav.news": "News",
+  "app.name": "75 years of liberation - Ommen",
+  "75 jaar bevrijding": "75 years of liberation",
+  "nav": {
+    "routes": "Routes",
+    "points": "Map",
+    "news": "News",
+    "pointinfo": "Location info",
+    "routeinfo": "Route info",
+    "config": "Help and configuration"
+  },
+  
   "drawer": {
     "title": "75 year liberty - Ommen"
   },

@@ -1,5 +1,5 @@
 <template>
-  <Page class="page">
+  <Page class="page" @loaded="onLoaded">
     <GridLayout rows="100, *, 50, 50">
       <GridLayout row="0" columns="*, *, *,*, *">
         <Button text="Enable Location" col="0" textWrap="true" @tap="enableLocationTap" />
@@ -33,7 +33,6 @@ class POI {
 
 export default {
   mounted() {
-    this.$store.commit('setCurrentPage', 'testgeo')
   },
   data() {
     return {
@@ -42,6 +41,9 @@ export default {
     };
   },
   methods: {
+    onLoaded() {
+      this.$store.commit('setCurrentPage', 'testgeo')
+    },
     buttonSave: function(e) {
       console.log("saveing", e);
     },

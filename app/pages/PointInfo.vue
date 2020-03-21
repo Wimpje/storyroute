@@ -1,6 +1,6 @@
 <template>
-  <Page class="page">
-    <AppActionBar page="Point info"></AppActionBar>
+  <Page class="page" @loaded="onLoaded">
+    <AppActionBar></AppActionBar>
     <GridLayout rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
       <CachedImage
         width="100%"
@@ -34,18 +34,21 @@ export default {
     CachedImage
   },
   mounted() {
-    this.$store.commit('setCurrentPage', 'pointinfo')
   },
   props: ["point"],
   methods: {
+    onLoaded() {
+      this.$store.commit('setCurrentPage', 'pointinfo')
+    },
     openNavigationTo(){
+      console.log('open maps application to go to:', this.point.title)
       let directions = new Directions();
       directions.available().then(avail => {
           if (avail) {
             directions.navigate({
               to: {
-                lat: point.position.latitude,
-                lng: point.position.longitude
+                lat: this.point.position.latitude,
+                lng: this.point.position.longitude
               }
             }).then(
               function() {

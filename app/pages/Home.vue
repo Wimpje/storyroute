@@ -1,38 +1,36 @@
 <template>
   <Page actionBarHidden="true">
-    <StackLayout>
-      <BottomNavigation class="bottomNavigation">
-        <TabStrip>
-          <TabStripItem>
-            <Label :text="'nav.routes' | L"></Label>
-            <Image src.decode="font://&#xf4d7;" class="fas t-24"></Image>
-          </TabStripItem>
-          <TabStripItem>
-            <Label :text="'nav.points' | L"></Label>
-            <Image src.decode="font://&#xf5a0;" stretch="none" class="fas t-24"></Image>
-          </TabStripItem>
-          <TabStripItem>
-            <Label :text="'nav.news' | L"></Label>
-            <Image src.decode="font://&#xf143;" stretch="none" class="fas t-24"></Image>
-          </TabStripItem>
-        </TabStrip>
-        <TabContentItem>
-          <Frame id="frameTab0">
-            <Routes />
-          </Frame>
-        </TabContentItem>
-        <TabContentItem>
-          <Frame id="frameTab1">
-            <Points />
-          </Frame>
-        </TabContentItem>
-        <TabContentItem>
-          <Frame id="frameTab2">
-            <News />
-          </Frame>
-        </TabContentItem>
-      </BottomNavigation>
-    </StackLayout>
+    <BottomNavigation class="bottomNavigation" @itemTap="onTap">
+      <TabStrip>
+        <TabStripItem>
+          <Label :text="'nav.routes' | L"></Label>
+          <Image src.decode="font://&#xf4d7;" class="fas t-24"></Image>
+        </TabStripItem>
+        <TabStripItem>
+          <Label :text="'nav.points' | L"></Label>
+          <Image src.decode="font://&#xf5a0;" stretch="none" class="fas t-24"></Image>
+        </TabStripItem>
+        <TabStripItem>
+          <Label :text="'nav.news' | L"></Label>
+          <Image src.decode="font://&#xf143;" stretch="none" class="fas t-24"></Image>
+        </TabStripItem>
+      </TabStrip>
+      <TabContentItem>
+        <Frame id="frameTab0">
+          <Routes />
+        </Frame>
+      </TabContentItem>
+      <TabContentItem>
+        <Frame id="frameTab1">
+          <Points />
+        </Frame>
+      </TabContentItem>
+      <TabContentItem>
+        <Frame id="frameTab2">
+          <News />
+        </Frame>
+      </TabContentItem>
+    </BottomNavigation>
   </Page>
 </template>
 
@@ -49,7 +47,12 @@ export default {
     News
   },
   computed: {},
-  methods: {}
+  methods: {
+    onTap(args) {
+      console.log(args)
+      this.$store.commit('bottomNavigatedTo', args.selectedIndex)
+    }
+  }
 };
 </script>
 

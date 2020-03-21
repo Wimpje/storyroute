@@ -1,6 +1,6 @@
 <template>
-  <Page class="page">
-    <AppActionBar page="Routes"></AppActionBar>
+  <Page class="page" @loaded="onLoaded">
+    <AppActionBar></AppActionBar>
 
     <StackLayout>
       <ListView
@@ -27,7 +27,6 @@ import * as utils from "~/plugins/utils";
 
 export default {
   mounted() {
-    this.$store.commit('setCurrentPage', 'routes')
   },
   components: {
     RouteListItem,
@@ -45,9 +44,12 @@ export default {
     })
   },
   methods: {
+    onLoaded() {
+      this.$store.commit('setCurrentPage', 'routes')
+    },
     loadRoute(event) {
       console.log("should load", event.item.title);
-      utils.navigateTo('routeinfo', {
+      utils.navigateTo(this, 'routeinfo', {
         props: {
           route: event.item
         }

@@ -1,20 +1,19 @@
 <template>
-  <Page class="page">
-    <AppActionBar page="Home"></AppActionBar>
-    <GridLayout>
+  <Page class="page" @loaded="onLoaded">
+    <AppActionBar></AppActionBar>
+    <StackLayout>
       <GoogleMap :pois="pois" @markerSelect="showPointInfo"/>
-    </GridLayout>
+    </StackLayout>
   </Page>
 </template>
 
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters, mapActions } from "vuex";
-
+import * as utils from "~/plugins/utils";
 
 export default {
   mounted() {
-    this.$store.commit('setCurrentPage', 'points')
   },
   components: {
     GoogleMap
@@ -31,9 +30,12 @@ export default {
   },
   created() {},
   methods: {
+    onLoaded() {
+      this.$store.commit('setCurrentPage', 'points')
+    },
     showPointInfo(marker) {
       console.log("should load", marker.poi.title);
-      utils.navigateTo('pointinfo', {
+      utils.navigateTo(this, 'pointinfo', {
         props: {
           point: marker.poi
         }

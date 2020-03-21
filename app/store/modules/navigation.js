@@ -16,26 +16,26 @@ const pages = {
   home: Home,
   points: Points,
   pointinfo: PointInfo,
-  route: Route,
   routes: Routes,
+  route: Route,
+  routeinfo: RouteInfo,
   config: Config,
   news: News,
-  testgeo: TestGeo,
-  routeinfo: RouteInfo
+  testgeo: TestGeo  
 };
 
 const pagesInfo = {
-  routes: { icon: "0xf4d7", text: "Routes", page: pages.routes, sideDrawer: true, isTabView: true, tabIndex: 0, 
-            childPages: [ 'route', 'routeinfo' ] },
-  points: { icon: "0xf5a0", text: "Kaart", page: pages.points,  sideDrawer: true, isTabView: true, tabIndex: 1, 
-            childPages: [ 'pointInfo' ] },
-  news: { icon: "0xf4d7", text: "News", page: pages.news,  sideDrawer: true, isTabView: true, tabIndex: 2 },
+  // having the name again is a bit overkill, but handy sometimes
+  routes: {     name: 'routes', icon: "0xf4d7", text: "nav.routes", page: pages.routes, sideDrawer: true, isTabView: true, tabIndex: 0 },
+  points: {     name: 'points', icon: "0xf5a0", text: "nav.points", page: pages.points, sideDrawer: true, isTabView: true, tabIndex: 1 },
+  news: {       name: 'news', icon: "0xf4d7", text: "nav.news", page: pages.news, sideDrawer: true, isTabView: true, tabIndex: 2 },
+  
   // no tab navigation for the following:
-  route: { icon: "0xf4d7", text: "Route", page: pages.route, sideDrawer: false, isTabView: false, isModal: true },
-  routeinfo: { icon: "0xf4d7", text: "Route info", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: true },
-  pointInfo: { icon: "0xf4d7", text: "Point info", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true },
-  testgeo: { icon: "0xf4d7", text: "Geo test", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true },
-  config: { icon: "0xf4d7", text: "Config", page: pages.config,  sideDrawer: true, isTabView: false, isModal: true }
+  route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
+  routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
+  pointinfo: {  name: 'pointinfo', icon: "0xf4d7", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: false } },
+  testgeo: {    name: 'testgeo', icon: "0xf4d7", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
+  config: {     name: 'config', icon: "0xf4d7", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  }
 }
 
 export const state = () => {
@@ -43,52 +43,67 @@ export const state = () => {
     currentPage: '',
     pageStack: [],
     pagesInfo: pagesInfo,
+    bottomIndex: 0
   }
 }
 export const getters = {
-  currentPage (state) {
+  currentPage(state) {
     return state.currentPage
   },
-  currentComponent (state) {
+  currentPageInfo(state) {
+    return state.pagesInfo[state.currentPage]
+  },
+  currentComponent(state) {
     // no error checking, we're in control so _of course_ this will never crash...
     return state.pagesInfo[state.currentPage].page
   },
-  currentIcon (state) {
+  currentIcon(state) {
     return state.pagesInfo[state.currentPage].icon
   },
-  currentIsTabView (state) {
+  currentPageText(state) {
+    if(state.currentPage) {
+      return state.pagesInfo[state.currentPage].text
+    }
+    else {
+      return state.pagesInfo['routes'].text
+    }
+  },
+  currentIsTabView(state) {
     return state.pagesInfo[state.currentPage].isTabView
   },
-  pagesInSideDrawer (state) {
+  pagesInSideDrawer(state) {
     const sideDrawerPages = Object.values(state.pagesInfo).filter(value => {
       return value.sideDrawer
     })
-    
+
     return sideDrawerPages
   },
-  pagesInTabNavigation (state) {
+  pagesInTabNavigation(state) {
     const res = Object.values(state.isTabView).filter(value => {
       return value.sideDrawer
     })
     return res
 
   },
-  pages (state) {
+  pages(state) {
     return Object.values(state.pagesInfo)
   },
-  pagesInfo (state) {
+  pagesInfo(state) {
     return state.pagesInfo
   }
 }
 
 export const mutations = {
-  setCurrentPage (state, page) {
+  setCurrentPage(state, page) {
     state.currentPage = page
   },
-  pagePop (state) {
-    state.pageStack.pop()
+  bottomNavigatedTo(state, index) {
+    state.bottomIndex = index
   },
-  pagePush (state, page) {
+  pagePop(state) {
+    return state.pageStack.pop()
+  },
+  pagePush(state, page) {
     state.pageStack.push(page)
   }
 }

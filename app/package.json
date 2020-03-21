@@ -3,7 +3,7 @@
     "v8Flags": "--expose_gc",
     "markingMode": "none"
   },
-  "main": "main",
+  "main": "app.js",
   "name": "storyroute",
   "version": "1.0.0"
 }

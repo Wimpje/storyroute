@@ -5,6 +5,7 @@ import pois from './modules/pois.js'
 import navigation from './modules/navigation.js'
 import messages from './modules/messages'
 import routes from './modules/routes'
+import articles from './modules/articles'
 
 import createLogger from '../plugins/logger'
 
@@ -18,7 +19,8 @@ export default new Vuex.Store({
     routes,
     navigation,
     pois,
-    messages
+    messages,
+    articles
   },
   strict: debug,
   plugins: debug ? [createLogger()] : []

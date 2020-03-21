@@ -1,6 +1,6 @@
 <template>
-  <Page class="page">
-    <AppActionBar page="Route"></AppActionBar>
+  <Page class="page" @loaded="onLoaded">
+    <AppActionBar></AppActionBar>
     <GridLayout rows="*, 100">
       <!-- <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder"></Label> -->
       <GoogleMap row="0" rowSpan="2" :pois="this.route.pois" :path="this.route.path" @markerSelect="selectMarker" :currentPoi="currentPoi">
@@ -44,7 +44,6 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   mounted() {
-    this.$store.commit('setCurrentPage', 'route')
   },
   props: ["route", "activePoi"],
   components: {
@@ -60,15 +59,16 @@ export default {
   computed: {},
   created() {},
   methods: {
+    onLoaded() {
+      this.$store.commit('setCurrentPage', 'route')
+    },
     openPoint({item, index}) {
       console.log('tapped poi', item, index)
       this.currentPoi = item
     },
-   
+
     listLoaded (args) {
-      this.$nextTick(() => {
-        this.$refs.listView.scrollToIndex(0);
-      })
+    
     },
     getInfoFor (poi) {},
     selectMarker (marker) { 

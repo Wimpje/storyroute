@@ -27,25 +27,52 @@ export function findNav(frame) {
   return frame
 }
 
-export const navigateTo = (page, props) => {
+//application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+ // data.cancel = true; // prevents default back button behavior
+//});
+
+export const goBack = () => {
+  const to = store.commit('pagePop')
+  if(!to) {
+    console.log('exit program')
+  }
+
   const topFrame = Frame.topmost();
-  console.log('topframe = ', topFrame.id)
+  console.log('going back! topframe = ', topFrame.id)
   const pagesInfo = store.getters.pagesInfo
-  
-  const item = pagesInfo[page];
+  const item = pagesInfo[to];
+  console.log(item)
+}
+
+export const navigateTo = (page, to, props) => {
+  const topFrame = Frame.topmost();
+  console.log('navigation! topframe = ', topFrame.id)
+  const pagesInfo = store.getters.pagesInfo
+  const item = pagesInfo[to];
 
   // ideas, open routeinfo / route in same frame as routes
   // same for pointInfo, open it in points (except if route is active...)
-
+  store.commit('pagePush', to)
   if (item.isTabView) {
+    console.log('... tabview, open in bottom nav: index=', item.tabIndex)
     const bottomNav = findNav(topFrame)
     bottomNav.selectedIndex = item.tabIndex
   }
-  else {
+  else if (item.isModal) {
+    console.log('... modal, open in modal')
     Vue.showMyModal(item.page, { 
-      ...props,
-      fullscreen: true
+      ...props, ...item.props
     })
+  }
+  else {
+    // determine which frame to go to
+    console.log('using maincontenframe')
+    const p = { ...props, clearHistory: false, frame: 'frameTab' +  item.tabIndex}
+
+    console.log('... page, opening in frame', item.name, p)
+    page.$navigateTo(item.page, p).then(res => {
+      console.log('yeah! i navigated from the utils.js thingy to ' + to)
+    }).catch(err => console.error('error navigating', err))
   }
 }
 

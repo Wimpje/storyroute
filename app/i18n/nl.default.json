@@ -3,7 +3,10 @@
   "nav": {
     "routes": "Routes",
     "points": "Kaart",
-    "news": "Nieuws"
+    "news": "Nieuws",
+    "pointinfo": "Locatie info",
+    "routeinfo": "Route info",
+    "config": "Help en configuratie"
   },
   "route": {
     "moreinfo": "Meer info",

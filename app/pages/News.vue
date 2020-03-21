@@ -1,14 +1,14 @@
 <template>
-  <Page class="page" @loaded="loadNews()">
-    <AppActionBar page="News"></AppActionBar>
+  <Page class="page" @loaded="onLoaded">
+    <AppActionBar></AppActionBar>
     <GridLayout rows="auto, *">
       <Label row="0" :text="'nav.news' | L" class="h1 p-10"></Label>
-      <ActivityIndicator row="1" verticalAlignment="center" :busy="newsArticles.length == 0" />
-      <ListView row="1" v-if="newsArticles.length" for="item in newsArticles" height="100%">
+      <ActivityIndicator row="1" verticalAlignment="center" :busy="news.length == 0" />
+      <ListView row="1" v-if="news.length" for="item in news" height="100%">
         <v-template>
           <StackLayout @tap="loadArticle(item)">
             <Label height="50" class="h2" :text="item.title"></Label>
-            <Label height="10" class="date" :text="toPrettyDate(item.date)"></Label>
+            <Label height="10" class="date" :text="toPrettyDate(item.publishDate)"></Label>
           </StackLayout>
         </v-template>
       </ListView>
@@ -17,41 +17,51 @@
 </template>
 
 <script>
-import { NewsService } from "~/services/newsService";
 import * as utils from "@nativescript/core/utils/utils";
+import { mapGetters } from "vuex";
 
 const moment = require("moment");
 
-const service = new NewsService();
-
 export default {
+  components: {
+    
+  },
   mounted() {
-    this.$store.commit('setCurrentPage', 'news')
   },
   data() {
     return {
-      newsArticles: [],
       currentItem: null
     };
+  },
+  computed: {
+    ...mapGetters({
+      news: "getNews"
+    })
   },
   created() {
     this.currentItem = null;
   },
   methods: {
+    onLoaded() {
+      this.$store.commit('setCurrentPage', 'news')
+      if(!this.news || this.news.length === 0) {
+        this.loadNews()
+      }
+    },
     toPrettyDate(date) {
       return moment(date).format("dddd, D MMMM YYYY, h:mm");
     },
     loadNews() {
-      service.getNews(true).then(n => {
-        this.newsArticles = n;
-      });
-    },
-    async reloadArticles() {
-      this.newsArticles = await service.getNews(true);
+      this.$store.dispatch('getArticles')
     },
     loadArticle(item) {
-      console.log("open native browser with URL", item.url);
       this.currentItem = item;
+      utils.navigateTo(this, 'articleinfo', {
+        props: {
+          article: item
+        }
+      });    },
+    openUrl(url) {
       utils.openUrl(item.url);
     }
   }

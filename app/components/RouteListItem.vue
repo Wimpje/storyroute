@@ -1,18 +1,15 @@
 <template>
-  <GridLayout rows="160, 30, 20" columns="*, 50">
+  <GridLayout rows="160, auto, auto" columns="*, 50">
     <CachedImage
       row="0"
       colSpan="2"
-      height="150"
-      width="100%"
       class="routeImage"
-      marginBottom="10"
       stretch="aspectFill"
       :source="image"
       placeholder= "~/assets/images/route-placeholder.png"
     />
-    <Label row="1" col="0" height="30" :text="route.title" class="routeTitle" textwrap="true"></Label>
-    <Label row="2" col="0" height="20" :text="route.subtitle" class="routeSubTitle" textwrap="true"></Label>
+    <Label row="1" col="0" :text="route.title" class="routeTitle" textwrap="true"></Label>
+    <Label row="2" col="0" :text="route.subtitle" class="routeSubTitle" textwrap="true"></Label>
     <CenterLabel
       row="1"
       rowSpan="2"
@@ -67,10 +64,11 @@ export default {
   color: white;
 }
 .fabButton {
-  height: 40;
-  width: 40;
-  border-radius: 100;
-  font-size: 15;
+  height: 50;
+  width: 50;
+  border-radius: 140;
+  font-size: 18;
+
 }
 .ns-dark .fabButton {
   background-color: white;
@@ -81,7 +79,7 @@ export default {
   color: #d1cece5b;
 }
 .routeImage {
-  
+  margin:0;
 }
 .action {
   background-color: #ddd;

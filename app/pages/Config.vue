@@ -1,5 +1,5 @@
 <template>
-  <Page class="page">
+  <Page class="page" @loaded="onLoaded">
     <StackLayout>
       <Label text="Config"></Label>
 
@@ -18,10 +18,12 @@ import Theme from "@nativescript/theme";
 
 export default {
   mounted() {
-    this.$store.commit('setCurrentPage', 'news')
   },
   computed: {},
   methods: {
+    onLoaded() {
+      this.$store.commit('setCurrentPage', 'help')
+    },
     toggleDark() {
       Theme.toggleMode(); // to toggle between the modes
     }

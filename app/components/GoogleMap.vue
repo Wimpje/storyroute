@@ -1,10 +1,11 @@
 <template>
-  <StackLayout width="100%" height="100%">
+  <StackLayout width="100%" height="100%" @loaded="onLoaded">
     <MapView
       :latitude="latitude"
       :longitude="longitude"
       :zoom="zoom"
       :bearing="bearing"
+      :tilt="tilt"
       height="100%"
       width="100%"
       @mapReady="onMapReady"
@@ -20,14 +21,11 @@ import { MapView, Marker, Position, Polyline } from "nativescript-google-maps-sd
 import { isAndroid, isIOS } from "tns-core-modules/platform";
 import { mapGetters } from "vuex";
 import { Color } from "tns-core-modules/color";
+import mapStyles from "~/assets/mapStyles.js"
 
-const Image = require("tns-core-modules/ui/image").Image;
-import {
-  ImageSource,
-  fromFile,
-  fromResource,
-  fromBase64
-} from "tns-core-modules/image-source";
+import { Image } from 'tns-core-modules/ui/image/image';
+import { ImageSource } from "tns-core-modules/image-source";
+
 
 export default {
   props: ["pois", "currentPoi", "path"],
@@ -50,7 +48,11 @@ export default {
     }
   },
   mounted() {
-    let that = this;
+   
+  },
+  methods: {
+    onLoaded() {
+ let that = this;
     geolocation.isEnabled().then(
       function(isEnabled) {
         if (!isEnabled) {
@@ -72,13 +74,11 @@ export default {
                     if (!location) {
                       console.log("Failed to get location!");
                     } else {
-                      console.log('location found, not setting it ')
-                      /*
                       that.latitude = location.latitude;
                       that.longitude = location.longitude;
-                      that.zoom = 14;
+                      that.zoom = 10;
                       that.bearing = 0;
-                      that.altitude = 0;*/
+                      that.altitude = 0;
                     }
                   });
               },
@@ -104,13 +104,11 @@ export default {
               if (!location) {
                 console.log("Failed to get location!");
               } else {
-                console.log('location found, not setting it ')
-                /*
                 that.latitude = location.latitude;
                 that.longitude = location.longitude;
-                that.zoom = 14;
+                that.zoom = 10;
                 that.bearing = 0;
-                that.altitude = 0;*/
+                that.altitude = 0;
               }
             });
         }
@@ -119,10 +117,52 @@ export default {
         console.log("Error: " + (e.message || e));
       }
     );
-  },
-  methods: {
+    },
     getPoints() {
       this.addMarkersFromPois(this.pois);
+    },
+    addMarkerIcon(marker, poi) {
+      //TODO icon map somewhere in settings
+      const iconMap = {
+        'stolperstein': 'starofdavid',
+        //'verzet': 'resistance',
+       // 'duits': 'german',
+       // 'geallieerd': 'allies',
+        'winkel': 'shop',
+        'cafe': 'coffee',
+        'restaurant': 'restaurant',
+
+      }
+
+      if (poi.tags) {
+        let icon = 'pin'
+        if (Array.isArray(poi.tags)) {
+          for (let tagIndex = 0; tagIndex < poi.tags.length; tagIndex++) {
+            const tag = poi.tags[tagIndex].toLowerCase().trim();
+            console.log('tag', tag)
+            if (tag && iconMap[tag]) {
+              icon =  iconMap[tag]
+              break
+            }
+          }
+        }
+        if (icon) {
+          const iconImg = new Image();
+
+          if(isIOS) {
+            //iconImg.imageSource = ImageSource.fromResourceSync(icon);
+            console.log(`LOADING > ~/assets/images/markers/${icon}@1.5x.png`)
+            iconImg.imageSource = ImageSource.fromFileSync(`~/assets/images/markers/${icon}@2x.png`);
+          }
+          else {
+            // in android the resources are too big, so just using two sizes... 
+            console.log(`LOADING > ~/assets/images/markers/${icon}@1.5x.png`)
+            iconImg.imageSource = ImageSource.fromFileSync(`~/assets/images/markers/${icon}@1.5x.png`);
+          }
+          
+          marker.icon = iconImg
+        }
+      }
     },
     addMarkersFromPois(pois) {
       this.mapView.removeAllMarkers();
@@ -131,13 +171,7 @@ export default {
         pois.forEach(poi => {
           const marker = this.addMarkerFromPoi(poi);
           marker.poi = poi;
-
-          /*
-          let icon = new Image();
-          icon.src = '~/images/pin.png';
-          icon.imageSource = fromFile('~/images/pin.png');
-          marker.icon=icon;
-          */
+          this.addMarkerIcon(marker, poi)
           this.markers.push(marker);
         });
       }
@@ -149,6 +183,7 @@ export default {
         poi.position.longitude
       );
       poiMarker.title = poi.title;
+      
       this.mapView.addMarker(poiMarker);
 
       return poiMarker;
@@ -167,6 +202,8 @@ export default {
       );
 
       var gMap = this.mapView.gMap;
+      
+      this.mapView.setStyle(mapStyles.retro)
 
       this.mapView.settings.mapToolbarEnabled = false;
       this.mapView.settings.rotateGesturesEnabled = true;
@@ -176,7 +213,7 @@ export default {
       this.mapView.settings.compassEnabled = true;
       this.mapView.settings.zoomGesturesEnabled = true;
 
-      // can be done to hiude infowindow
+      // can be done to hide infowindow
       // this.mapview.infoWindowTemplate = ''
 
       if (isAndroid && this.isMounted && geolocation.isEnabled()) {
@@ -214,6 +251,9 @@ export default {
         "MAPREADY -  ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
       );
       this.addMarkersFromPois(this.pois);
+
+
+      // This positions the camera on a box around the points
       if (isIOS) {
         this.pois.forEach(poi => {
           const pos = Position.positionFromLatLng(
@@ -239,7 +279,9 @@ export default {
         var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
         this.mapView.gMap.animateWithCameraUpdate(update);
       }
+      // END map positioning
 
+      // create route line
       if(this.path && this.path.length) {
         this.mapView.removeAllShapes();
 

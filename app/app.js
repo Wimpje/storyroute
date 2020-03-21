@@ -17,7 +17,6 @@ import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 
 import RadListView from 'nativescript-ui-listview/vue';
 
-
 if (TNS_ENV !== 'production') {
   Vue.use(VueDevtools)
 }
@@ -30,7 +29,7 @@ Vue.use(RadSideDrawer);
 Vue.registerElement('MapView', () => MapView)
 Vue.component('AppActionBar', AppActionBar)
 
-console.log("I'm here, will load firebase stuff now!")
+console.log("App start - will load firebase stuff now!")
 const firebase = require("nativescript-plugin-firebase");
 const fbInit = firebase.init({
     iOSEmulatorFlush: true,
@@ -41,7 +40,7 @@ const fbInit = firebase.init({
   })
 
 if (isIOS) {
-  GMSServices.provideAPIKey("<KEYHERE>");
+  GMSServices.provideAPIKey("<keyhere>");
 }
 
 Vue.filter("L", localize);
@@ -75,6 +74,7 @@ const vueApp = new Vue({
           this.$store.dispatch("initRoutes")
           console.log('initRoutes called after logging in')
           console.log("User uid: " + user.uid)
+          
         })
         .catch(error => {
           // TODO handle errors on connections
@@ -115,8 +115,6 @@ Vue.showMyModal = function(component, options) {
     })
     const modalPage = modalInstance.$mount().$el.nativeView
     Frame.topmost().showModal(modalPage, opts)
-
-
   })
 }
 

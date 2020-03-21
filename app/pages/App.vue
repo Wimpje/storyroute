@@ -3,7 +3,7 @@
     <StackLayout ~drawerContent class="drawer">
       <slot name="drawerContent"></slot>
     </StackLayout>
-    <Frame ~mainContent id="mainContentFrame">
+    <Frame ~mainContent id="mainContent">
       <slot name="mainContent"></slot>
     </Frame>
   </RadSideDrawer>
