@@ -43,7 +43,7 @@ export class AudioService {
         console.log(JSON.stringify(args));
       }
     };
-
+    console.log('starting to play url:', url, playerOptions)
     return this._player.playFromUrl(playerOptions).then(res => {
       console.log(res)
     }).catch(err => {

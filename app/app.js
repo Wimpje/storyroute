@@ -16,6 +16,35 @@ import AppActionBar from "./components/AppActionBar";
 import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 
 import RadListView from 'nativescript-ui-listview/vue';
+import { android, AndroidApplication, AndroidActivityBundleEventData } from "tns-core-modules/application";
+import * as utils from "~/plugins/utils";
+import { AudioService } from "~/services/audioService"
+
+let lastPress
+let timeDelay = 500 // ms
+if(android) {
+  android.on(AndroidApplication.activityBackPressedEvent, function (args) {
+    console.log("Event: " + args.eventName + ", Activity: " + args.activity);
+    // TODO add navigation
+    if(lastPress + timeDelay > Date.now())
+    {
+      // double tap kill
+      console.log('bybye')
+      android.foregroundActivity.finish();
+    }
+    else {
+      // navigate back if relevant
+      args.cancel = true
+      utils.navigateBackFromButton(args)
+    }
+    lastPress = Date.now()
+  });
+}
+
+
+
+Vue.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
+Vue.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
 
 if (TNS_ENV !== 'production') {
   Vue.use(VueDevtools)
@@ -48,6 +77,7 @@ Vue.filter("L", localize);
 Vue.use(Vuex);
 
 Vue.prototype.$store = store;
+Vue.prototype.$player = new AudioService()
 
 const vueApp = new Vue({
   store,
@@ -63,7 +93,7 @@ const vueApp = new Vue({
   created() {
     // load the FB stuff when Vue is done creating itself (?needed)
     fbInit.then((resp) => {
-      console.log("Firebase initialized", resp)
+      console.log("Firebase initialized")
       firebase.login(
         {
           type: firebase.LoginType.ANONYMOUS
@@ -73,7 +103,7 @@ const vueApp = new Vue({
           console.log('getPois called after logging in')
           this.$store.dispatch("initRoutes")
           console.log('initRoutes called after logging in')
-          console.log("User uid: " + user.uid)
+          console.log("User.uid: " + user.uid)
           
         })
         .catch(error => {

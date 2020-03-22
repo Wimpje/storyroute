@@ -41,6 +41,7 @@
 import GoogleMap from "~/components/GoogleMap.vue";
 import CenterLabel from "~/components/CenterLabel.vue";
 import { mapGetters, mapActions } from "vuex";
+import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
 
 export default {
   mounted() {
@@ -58,9 +59,19 @@ export default {
   },
   computed: {},
   created() {},
+  beforeDestroy() {
+    // TODO settings?
+    allowSleepAgain().then(function() {
+      console.log("Insomnia is inactive, good night!");
+    })
+  },
   methods: {
     onLoaded() {
-      this.$store.commit('setCurrentPage', 'route')
+      this.$store.commit('setCurrentPage',  { name: 'route', instance: this })
+      // TODO settings?
+      keepAwake().then(function() {
+        console.log("Insomnia is active");
+      })
     },
     openPoint({item, index}) {
       console.log('tapped poi', item, index)

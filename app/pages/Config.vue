@@ -3,7 +3,7 @@
     <StackLayout>
       <Label text="Config"></Label>
 
-      <Button @tap="$modal.close()" text="Close" />
+      <Button @tap="close" text="Close" />
       <!-- <StackLayout orientation="horizontal">
         <Switch checked="true" @checkedChange="toggleDark" />
         <Label :text="'Dark mode' | L"></Label>
@@ -21,8 +21,11 @@ export default {
   },
   computed: {},
   methods: {
+    close() {
+      this.$modal.close()
+    },
     onLoaded() {
-      this.$store.commit('setCurrentPage', 'help')
+      this.$store.commit('setCurrentPage', { name: 'config', instance: this })
     },
     toggleDark() {
       Theme.toggleMode(); // to toggle between the modes

@@ -1,6 +1,5 @@
 <template>
   <Image
-    row="0"
     ref="image"
     class="cachedImage"
     :src="resolvedImage"

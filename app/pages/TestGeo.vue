@@ -13,7 +13,7 @@
           <Label :text="location.latitude + ', ' + location.longitude + ', ' + location.altitude" />
         </v-template>
       </ListView>
-      <Button row="2" @tap="$modal.close()" text="Close" />
+      <Button row="2" @tap="close" text="Close" />
       <Button text="Clear" row="3" @tap="buttonClearTap" />
     </GridLayout>
   </Page>
@@ -42,7 +42,10 @@ export default {
   },
   methods: {
     onLoaded() {
-      this.$store.commit('setCurrentPage', 'testgeo')
+      this.$store.commit('setCurrentPage',  { name: 'testgeo', instance: this })
+    },
+    close() {
+      this.$modal.close()
     },
     buttonSave: function(e) {
       console.log("saveing", e);

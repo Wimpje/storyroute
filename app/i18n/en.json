@@ -7,7 +7,8 @@
     "news": "News",
     "pointinfo": "Location info",
     "routeinfo": "Route info",
-    "config": "Help and configuration"
+    "config": "Help and configuration",
+    "doubletap": "Push back twice to exit app"
   },
   
   "drawer": {

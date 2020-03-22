@@ -45,11 +45,11 @@ export default {
   },
   methods: {
     onLoaded() {
-      this.$store.commit('setCurrentPage', 'routes')
+      this.$store.commit('setCurrentPage',  { name: 'routes', instance: this })
     },
     loadRoute(event) {
       console.log("should load", event.item.title);
-      utils.navigateTo(this, 'routeinfo', {
+      utils.navigateTo('routeinfo', {
         props: {
           route: event.item
         }

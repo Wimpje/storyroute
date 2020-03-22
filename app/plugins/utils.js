@@ -2,6 +2,11 @@ import { getRootView } from "tns-core-modules/application"
 import { Frame } from '@nativescript/core/ui/frame';
 import store from '~/store/index.js'
 import Vue from 'nativescript-vue'
+import { Span } from "text/span";
+import { FormattedString } from "text/formatted-string"
+import { Toasty, ToastPosition, ToastDuration } from 'nativescript-toasty';
+import { localize } from "nativescript-localize";
+import { Color } from "tns-core-modules/color";
 
 
 export const showDrawer = () => {
@@ -27,57 +32,128 @@ export function findNav(frame) {
   return frame
 }
 
-//application.android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
- // data.cancel = true; // prevents default back button behavior
-//});
+// super basic markdown like formatting for headers and such
+export const createFormattedString = (text) => {
+  const str = new FormattedString();
+  const lines = text.split(/\n/)
 
-export const goBack = () => {
-  const to = store.commit('pagePop')
-  if(!to) {
-    console.log('exit program')
-  }
-
-  const topFrame = Frame.topmost();
-  console.log('going back! topframe = ', topFrame.id)
-  const pagesInfo = store.getters.pagesInfo
-  const item = pagesInfo[to];
-  console.log(item)
+  lines.forEach(line => {
+    let s = new Span();
+    line += '\n'
+    // heading
+    if (line.indexOf('###') == 0) {
+      s.text = line.substring(1);
+      s.className = "h4"
+    }
+    else if (line.indexOf('##') == 0) {
+      s.text = line.substring(1);
+      s.className = "h3"
+    }
+    else if (line.indexOf('#') == 0) {
+      s.text = line.substring(1);
+      s.className = "h2"
+    }
+    // manual lineBreak
+    else if (line.length === 3 && line.indexOf('---') === 0) {
+      s.text = line.substring(3);
+      const lineEnd = new Span()
+      lineEnd.text = '\n\n'
+      str.spans.push(lineEnd)
+    }
+    else {
+      s.text = line
+    }
+    str.spans.push(s)
+  })
+  return str
 }
 
-export const navigateTo = (page, to, props) => {
-  const topFrame = Frame.topmost();
-  console.log('navigation! topframe = ', topFrame.id)
-  const pagesInfo = store.getters.pagesInfo
-  const item = pagesInfo[to];
+export const showMessage = (text, isLocalizeLabel) => {
+  new Toasty({ text: isLocalizeLabel ? localize(text) : text })
+    .setToastDuration(ToastDuration.LONG)
+    .setToastPosition(ToastPosition.BOTTOM)
+    .setTextColor(new Color('white'))
+    .setBackgroundColor('#222222')
+    .show(); 
+}
 
-  // ideas, open routeinfo / route in same frame as routes
-  // same for pointInfo, open it in points (except if route is active...)
-  store.commit('pagePush', to)
-  if (item.isTabView) {
-    console.log('... tabview, open in bottom nav: index=', item.tabIndex)
-    const bottomNav = findNav(topFrame)
-    bottomNav.selectedIndex = item.tabIndex
+export const navigateBackFromButton = (backPressArgs) => {
+  const page = store.getters.currentPage
+  const prevPage = store.getters.previousPage
+  
+  
+  if (!page) {
+    console.log('show doubletap message...')
+    showMessage('nav.doubletap', true)
+    return
   }
-  else if (item.isModal) {
+  console.log('Navigate back!', page.name)
+  store.commit('popPage')
+
+  const pagesInfo = store.getters.pagesInfo
+  const item = pagesInfo[page.name];
+  if (item.isModal) {
+    console.log('is modal, closing')
+
+    page.instance.$modal.close()
+  }
+  else if(item.isTabView) {
+    // don't do anything
+    console.log('is tabview, wont navigate')
+    showMessage('nav.doubletap', true)
+
+  }
+  //else if(item.isChild) {
+    //const parent = store.getters.pagesInTabNavigation.filter(page => page.tabIndex = item.tabIndex)
+    //page.instance.$navigateTo(parent.page)
+ // }
+  else {
+    const frame = 'frameTab' + item.tabIndex
+    // following line does not work, it cannot find parent frame id
+    console.log('is part of tab, go back', fame)
+    page.instance.$navigateBack( {frame: frame})
+    // so just go back to 'routes' as home, and if on home, show the 'doubletapper'
+   // page.instance.$navigateTo(pagesInfo.routes.page)
+  }
+}
+
+export const navigateTo = (to, props) => {
+  const topFrame = Frame.topmost();
+  console.log(`navigation! topframe = ${topFrame.id}, going to ${to}`)
+  const pagesInfo = store.getters.pagesInfo
+  const toPage = pagesInfo[to];
+  const bottomNav = findNav(topFrame)
+
+  const currentPage = store.getters.currentPage
+
+  if (toPage.isTabView) {
+    console.log('... tabview, open in bottom nav: index=', toPage.tabIndex)
+    bottomNav.selectedIndex = toPage.tabIndex
+  }
+  else if (toPage.isModal) {
     console.log('... modal, open in modal')
-    Vue.showMyModal(item.page, { 
-      ...props, ...item.props
+    
+    currentPage.instance.$showModal(toPage.page, {
+      ...props, 
+      ...toPage.props
     })
   }
   else {
     // determine which frame to go to
-    console.log('using maincontenframe')
-    const p = { ...props, clearHistory: false, frame: 'frameTab' +  item.tabIndex}
+    const frame = 'frameTab' + toPage.tabIndex
+    const p = { ...props, clearHistory: false, frame: frame }
+    
+    bottomNav.selectedIndex = toPage.tabIndex
 
-    console.log('... page, opening in frame', item.name, p)
-    page.$navigateTo(item.page, p).then(res => {
+    console.log('... navigating in frame='+frame+' to page ', toPage.name, p)
+    currentPage.instance.$navigateTo(toPage.page, p).then(res => {
       console.log('yeah! i navigated from the utils.js thingy to ' + to)
     }).catch(err => console.error('error navigating', err))
   }
 }
 
-export const filterObject = (obj, predicate) => 
-                  Object.fromEntries(Object.entries(obj).filter(predicate));
+export const filterObject = (obj, predicate) =>
+  Object.fromEntries(Object.entries(obj).filter(predicate));
 
 
 // https://github.com/vuejs/vuex/tree/dev/src/util.js

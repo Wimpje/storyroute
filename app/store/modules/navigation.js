@@ -8,8 +8,8 @@ import Config from "~/pages/Config.vue";
 import News from "~/pages/News.vue";
 import TestGeo from "~/pages/TestGeo.vue";
 import RouteInfo from "~/pages/RouteInfo.vue";
+import ArticleInfo from "~/pages/ArticleInfo.vue";
 import * as utils from "~/plugins/utils";
-
 
 const pages = {
   app: App,
@@ -21,7 +21,8 @@ const pages = {
   routeinfo: RouteInfo,
   config: Config,
   news: News,
-  testgeo: TestGeo  
+  testgeo: TestGeo,
+  articleinfo: ArticleInfo
 };
 
 const pagesInfo = {
@@ -35,36 +36,45 @@ const pagesInfo = {
   routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
   pointinfo: {  name: 'pointinfo', icon: "0xf4d7", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: false } },
   testgeo: {    name: 'testgeo', icon: "0xf4d7", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
-  config: {     name: 'config', icon: "0xf4d7", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  }
+  config: {     name: 'config', icon: "0xf4d7", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
+  articleinfo: {name: 'articleinfo', icon: "0xf4d7", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true }  }
 }
 
 export const state = () => {
   return {
-    currentPage: '',
-    pageStack: [],
+    currentPage: {name: 'routes', instance: null},
+    previousPage: {name: '', instance: null},
     pagesInfo: pagesInfo,
     bottomIndex: 0
   }
 }
 export const getters = {
+
   currentPage(state) {
     return state.currentPage
   },
+  previousPage(state) {
+    return state.previousPage
+  },
   currentPageInfo(state) {
-    return state.pagesInfo[state.currentPage]
+    return state.pagesInfo[state.currentPage.name]
   },
   currentComponent(state) {
     // no error checking, we're in control so _of course_ this will never crash...
-    return state.pagesInfo[state.currentPage].page
+    return state.pagesInfo[state.currentPage.name].page
   },
   currentIcon(state) {
-    return state.pagesInfo[state.currentPage].icon
+    return state.pagesInfo[state.currentPage.name].icon
+  },
+  currentPageInstance(state) {
+    return state.currentPage.instance
   },
   currentPageText(state) {
     if(state.currentPage) {
-      return state.pagesInfo[state.currentPage].text
+      return state.pagesInfo[state.currentPage.name].text
     }
     else {
+      // default is routes
       return state.pagesInfo['routes'].text
     }
   },
@@ -79,11 +89,10 @@ export const getters = {
     return sideDrawerPages
   },
   pagesInTabNavigation(state) {
-    const res = Object.values(state.isTabView).filter(value => {
-      return value.sideDrawer
+    const res = Object.values(state.pagesInfo).filter(value => {
+      return value.isTabView
     })
     return res
-
   },
   pages(state) {
     return Object.values(state.pagesInfo)
@@ -100,12 +109,10 @@ export const mutations = {
   bottomNavigatedTo(state, index) {
     state.bottomIndex = index
   },
-  pagePop(state) {
-    return state.pageStack.pop()
+  popPage(state) {
+    return state.previousPage = state.currentPage
   },
-  pagePush(state, page) {
-    state.pageStack.push(page)
-  }
+  
 }
 
 export default {

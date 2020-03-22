@@ -1,7 +1,7 @@
 <template>
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
-    <GridLayout rows="auto, *">
+    <GridLayout rows="auto, *, auto">
       <Label row="0" :text="'nav.news' | L" class="h1 p-10"></Label>
       <ActivityIndicator row="1" verticalAlignment="center" :busy="news.length == 0" />
       <ListView row="1" v-if="news.length" for="item in news" height="100%">
@@ -12,12 +12,15 @@
           </StackLayout>
         </v-template>
       </ListView>
+      <Button row="2" text="back" @tap="goBack"/>
     </GridLayout>
   </Page>
 </template>
 
 <script>
 import * as utils from "@nativescript/core/utils/utils";
+import * as myUtils from "~/plugins/utils";
+
 import { mapGetters } from "vuex";
 
 const moment = require("moment");
@@ -43,10 +46,13 @@ export default {
   },
   methods: {
     onLoaded() {
-      this.$store.commit('setCurrentPage', 'news')
+      this.$store.commit('setCurrentPage', { name: 'news', instance: this })
       if(!this.news || this.news.length === 0) {
         this.loadNews()
       }
+    },
+    goBack() {
+      this.$navigateBack()
     },
     toPrettyDate(date) {
       return moment(date).format("dddd, D MMMM YYYY, h:mm");
@@ -56,11 +62,12 @@ export default {
     },
     loadArticle(item) {
       this.currentItem = item;
-      utils.navigateTo(this, 'articleinfo', {
+      myUtils.navigateTo('articleinfo', {
         props: {
           article: item
         }
-      });    },
+      }); 
+    },
     openUrl(url) {
       utils.openUrl(item.url);
     }

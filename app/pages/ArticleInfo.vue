@@ -1,25 +1,28 @@
 <template>
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
-    <GridLayout rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
-      <CachedImage
-        width="100%"
-        class="image"
-        marginBottom="10"
-        stretch="aspectFill"
-        :source="image"
-        placeholder= "~/assets/images/route-placeholder.png"
-        row="0"
-      />
-      <GridLayout class="info" row="1" rows="auto, *">
-        <Label row="0" :text="article.title" class="h1 name" textWrap="true"></Label>
-        <Label row="1" :text="article.text" class="body description" textWrap="true"></Label>
+      <GridLayout height="100%" rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
+        <CachedImage
+          width="100%"
+          class="image"
+          marginBottom="10"
+          stretch="aspectFill"
+          :source="image"
+          placeholder= "~/assets/images/route-placeholder.png"
+          row="0"
+        />
+        <ScrollView  row="1">
+          <GridLayout class="info" rows="auto, *">
+            <Label row="0" :text="article.title" class="h1 name" textWrap="true"></Label>
+            <Label row="1" ref="text" class="text" textWrap="true"></Label>
+          </GridLayout>
+        </ScrollView>
+        
+        <StackLayout class="actions" row="2">
+          <Button class="-outline" :text="'close' | L" @tap="close"></Button>
+        </StackLayout>
       </GridLayout>
-
-      <StackLayout class="actions" row="2">
-        <Button class="-outline" :text="'close' | L" @tap="close"></Button>
-      </StackLayout>
-    </GridLayout>
+     
   </Page>
 </template>
 <script>
@@ -36,8 +39,18 @@ export default {
   },
   props: ["article"],
   methods: {
-    onLoaded() {
-      this.$store.commit('setCurrentPage', 'articleinfo')
+    onLoaded(args) {
+      this.$store.commit('setCurrentPage', {name: 'articleinfo', instance: this})
+
+      console.log('loading article:', this.article.text)
+      this.$refs.text.nativeView.formattedText = utils.createFormattedString(this.article.text)
+    },
+    webViewLoaded(webView) {
+      const height = webView.url.split("#")[1];
+      if (height) {
+        console.log('setting height', height)
+        webView.object.height = Number(height);
+      }
     },
     openNavigationTo(){
       console.log('open maps application to go to:', this.point.title)
@@ -92,7 +105,7 @@ export default {
 .info {
   background-color: #489e9e9e;
 }
-.description {
+.text {
   vertical-align: top;
   padding: 20 20 20 20;
   font-size: 18;

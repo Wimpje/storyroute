@@ -54,7 +54,7 @@ export default {
       return String.fromCharCode(code);
     },
     goToPage(item) {
-      utils.navigateTo(this, item);
+      utils.navigateTo(item);
       utils.closeDrawer();
     }
   }

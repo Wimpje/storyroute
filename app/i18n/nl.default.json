@@ -6,7 +6,8 @@
     "news": "Nieuws",
     "pointinfo": "Locatie info",
     "routeinfo": "Route info",
-    "config": "Help en configuratie"
+    "config": "Help en configuratie",
+    "doubletap": "Druk 2x op terug om app te sluiten"
   },
   "route": {
     "moreinfo": "Meer info",

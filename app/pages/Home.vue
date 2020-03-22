@@ -39,6 +39,8 @@ import * as application from "tns-core-modules/application";
 import Routes from "~/pages/Routes.vue";
 import Points from "~/pages/Points.vue";
 import News from "~/pages/News.vue";
+import * as utils from "~/plugins/utils";
+
 
 export default {
   components: {
@@ -49,8 +51,21 @@ export default {
   computed: {},
   methods: {
     onTap(args) {
-      console.log(args)
-      this.$store.commit('bottomNavigatedTo', args.selectedIndex)
+      args.cancel = true
+      // not awesome, but makes it in sync with how otherrs navigate, and builds navigation stack for android.
+      let page = ''
+      switch (rgs.selectedIndex) {
+        case 0:
+          page = 'routes'
+          break;
+        case 1:
+          page = 'points'
+          break;
+        case 2:
+          page = 'news'
+          break;
+      }
+      utils.navigateTo(page)
     }
   }
 };

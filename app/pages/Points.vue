@@ -31,11 +31,11 @@ export default {
   created() {},
   methods: {
     onLoaded() {
-      this.$store.commit('setCurrentPage', 'points')
+      this.$store.commit('setCurrentPage',  { name: 'points', instance: this })
     },
     showPointInfo(marker) {
       console.log("should load", marker.poi.title);
-      utils.navigateTo(this, 'pointinfo', {
+      utils.navigateTo('pointinfo', {
         props: {
           point: marker.poi
         }
