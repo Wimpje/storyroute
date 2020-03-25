@@ -11,6 +11,10 @@
 
 <script>
 import { SlideInOnTopTransition } from "nativescript-ui-sidedrawer";
+import * as dialogs from "tns-core-modules/ui/dialogs";
+import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
+import { localize } from "nativescript-localize";
+import { device } from "@nativescript/core/platform";
 
 export default {
   data() {
@@ -18,7 +22,22 @@ export default {
       transition: new SlideInOnTopTransition()
     };
   },
-  methods: {}
+  mounted() {
+    const lang = device.language.split("-")[0];
+    console.log("User language = ", lang);
+    if (lang !== "nl" && !getBoolean("englishMessageDisplayed", false)) {
+      dialogs
+        .alert({
+          title: localize("message.englishNotYetSupportedTitle"),
+          message: localize("message.englishNotYetSupportedMessage"),
+          okButtonText: localize("message.englishNotYetSupportedButton")
+        })
+        .then(() => {
+          console.log("English message dialog closed!");
+          setBoolean("englishMessageDisplayed", true);
+        });
+    }
+  }
 };
 </script>
 

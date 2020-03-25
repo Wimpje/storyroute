@@ -3,23 +3,28 @@
     <AppActionBar></AppActionBar>
     <GridLayout rows="*, 80">
       <!-- <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder"></Label> -->
-      <GoogleMap row="0" rowSpan="2" :pois="this.route.pois" :path="this.route.path" @markerSelect="selectMarker" :currentPoi="currentPoi">
-        
-      </GoogleMap> 
-      <RadListView row="1" class="points" ref="listView" 
-                   for="(poi, index) in this.route.pois" 
-                   @itemTap="openPoint"
-                   @loaded="listLoaded"
-                   itemHeight="50"
-                   itemInsertAnimation="Fade" itemDeleteAnimation="Fade">
+      <GoogleMap
+        row="0"
+        rowspan="2"
+        :mapId="this.route.id"
+        :pois="this.route.pois"
+        :path="this.route.path"
+        @markerSelect="selectMarker"
+        :currentPoi="currentPoi"
+      ></GoogleMap>
+      <RadListView
+        row="1"
+        class="points"
+        ref="listView"
+        for="(poi, index) in this.route.pois"
+        @itemTap="openPoint"
+        @loaded="listLoaded"
+        itemHeight="50"
+        itemInsertAnimation="Fade"
+        itemDeleteAnimation="Fade"
+      >
         <v-template>
-          <GridLayout
-            rows="*"
-            columns="70, 0, *, 100"
-            :key="poi.id"
-            :id="poi.id"
-            class="point"
-          >
+          <GridLayout rows="*" columns="70, 0, *, 100" :key="poi.id" :id="poi.id" class="point">
             <Button row="0" col="0" class="-rounded-lg pointIndex" :text="index + 1"></Button>
             <CenterLabel
               row="0"
@@ -27,7 +32,7 @@
               class="-rounded pointDescription"
               :text="poi.title"
               :centerMethod="16"
-              autoWrap="true"
+              textWrap="true"
             ></CenterLabel>
             <Button col="3" class="pointButton" :text="'point.info' | L" @tap="getInfoFor(poi)"></Button>
           </GridLayout>
@@ -45,7 +50,7 @@ import * as utils from "~/plugins/utils";
 
 export default {
   components: {
-    GoogleMap,
+    GoogleMap
   },
   props: ["route", "activePoi"],
   data() {
@@ -59,40 +64,36 @@ export default {
     // TODO settings?
     allowSleepAgain().then(function() {
       console.log("Insomnia is inactive, good night!");
-    })
+    });
   },
   methods: {
     onLoaded() {
-      this.$store.commit('setCurrentPage',  { name: 'route', instance: this })
+      this.$store.commit("setCurrentPage", { name: "route", instance: this });
       // TODO settings?
       keepAwake().then(function() {
         console.log("Insomnia is active");
-      })
+      });
     },
-    openPoint({item, index}) {
-      console.log('tapped poi', item, index)
-      this.currentPoi = item
+    openPoint({ item, index }) {
+      console.log("tapped poi", item, index);
+      this.currentPoi = item;
     },
 
-    listLoaded (args) {
-    
-    },
-    getInfoFor (poi) {
-      utils.navigateTo('pointinfo', {
+    listLoaded(args) {},
+    getInfoFor(poi) {
+      utils.navigateTo("pointinfo", {
         props: {
           point: poi
         }
       });
     },
-    selectMarker (marker) { 
-      const poi = marker.poi
-      this.currentPoi = poi
-      const idx = this.route.pois.findIndex(p => poi.id === p.id)
-      if (idx > -1)
-        this.$refs.listView.scrollToIndex(idx, true);
+    selectMarker(marker) {
+      const poi = marker.poi;
+      this.currentPoi = poi;
+      const idx = this.route.pois.findIndex(p => poi.id === p.id);
+      if (idx > -1) this.$refs.listView.scrollToIndex(idx, true);
     },
-    refreshPoints() {},
-
+    refreshPoints() {}
   }
 };
 </script>
@@ -102,7 +103,7 @@ export default {
   font-size: 20;
 }
 .pushDown {
-  height:10;
+  height: 10;
 }
 .index {
   horizontal-align: center;

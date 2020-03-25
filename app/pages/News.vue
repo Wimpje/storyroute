@@ -1,21 +1,20 @@
 <template>
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
-    <GridLayout rows="auto, *">
-      <Label row="0" :text="'nav.news' | L" class="h1 p-10"></Label>
+    <StackLayout>
       <ActivityIndicator row="1" verticalAlignment="center" :busy="news.length == 0" />
       <RadListView
         row="1"
         for="item in news"
         height="100%"
         v-if="news.length"
-        pullToRefresh="true"
+        android.pullToRefresh="true"
         @pullToRefreshInitiated="updateNews"
         itemHeight="100"
         @itemTap="loadArticle"
       >
         <v-template>
-          <GridLayout columns="80, *" row="50, 20, 50">
+          <GridLayout class="article" columns="80, *" rows="30, 20, 250">
             <CachedImage
               col="0"
               rowSpan="2"
@@ -25,13 +24,28 @@
               height="80"
               placeholder="~/assets/images/route-placeholder.png"
             />
-            <Label col="1" row="0" class="h2" :text="item.title"></Label>
-            <Label col="1" row="1" class="date" :text="toPrettyDate(item.publishDate)"></Label>
-            <Label col="1" row="2" class="text" ref="desc" :text="item.text" @loaded="textLabelLoaded"></Label>
+            <Label col="1" row="0" class="h2" verticalAlignment="top" :text="item.title"></Label>
+            <Label
+              col="1"
+              row="1"
+              class="date"
+              verticalAlignment="top"
+              :text="toPrettyDate(item.publishDate)"
+            ></Label>
+            <Label
+              col="0"
+              colSpan="2"
+              row="2"
+              class="text"
+              verticalAlignment="top"
+              ref="desc"
+              textWrap="true"
+              :text="item.text"
+            ></Label>
           </GridLayout>
         </v-template>
       </RadListView>
-    </GridLayout>
+    </StackLayout>
   </Page>
 </template>
 
@@ -70,9 +84,8 @@ export default {
     getImageFromItem(item) {
       const file = item.files.filter(file => file.type == "image");
 
-      if (file.length) 
-        return file[0].firebaseUrl;
-      return ''
+      if (file.length) return file[0].firebaseUrl;
+      return "";
     },
     goBack() {
       this.$navigateBack();
@@ -84,12 +97,14 @@ export default {
       // aooerenlty needed for ios race condition
       this.$nextTick(() => {
         this.$store.dispatch("updateArticles");
+        return
       });
     },
     loadNews() {
       this.$store.dispatch("getArticles");
     },
     loadArticle({ item }) {
+      console.log('item', item)
       this.currentItem = item;
       myUtils.navigateTo("articleinfo", {
         props: {
@@ -101,10 +116,10 @@ export default {
       utils.openUrl(item.url);
     },
     textLabelLoaded(args) {
-      if(isIOS) {
-        args.object.ios.numberOfLines = 2
+      if (isIOS) {
+        args.object.ios.numberOfLines = 2;
       }
-      if(isAndroid) {
+      if (isAndroid) {
         args.object.android.setMaxLines(2);
       }
     }
@@ -114,6 +129,9 @@ export default {
 
 <style scoped lang="scss">
 .thumbNail {
-  border-radius:5;
+  border-radius: 5;
+}
+.article {
+  margin: 15;
 }
 </style>

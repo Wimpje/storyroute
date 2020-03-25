@@ -8,14 +8,13 @@
         height="100"
       />
       <Label :text="'drawer.title' | L" class="nt-drawer__header-brand"></Label>
-      <Label :text="currentPage"></Label>
     </StackLayout>
     <ListView for="item in pages" height="100%" rowHeight="60" ref="list">
       <v-template>
         <GridLayout
           columns="auto, *"
           rows="*"
-          :class="'nt-drawer__list-item' + (currentPage === item.name ? ' -selected': '')"
+          :class="'nt-drawer__list-item' + (currentPage.name === item.name ? ' -selected': '')"
           @tap="goToPage(item.name)"
         >
           <Label row="0" col="0" :text="iconFromCode(item.icon)" class="nt-icon fas"></Label>

@@ -9,7 +9,7 @@
       placeholder= "~/assets/images/route-placeholder.png"
     />
     <Label row="1" col="0" :text="route.title" class="routeTitle" textwrap="true"></Label>
-    <Label row="2" col="0" :text="route.subtitle" class="routeSubTitle" textwrap="true"></Label>
+    <Label row="2" col="0" verticalAlignment="top" :text="route.subtitle" class="routeSubTitle" textwrap="true"></Label>
     <CenterLabel
       row="1"
       rowSpan="2"

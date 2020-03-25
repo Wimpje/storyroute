@@ -3,7 +3,7 @@
   "nav": {
     "routes": "Routes",
     "points": "Kaart",
-    "news": "Nieuws",
+    "news": "Nieuws & evenementen",
     "pointinfo": "Locatie info",
     "routeinfo": "Route info",
     "config": "Help en configuratie",
@@ -20,38 +20,33 @@
     "info": "info",
     "more": "meer"
   },
-  "array": [
-    "split the translation into ",
-    "multiples lines"
-  ],
-  "hello.world": "Hello World !",
-  "html": "Text with <b>HTML</b> <wrong & Hi",
-  "new": {
-    "line": "Let's try with a new \n line"
+  "btn": {
+    "close": "sluiten",
+    "goto": "plan route met externe maps app",
+    "refreshDownloadAll": "ververs downloads",
+    "removeDownloadAll": "verwijder downloads"
   },
-  "special.characters": {
-    "n": "char \\n: \n END",
-    "r": "char \\r: \r END",
-    "t": "char \\t: \t END",
-    "backslash": "char \\: \\ END",
-    "single.quote": "char ': ' END",
-    "double.quote": "char \": \" END"
+  "map": {
+    "location": {
+      "nolocation": "Locatie kon niet worden opgehaald (heeft de app toestemming?)",
+      "error": "Fout bij het ophalen van locatie (heeft de app toestemming?)"
+    }
   },
-  "special.keys": {
-    "\n": "n",
-    "\r": "r",
-    "\t": "t",
-    "\\": "\\",
-    "'": "'",
-    "\"": "\""
+  "message": {
+    "englishNotYetSupportedTitle": "Language not (fully) supported",
+    "englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
+    "englishNotYetSupportedButton": "OK"
   },
-  "sprintf": "format me %s : %s",
-  "sprintf.numbered.placeholders": "format $2: %2$s, $1: %1$s",
-  "tab": "Tab \t is working",
-  "test": {
-    "percent": "%",
-    "escaped.percent": "%%",
-    "escaped.percent.followed.by.s": "%%s",
-    "escaped.percent.followed.by.placeholder": "%%%s"
+  "config": {
+    "crashInfo": "Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!",
+    "analyticsInfo": "Toestemming gebruiksinformatie te verzamelen (geen persoonlijke informatie). Dat helpt ons de app te verbeteren!",
+    "downloadAll": "Download alle bestanden en routes. Niet nodig, maar handig als je geen of weinig mobiele data kunt gebruiken.",
+    "refreshDownloadAll": "Ververs alle gedownloade bestanden en routes (om problemen te verhelpen & nieuwe routes op te halen)",
+    "removeDownloadAll": "Verwijder alle gedownloadede bestanden & routes",
+    "help": "Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon."
+  },
+  "ios.info.plist": {
+    "NSLocationUsageDescription": "Gebruik je huidige locatie om interessante plekken dichtbij te vinden",
+    "NSLocationWhenInUseUsageDescription": "Gebruik je huidige locatie om interessante plekken dichtbij te vinden"
   }
 }

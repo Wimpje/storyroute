@@ -2,7 +2,7 @@
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
     <StackLayout>
-      <GoogleMap :pois="pois" @markerSelect="showPointInfo"/>
+      <GoogleMap mapId="points" :pois="pois" @markerSelect="showPointInfo"/>
     </StackLayout>
   </Page>
 </template>

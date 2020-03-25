@@ -4,13 +4,32 @@
   "nav": {
     "routes": "Routes",
     "points": "Map",
-    "news": "News",
+    "news": "News & events",
     "pointinfo": "Location info",
     "routeinfo": "Route info",
     "config": "Help and configuration",
     "doubletap": "Push back twice to exit app"
   },
-  
+  "btn": {
+    "close": "close",
+    "goto": "plan route with external maps app",
+    "refreshDownloadAll": "refresh downloads",
+    "removeDownloadAll": "remove downloads"
+  },
+  "map": {
+    "location": {
+      "nolocation": "Location could not be retrieved (does app have location access?)",
+      "error": "Error getting location (heeft de app toestemming?)"
+    }
+  },
+  "config": {
+    "crashInfo": "Enable collecting crash information (helps us fix bugs!)",
+    "analyticsInfo": "Enable collecting analytics (no personal info is stored)",
+    "downloadAll": "Download all files & routes (not necessery, but convenient when you have limited or no mobile internet)",
+    "refreshDownloadAll": "Refresh downloaded files & routes",
+    "removeDownloadAll": "Remove downloaded files & routes",
+    "help": "Here you can toggle settings, and download routes to your phone."
+  },
   "drawer": {
     "title": "75 year liberty - Ommen"
   },
@@ -21,5 +40,14 @@
   "point": {
     "info": "info",
     "more": "more"
+  },
+  "message": {
+    "englishNotYetSupportedTitle": "Language not (fully) supported",
+    "englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
+    "englishNotYetSupportedButton": "OK"
+  },
+  "ios.info.plist": {
+    "NSLocationUsageDescription": "Find your current location to see interesting points nearby.",
+    "NSLocationWhenInUseUsageDescription": "Find your current location to see interesting points nearby."
   }
 }

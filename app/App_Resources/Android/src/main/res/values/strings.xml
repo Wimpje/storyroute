@@ -23,6 +23,12 @@
   <string name="html">"Text with &lt;b>HTML&lt;/b> &lt;wrong &amp; Hi"</string>
   <string name="_hello_world_Z2tF6Gu">"Hello World !"</string>
   <string name="array">"split the translation into multiples lines"</string>
+  <string name="_config_downloadAll_29yUK2">"Download alle bestanden en routes. Handig als je geen of weinig mobiele data kunt gebruiken."</string>
+  <string name="_config_analyticsInfo_1vPaqx">"Toestemming gebruiksinformatie te verzamelen (geen persoonlijke informatie). Dat helpt ons de app te verbeteren!"</string>
+  <string name="_config_crashInfo_Z1GWQFB">"Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!"</string>
+  <string name="_map_location_error_Z12s6Yy">"Fout bij het ophalen van locatie (heeft de app toestemming?)"</string>
+  <string name="_map_location_nolocation_Zz4FIL">"Locatie kon niet worden opgehaald (heeft de app toestemming?)"</string>
+  <string name="_btn_close_ZyLgre">"sluiten"</string>
   <string name="_point_more_1rasN0">"meer"</string>
   <string name="_point_info_1r9VpN">"info"</string>
   <string name="_drawer_title_Z1GOBux">"75 jaar bevrijding - Ommen"</string>

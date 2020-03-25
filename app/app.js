@@ -25,7 +25,27 @@ import { AudioService } from "~/services/audioService"
 import * as application from "tns-core-modules/application";
 import { ToastService } from '~/services/toastService'
 import { allowSleepAgain } from "nativescript-insomnia";
+import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
 
+// Set up config if not there:
+
+const setupConfigBool = (key, value) => {
+  if (!hasKey(key)) {
+    console.log(`creating key ${key}, and setting it to ${value}`)
+    setBoolean(key, value)
+  }
+}
+
+const setupConfigString = (key, value) => {
+  if (!hasKey(key)) {
+    console.log(`creating key ${key}, and setting it to ${value}`)
+    setString(key, value)
+  }
+}
+
+setupConfigBool('googleAnalytics', false)
+setupConfigBool('googleCrashlytics', false)
+setupConfigString('theme', 'default')
 
 Vue.prototype.$player = new AudioService()
 Vue.prototype.$store = store
@@ -38,7 +58,7 @@ application.on(application.launchEvent, (args) => {
 
 application.on(application.suspendEvent, (args) => {
   Vue.prototype.$player.pause()
-  allowSleepAgain().then(function() {
+  allowSleepAgain().then(function () {
     console.log("suspendEvent Insomnia is inactive, good night!");
   })
 });
@@ -46,7 +66,7 @@ application.on(application.suspendEvent, (args) => {
 application.on(application.exitEvent, (args) => {
   Vue.prototype.$player.pause();
   Vue.prototype.$player.dispose();
-  allowSleepAgain().then(function() {
+  allowSleepAgain().then(function () {
     console.log("exitEvent Insomnia is inactive, good night!");
   })
 });
@@ -56,8 +76,7 @@ let timeDelay = 500 // ms
 if (android) {
   android.on(AndroidApplication.activityBackPressedEvent, function (args) {
     console.log("Event: " + args.eventName + ", Activity: " + args.activity);
-    if(lastPress + timeDelay > Date.now())
-    {
+    if (lastPress + timeDelay > Date.now()) {
       // double tap kill
       console.log('bybye')
       android.foregroundActivity.finish();
@@ -90,17 +109,17 @@ Vue.component('AppActionBar', AppActionBar)
 Vue.component('CenterLabel', CenterLabel)
 Vue.component('CachedImage', CachedImage)
 
-
-
 console.log("App start - will load firebase stuff now!")
 const firebase = require("nativescript-plugin-firebase");
 const fbInit = firebase.init({
-    iOSEmulatorFlush: true,
-    onAuthStateChanged: data => {
-      console.log("auth state changed: ", data)
-      store.dispatch('setUser', data)
-    }
-  })
+  iOSEmulatorFlush: true,
+  analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled
+  crashlyticsCollectionEnabled: getBoolean('googleCrashlytics'), // enabled
+  onAuthStateChanged: data => {
+    console.log("auth state changed: ", data)
+    store.dispatch('setUser', data)
+  }
+})
 
 if (isIOS) {
   GMSServices.provideAPIKey("<keyhere>");
@@ -136,22 +155,22 @@ const vueApp = new Vue({
           this.$store.dispatch("initRoutes")
           console.log('initRoutes called after logging in')
           console.log("User.uid: " + user.uid)
-          
+
         })
         .catch(error => {
           // TODO handle errors on connections
           console.log("Issue with logging in: " + error);
-        });  
+        });
     })
-    .catch(error => console.log("Error initializing Firebase: " + error));
+      .catch(error => console.log("Error initializing Firebase: " + error));
   }
 })
 
-Vue.showMyModal = function(component, options) {
+Vue.showMyModal = function (component, options) {
   return new Promise((resolve) => {
-    
+
     let resolved = false
-    const closeCb = function(data) {
+    const closeCb = function (data) {
       if (resolved) return
       resolved = true
       resolve(data)
@@ -159,7 +178,7 @@ Vue.showMyModal = function(component, options) {
       modalInstance.$destroy()
     }
 
-    const opts = Object.assign({}, options,  {
+    const opts = Object.assign({}, options, {
       context: null,
       closeCallback: closeCb
     })
@@ -169,7 +188,7 @@ Vue.showMyModal = function(component, options) {
       methods: {
         closeCb: closeCb
       },
-      render: function(h) {
+      render: function (h) {
         return h(component, {
           props: opts.props
         })

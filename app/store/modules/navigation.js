@@ -10,6 +10,8 @@ import TestGeo from "~/pages/TestGeo.vue";
 import RouteInfo from "~/pages/RouteInfo.vue";
 import ArticleInfo from "~/pages/ArticleInfo.vue";
 import * as utils from "~/plugins/utils";
+import * as firebase from"nativescript-plugin-firebase";
+import { getBoolean } from "tns-core-modules/application-settings";
 
 const pages = {
   app: App,
@@ -29,14 +31,14 @@ const pagesInfo = {
   // having the name again is a bit overkill, but handy sometimes
   routes: {     name: 'routes', icon: "0xf4d7", text: "nav.routes", page: pages.routes, sideDrawer: true, isTabView: true, tabIndex: 0 },
   points: {     name: 'points', icon: "0xf5a0", text: "nav.points", page: pages.points, sideDrawer: true, isTabView: true, tabIndex: 1 },
-  news: {       name: 'news', icon: "0xf4d7", text: "nav.news", page: pages.news, sideDrawer: true, isTabView: true, tabIndex: 2 },
+  news: {       name: 'news', icon: "0xf143", text: "nav.news", page: pages.news, sideDrawer: true, isTabView: true, tabIndex: 2 },
   
   // no tab navigation for the following:
   route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
   routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
-  pointinfo: {  name: 'pointinfo', icon: "0xf4d7", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
-  testgeo: {    name: 'testgeo', icon: "0xf4d7", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
-  config: {     name: 'config', icon: "0xf4d7", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
+  pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
+  testgeo: {    name: 'testgeo', icon: "0xf7a2", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
+  config: {     name: 'config', icon: "0xf013", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
   articleinfo: {name: 'articleinfo', icon: "0xf4d7", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true }  }
 }
 
@@ -105,6 +107,15 @@ export const getters = {
 export const mutations = {
   setCurrentPage(state, page) {
     state.currentPage = page
+    if (getBoolean('googleAnalytics')) {
+      firebase.analytics.setScreenName({
+        screenName: page.name
+      }).then(
+          function () {
+            console.log("Screen name set");
+          }
+      );
+    }
   },
   bottomNavigatedTo(state, index) {
     state.bottomIndex = index

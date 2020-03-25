@@ -38,11 +38,11 @@ export const createFormattedString = (text) => {
     line += '\n'
     // heading
     if (line.indexOf('###') == 0) {
-      s.text = line.substring(1);
+      s.text = line.substring(3);
       s.className = "h4"
     }
     else if (line.indexOf('##') == 0) {
-      s.text = line.substring(1);
+      s.text = line.substring(2);
       s.className = "h3"
     }
     else if (line.indexOf('#') == 0) {

@@ -1,10 +1,9 @@
 import { RouteService } from "~/services/routeService"
 
-
 export const state = () => {
   return {
     routes: [],
-    currentRoute: null
+    currentRoute: null,
   }
 }
 export const getters = {

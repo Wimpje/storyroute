@@ -39,7 +39,7 @@ export default {
     onLoaded(args) {
       this.$store.commit('setCurrentPage', {name: 'articleinfo', instance: this})
 
-      console.log('loading article:', this.article.text)
+      console.log('loading & formatting article')
       this.$refs.text.nativeView.formattedText = utils.createFormattedString(this.article.text)
     },
     webViewLoaded(webView) {

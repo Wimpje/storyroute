@@ -7,7 +7,8 @@ export const state = () => {
     currentRoute: null,
     ref: null,
     showAutocomplete: false,
-    pois: []
+    pois: [],
+    configs: {}
   }
 }
 export const getters = {
@@ -19,19 +20,27 @@ export const getters = {
   },
   mapShowAutocomplete (state) {
     return state.showAutocomplete
-  }  
+  },
+  getMapConfigs(state) {
+    return state.configs
+  }
 }
 
 export const mutations = {
   setMapZoom (state, zoom) {
     state.zoom = zoom
-    
   },
   setMapCenter (state, val) {
     state.center = val
   },
   setMapShowAutocomplete (state, val) {
     state.showAutocomplete = val
+  },
+  setMapConfig(state, val) {
+    if (val.id && val.config)
+      state.configs[val.id] = val.config
+    else 
+      console.warn('weird value received for mapconfig')
   }
 }
 export default {

@@ -98,6 +98,7 @@ export default {
                     .then(location => {
                       if (!location) {
                         console.log("Failed to get location!");
+                        this.$toast.show('map.location.nolocation', {shouldLocalize: true})
                       } else {
                         console.log("!isEnabled - got user location, not doing anything...");
                         //that.latitude = location.latitude;
@@ -114,6 +115,7 @@ export default {
               )
               .catch(ex => {
                 console.log("Unable to Enable Location", ex);
+                this.$toast.show('map.location.enableerror', {shouldLocalize: true})
               });
           } else {
             that.isMounted = true;
@@ -129,6 +131,7 @@ export default {
               .then(location => {
                 if (!location) {
                   console.log("Failed to get location!");
+                  this.$toast.errorFriendly('map.location.nolocation', {shouldLocalize: true})
                 } else {
                   console.log("isEnabled - Got user location, not doing anything");
                   //that.latitude = location.latitude;
@@ -142,6 +145,8 @@ export default {
         },
         function(e) {
           console.log("Error: " + (e.message || e));
+          this.$toast.show('map.location.error', {shouldLocalize: true})
+
         }
       );
     },
@@ -207,7 +212,7 @@ export default {
     // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
     onMapReady(args) {
       this.mapView = args.object;
-
+      console.log('what is zoom?', this.mapView.zoom)
       // workaround for sizing the map correctly
       setTimeout(
         () =>

@@ -1,34 +1,88 @@
 <template>
   <Page class="page" @loaded="onLoaded">
-    <StackLayout>
-      <Label text="Config"></Label>
-
-      <Button @tap="close" text="Close" />
-      <!-- <StackLayout orientation="horizontal">
-        <Switch checked="true" @checkedChange="toggleDark" />
-        <Label :text="'Dark mode' | L"></Label>
-      </StackLayout>-->
-    </StackLayout>
+    <GridLayout rows="auto, *, auto">
+      <Label row="0" :text="'config.help' | L" class="helptext"></Label>
+      <StackLayout row="1" class="settings">
+        <!-- <StackLayout class="setting" orientation="horizontal">
+          <Switch checked="true" @checkedChange="toggleDark" />
+          <Label :text="'Dark mode' | L"></Label>
+        </StackLayout>-->
+        <StackLayout class="setting" orientation="horizontal">
+          <Switch v-model="toggleAnalytics"/>
+          <Label :text="'config.analyticsInfo' | L" textWrap="true"></Label>
+        </StackLayout>
+        <StackLayout class="setting" orientation="horizontal">
+          <Switch v-model="toggleCrashInfo"  />
+          <Label :text="'config.crashInfo' | L" textWrap="true"></Label>
+        </StackLayout>
+        <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
+          <Button text="download" @tap="downloadAll" />
+          <Label :text="'config.downloadAll' | L" textWrap="true"></Label>
+        </StackLayout>
+        <StackLayout class="setting" orientation="horizontal" v-else>
+          <Button :text="'btn.refreshDownloadAll' | L" @tap="downloadAll" />
+          <Label :text="'config.refreshDownloadAll' | L" textWrap="true"></Label>
+        </StackLayout>
+        <StackLayout class="setting" orientation="horizontal">
+          <Button text="crash" @tap="crash textWrap="true""></Button>
+        </StackLayout>
+      </StackLayout>
+      <Button row="2" @tap="close" :text="'btn.close' | L" />
+    </GridLayout>
   </Page>
 </template>
 
 <script>
 import * as application from "tns-core-modules/application";
 import Theme from "@nativescript/theme";
+import * as firebase from "nativescript-plugin-firebase";
+import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
+import * as utils from "~/plugins/utils";
 
 export default {
   mounted() {
+    this.allDownloaded = getBoolean('allDownloaded', false)
   },
-  computed: {},
+  computed: {
+    toggleCrashInfo: {
+      get() {
+        return getBoolean('googleCrashlytics')
+      },
+      set(val) {
+        console.log("toggleCrashConfig", val);
+        setBoolean('googleCrashlytics', val)
+        firebase.crashlytics.setCrashlyticsCollectionEnabled(val);
+      }
+    },
+    toggleAnalytics: {
+      get () {
+        return getBoolean('googleAnalytics')
+      },
+      set (val) {
+        console.log("toggle analytics", val);
+        setBoolean('googleAnalytics', val)
+        firebase.analytics.setAnalyticsCollectionEnabled(val);
+      }
+
+    }
+  },
   methods: {
     close() {
-      this.$modal.close()
+      this.$modal.close();
     },
     onLoaded() {
-      this.$store.commit('setCurrentPage', { name: 'config', instance: this })
+      this.$store.commit("setCurrentPage", { name: "config", instance: this });
+    },
+
+    downloadAll() {
+      this.$toast.show('Sorry not supported yet')
+      // utils.downloadAllResources()
     },
     toggleDark() {
       Theme.toggleMode(); // to toggle between the modes
+    },
+    crash() {
+      firebase.crashlytics.crash();
     }
   }
 };

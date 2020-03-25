@@ -1,51 +1,55 @@
 <template>
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
-    <GridLayout rows="200,*,auto" columns="*" iosOverflowSafeArea="true">
-      <ImageCarousel row="0" :images="images"></ImageCarousel>
+    <GridLayout rows="250,*,auto" columns="*" iosOverflowSafeArea="true">
+      <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
       <ScrollView row="1">
-        <GridLayout class="info"  rows="auto, *, auto">
+        <GridLayout class="info" rows="auto, *, auto">
           <Label row="0" :text="point.title" class="h1 name" textWrap="true"></Label>
           <Label row="1" :text="point.description" class="body description" textWrap="true"></Label>
         </GridLayout>
       </ScrollView>
       <StackLayout class="actions" row="2">
-        <AudioPlayer :files="point.files"/>
-        <Button class="-outline" :text="'close' | L" @tap="close"></Button>
-        <Button class="-outline" :text="'goto' | L" @tap="openNavigationTo"></Button>
+        <AudioPlayer :files="point.files" />
+        <Button class="-outline" :text="'btn.close' | L" @tap="close"></Button>
+        <Button class="-outline" :text="'btn.goto' | L" @tap="openNavigationTo"></Button>
       </StackLayout>
     </GridLayout>
   </Page>
 </template>
 <script>
-
 import * as utils from "~/plugins/utils";
-import { Directions }from "nativescript-directions"
-import ImageCarousel from "~/components/ImageCarousel"
-import AudioPlayer from "~/components/AudioPlayer"
+import { Directions } from "nativescript-directions";
+import ImageCarousel from "~/components/ImageCarousel";
+import AudioPlayer from "~/components/AudioPlayer";
 
 export default {
   components: {
-    ImageCarousel,AudioPlayer
+    ImageCarousel,
+    AudioPlayer
   },
-  mounted() {
-  },
+  mounted() {},
   props: ["point"],
   methods: {
     onLoaded() {
-      this.$store.commit('setCurrentPage',  { name: 'pointinfo', instance: this })
+      this.$store.commit("setCurrentPage", {
+        name: "pointinfo",
+        instance: this
+      });
     },
-    openNavigationTo(){
-      console.log('open maps application to go to:', this.point.title)
+    openNavigationTo() {
+      console.log("open maps application to go to:", this.point.title);
       let directions = new Directions();
       directions.available().then(avail => {
-          if (avail) {
-            directions.navigate({
+        if (avail) {
+          directions
+            .navigate({
               to: {
                 lat: this.point.position.latitude,
                 lng: this.point.position.longitude
               }
-            }).then(
+            })
+            .then(
               function() {
                 console.log("Maps app launched.");
               },
@@ -53,29 +57,25 @@ export default {
                 console.log(error);
               }
             );
-          }
-          else {
-            this.$store.setMessage('No maps application found to open')
-          }
+        } else {
+          this.$store.setMessage("No maps application found to open");
+        }
       });
     },
     close() {
       this.$modal.close();
-    },
-    
+    }
   },
   computed: {
     images() {
       if (this.point) {
-        return this.point.files.filter(file => file.type == 'image')
+        return this.point.files.filter(file => file.type == "image");
       }
-      return []
+      return [];
     }
   },
   data() {
-    return {
-
-    };
+    return {};
   }
 };
 </script>
