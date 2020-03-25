@@ -4,10 +4,6 @@ import store from '~/store/index.js'
 import Vue from 'nativescript-vue'
 import { Span } from "text/span";
 import { FormattedString } from "text/formatted-string"
-import { Toasty, ToastPosition, ToastDuration } from 'nativescript-toasty';
-import { localize } from "nativescript-localize";
-import { Color } from "tns-core-modules/color";
-
 
 export const showDrawer = () => {
   let drawerNativeView = getRootView();
@@ -68,23 +64,18 @@ export const createFormattedString = (text) => {
   return str
 }
 
-export const showMessage = (text, isLocalizeLabel) => {
-  new Toasty({ text: isLocalizeLabel ? localize(text) : text })
-    .setToastDuration(ToastDuration.LONG)
-    .setToastPosition(ToastPosition.BOTTOM)
-    .setTextColor(new Color('white'))
-    .setBackgroundColor('#222222')
-    .show(); 
+
+export const showMessageLocalized = (text) => {
+  Vue.prototype.$toast.show(text, {shouldLocalize: true})
 }
 
 export const navigateBackFromButton = (backPressArgs) => {
   const page = store.getters.currentPage
   const prevPage = store.getters.previousPage
   
-  
   if (!page) {
     console.log('show doubletap message...')
-    showMessage('nav.doubletap', true)
+    showMessageLocalized('nav.doubletap')
     return
   }
   console.log('Navigate back!', page.name)
@@ -100,17 +91,16 @@ export const navigateBackFromButton = (backPressArgs) => {
   else if(item.isTabView) {
     // don't do anything
     console.log('is tabview, wont navigate')
-    showMessage('nav.doubletap', true)
-
+    showMessageLocalized('nav.doubletap')
   }
   //else if(item.isChild) {
     //const parent = store.getters.pagesInTabNavigation.filter(page => page.tabIndex = item.tabIndex)
     //page.instance.$navigateTo(parent.page)
  // }
   else {
-    const frame = 'frameTab' + item.tabIndex
+    const frame = 'tabIndex' in item ? 'frameTab' + item.tabIndex : 'mainContent'
     // following line does not work, it cannot find parent frame id
-    console.log('is part of tab, go back', fame)
+    console.log('is part of tab, go back', frame)
     page.instance.$navigateBack( {frame: frame})
     // so just go back to 'routes' as home, and if on home, show the 'doubletapper'
    // page.instance.$navigateTo(pagesInfo.routes.page)
@@ -133,7 +123,7 @@ export const navigateTo = (to, props) => {
   else if (toPage.isModal) {
     console.log('... modal, open in modal')
     
-    currentPage.instance.$showModal(toPage.page, {
+    Vue.showMyModal(toPage.page, {
       ...props, 
       ...toPage.props
     })

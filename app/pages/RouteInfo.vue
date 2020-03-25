@@ -1,39 +1,30 @@
 <template>
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
-    <GridLayout rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
-      <CachedImage
-        width="100%"
-        class="routeImage"
-        marginBottom="10"
-        stretch="aspectFill"
-        :source="image"
-        placeholder= "~/assets/images/route-placeholder.png"
-        row="0"
-      />
-      <GridLayout class="routeInfo" row="1" columns="auto, auto, *" rows="auto, *">
-        <Label col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></Label>
-        <Label col="1" row="0" :text="route.distance + 'km'" class="h3 distance"></Label>
-        <Label col="2" row="0" :text="route.title" class="h1 routeName" textWrap="true"></Label>
-        <Label col="0" colSpan="3" row="1" :text="route.description" class="body routeDescription" textWrap="true"></Label>
-      </GridLayout>
-
+    <GridLayout rows="200,*,auto" columns="*" iosOverflowSafeArea="true">
+      <ImageCarousel row="0" :images="images"></ImageCarousel>
+      <ScrollView row="1">
+        <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
+          <Label col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></Label>
+          <Label col="1" row="0" :text="route.distance + 'km'" class="h3 distance"></Label>
+          <Label col="2" row="0" :text="route.title" class="h1 routeName" textWrap="true"></Label>
+          <Label col="0" colSpan="3" row="1" :text="route.description" class="body routeDescription" textWrap="true"></Label>
+        </GridLayout>
+      </ScrollView>
       <StackLayout class="actions" row="2">
+        <AudioPlayer :files="route.files"/>
         <Button class="-outline" text="Start Route" @tap="startRoute"></Button>
       </StackLayout>
     </GridLayout>
   </Page>
 </template>
 <script>
-
-import CachedImage from "~/components/CachedImage"
+import ImageCarousel from "~/components/ImageCarousel"
 import * as utils from "~/plugins/utils";
-
+import AudioPlayer from "~/components/AudioPlayer"
 
 export default {
-  components: {
-    CachedImage
-  },
+  components: { AudioPlayer, ImageCarousel },
   props: ["route"],
   methods: {
     onLoaded() {
@@ -65,13 +56,11 @@ export default {
       }
       return String.fromCharCode('0xf05a')
     },
-    image() {
+    images() {
       if (this.route) {
-        const file = this.route.files.filter(file => file.type == 'image' && file.lead)
-        if (file.length)
-          return file[0].firebaseUrl;
+        return this.route.files.filter(file => file.type == 'image')
       }
-      return ''
+      return []
     }
   },
   data() {

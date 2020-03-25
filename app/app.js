@@ -13,19 +13,49 @@ import VueDevtools from 'nativescript-vue-devtools'
 
 import DrawerContent from "./components/DrawerContent";
 import AppActionBar from "./components/AppActionBar";
+import CachedImage from '~/components/CachedImage'
+import CenterLabel from '~/components/CenterLabel'
+
 import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 
 import RadListView from 'nativescript-ui-listview/vue';
 import { android, AndroidApplication, AndroidActivityBundleEventData } from "tns-core-modules/application";
 import * as utils from "~/plugins/utils";
 import { AudioService } from "~/services/audioService"
+import * as application from "tns-core-modules/application";
+import { ToastService } from '~/services/toastService'
+import { allowSleepAgain } from "nativescript-insomnia";
+
+
+Vue.prototype.$player = new AudioService()
+Vue.prototype.$store = store
+Vue.prototype.$toast = new ToastService()
+
+application.on(application.launchEvent, (args) => {
+  // appSettings.setNumber("start", 0);
+  // init settings or something?
+});
+
+application.on(application.suspendEvent, (args) => {
+  Vue.prototype.$player.pause()
+  allowSleepAgain().then(function() {
+    console.log("suspendEvent Insomnia is inactive, good night!");
+  })
+});
+
+application.on(application.exitEvent, (args) => {
+  Vue.prototype.$player.pause();
+  Vue.prototype.$player.dispose();
+  allowSleepAgain().then(function() {
+    console.log("exitEvent Insomnia is inactive, good night!");
+  })
+});
 
 let lastPress
 let timeDelay = 500 // ms
-if(android) {
+if (android) {
   android.on(AndroidApplication.activityBackPressedEvent, function (args) {
     console.log("Event: " + args.eventName + ", Activity: " + args.activity);
-    // TODO add navigation
     if(lastPress + timeDelay > Date.now())
     {
       // double tap kill
@@ -41,8 +71,6 @@ if(android) {
   });
 }
 
-
-
 Vue.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
 Vue.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
 
@@ -56,7 +84,13 @@ Vue.use(RadListView);
 Vue.use(RadSideDrawer);
 
 Vue.registerElement('MapView', () => MapView)
+
+// some of our own custom components
 Vue.component('AppActionBar', AppActionBar)
+Vue.component('CenterLabel', CenterLabel)
+Vue.component('CachedImage', CachedImage)
+
+
 
 console.log("App start - will load firebase stuff now!")
 const firebase = require("nativescript-plugin-firebase");
@@ -76,8 +110,6 @@ Vue.filter("L", localize);
 
 Vue.use(Vuex);
 
-Vue.prototype.$store = store;
-Vue.prototype.$player = new AudioService()
 
 const vueApp = new Vue({
   store,

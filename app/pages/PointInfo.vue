@@ -1,15 +1,16 @@
 <template>
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
-    <GridLayout rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
+    <GridLayout rows="200,*,auto" columns="*" iosOverflowSafeArea="true">
       <ImageCarousel row="0" :images="images"></ImageCarousel>
-      <GridLayout class="info" row="1" rows="auto, *, auto">
-        <Label row="0" :text="point.title" class="h1 name" textWrap="true"></Label>
-        <Label row="1" :text="point.description" class="body description" textWrap="true"></Label>
-        <Button row="2" v-if="audioFile" text="play" @tap="playAudio"></Button>
-      </GridLayout>
-
+      <ScrollView row="1">
+        <GridLayout class="info"  rows="auto, *, auto">
+          <Label row="0" :text="point.title" class="h1 name" textWrap="true"></Label>
+          <Label row="1" :text="point.description" class="body description" textWrap="true"></Label>
+        </GridLayout>
+      </ScrollView>
       <StackLayout class="actions" row="2">
+        <AudioPlayer :files="point.files"/>
         <Button class="-outline" :text="'close' | L" @tap="close"></Button>
         <Button class="-outline" :text="'goto' | L" @tap="openNavigationTo"></Button>
       </StackLayout>
@@ -21,10 +22,11 @@
 import * as utils from "~/plugins/utils";
 import { Directions }from "nativescript-directions"
 import ImageCarousel from "~/components/ImageCarousel"
+import AudioPlayer from "~/components/AudioPlayer"
 
 export default {
   components: {
-    ImageCarousel
+    ImageCarousel,AudioPlayer
   },
   mounted() {
   },
@@ -60,20 +62,9 @@ export default {
     close() {
       this.$modal.close();
     },
-    playAudio() {
-      this.$player.playUrl(this.audioFile)
-    }
+    
   },
   computed: {
-    audioFile() {
-      if (this.point) {
-        const audioFiles = this.point.files.filter(file => file.type == 'audio')
-        if(audioFiles && audioFiles.length > 0) {
-          return audioFiles[0].firebaseUrl
-        }
-      }
-      return null
-    },
     images() {
       if (this.point) {
         return this.point.files.filter(file => file.type == 'image')

@@ -34,7 +34,7 @@ const pagesInfo = {
   // no tab navigation for the following:
   route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
   routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
-  pointinfo: {  name: 'pointinfo', icon: "0xf4d7", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: false } },
+  pointinfo: {  name: 'pointinfo', icon: "0xf4d7", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
   testgeo: {    name: 'testgeo', icon: "0xf4d7", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
   config: {     name: 'config', icon: "0xf4d7", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
   articleinfo: {name: 'articleinfo', icon: "0xf4d7", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true }  }

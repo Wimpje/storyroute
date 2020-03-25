@@ -22,12 +22,8 @@
   </GridLayout>
 </template>
 <script>
-import CachedImage from '~/components/CachedImage'
-import CenterLabel from '~/components/CenterLabel'
 export default {
   components: {
-    CachedImage,
-    CenterLabel
   },
   props: ["route", "cache"],
   methods: {

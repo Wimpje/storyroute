@@ -27,14 +27,11 @@
 </template>
 <script>
 
-import CachedImage from "~/components/CachedImage"
 import * as utils from "~/plugins/utils";
 import { Directions }from "nativescript-directions"
 
 export default {
-  components: {
-    CachedImage
-  },
+  components: {  },
   mounted() {
   },
   props: ["article"],

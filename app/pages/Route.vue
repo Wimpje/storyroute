@@ -1,7 +1,7 @@
 <template>
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
-    <GridLayout rows="*, 100">
+    <GridLayout rows="*, 80">
       <!-- <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder"></Label> -->
       <GoogleMap row="0" rowSpan="2" :pois="this.route.pois" :path="this.route.path" @markerSelect="selectMarker" :currentPoi="currentPoi">
         
@@ -39,27 +39,23 @@
 
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
-import CenterLabel from "~/components/CenterLabel.vue";
 import { mapGetters, mapActions } from "vuex";
 import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
+import * as utils from "~/plugins/utils";
 
 export default {
-  mounted() {
-  },
-  props: ["route", "activePoi"],
   components: {
     GoogleMap,
-    CenterLabel
   },
+  props: ["route", "activePoi"],
   data() {
     return {
-      markers: [],
       currentPoi: null
     };
   },
   computed: {},
   created() {},
-  beforeDestroy() {
+  destroy() {
     // TODO settings?
     allowSleepAgain().then(function() {
       console.log("Insomnia is inactive, good night!");
@@ -81,7 +77,13 @@ export default {
     listLoaded (args) {
     
     },
-    getInfoFor (poi) {},
+    getInfoFor (poi) {
+      utils.navigateTo('pointinfo', {
+        props: {
+          point: poi
+        }
+      });
+    },
     selectMarker (marker) { 
       const poi = marker.poi
       this.currentPoi = poi
@@ -126,6 +128,8 @@ export default {
   line-height: 100%;
   width: 100%;
   height: 40;
+  background-color: white;
+  color: black;
 }
 .mapPlaceholder {
   background-color: green;

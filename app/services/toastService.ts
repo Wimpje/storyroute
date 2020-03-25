@@ -1,0 +1,37 @@
+import { Toasty, ToastPosition, ToastDuration, ToastyOptions } from 'nativescript-toasty';
+import { localize } from "nativescript-localize";
+import { Color } from "@nativescript/core/color";
+
+export class ToastService {
+  private currentToast;
+  private defaults: ToastyOptions;
+
+  constructor() {
+    this.currentToast = null;
+    this.defaults = {
+      text: '',
+      duration: ToastDuration.LONG,
+      position: ToastPosition.BOTTOM,
+      yAxisOffset: 20,
+      textColor: new Color('white'),
+      backgroundColor: '#222222'
+    }
+  }
+
+  async show(text, opts) {
+    if (this.currentToast && 'cancel' in this.currentToast)
+      this.currentToast.cancel()
+
+    if (!opts) {
+      opts = {
+        shouldLocalize: false,
+        ...this.defaults
+      }
+    }
+    else {
+      opts = Object.assign({}, this.defaults, opts)
+    }
+    opts.text = opts.shouldLocalize ? localize(text) : text
+    this.currentToast = new Toasty(opts).show()
+  }
+};

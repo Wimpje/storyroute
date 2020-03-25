@@ -27,8 +27,9 @@ export const actions = {
     commit("setArticles", docs)
   },
   async updateArticles({ commit }) {
+    commit("setArticles", [])
     const service = new ArticlesService()
-    const docs = await service.getArticles()
+    const docs = await service.getArticles(true)
     commit("setArticles", docs)
   }
 }

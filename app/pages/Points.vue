@@ -19,9 +19,7 @@ export default {
     GoogleMap
   },
   data() {
-    return {
-      markers: []
-    };
+    return {  };
   },
   computed: {
     ...mapGetters({
