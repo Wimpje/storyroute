@@ -3,8 +3,10 @@
   "75 jaar bevrijding": "75 years of liberation",
   "nav": {
     "routes": "Routes",
+    "route": "Route",
     "points": "Map",
     "news": "News & events",
+    "articleinfo": "Article",
     "pointinfo": "Location info",
     "routeinfo": "Route info",
     "config": "Help and configuration",
@@ -13,6 +15,7 @@
   "btn": {
     "close": "close",
     "goto": "plan route with external maps app",
+    "startRoute": "start route",
     "refreshDownloadAll": "refresh downloads",
     "removeDownloadAll": "remove downloads"
   },
@@ -35,7 +38,8 @@
   },
   "route": {
     "moreinfo": "More info",
-    "start": "Start"
+    "start": "Start",
+    "directions": "Directions"
   },
   "point": {
     "info": "info",

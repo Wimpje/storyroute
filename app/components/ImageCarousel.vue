@@ -5,8 +5,9 @@
       v-if="images"
       @pageChanged="pageChanged"
       android:indicatorAnimation="slide"
-      indicatorColor="#000000"
-      indicatorOffset="0, -10"
+      indicatorColor="#ccc"
+      indicatorColorUnselected="#ddd"
+      indicatorOffset="0, -20"
       showIndicator="true"
     >
       <CarouselItem
@@ -26,11 +27,11 @@
           ></CachedImage>
           <Label
             row="0"
+            v-if="item.title"
             :text="item.title"
-            class="carouselLabel"
+            class="carouselLabel m-b-10 p-5"
             verticalAlignment="bottom"
             horizontalAlignment="center"
-            height="30"
           />
         </GridLayout>
       </CarouselItem>
@@ -75,6 +76,5 @@ export default {
   background-color: white;
   border-radius: 5;
   color: black;
-  padding: 4;
 }
 </style>

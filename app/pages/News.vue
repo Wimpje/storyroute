@@ -2,29 +2,26 @@
   <Page class="page" @loaded="onLoaded">
     <AppActionBar></AppActionBar>
     <StackLayout>
-      <ActivityIndicator row="1" verticalAlignment="center" :busy="news.length == 0" />
+      <ActivityIndicator verticalAlignment="center" horizontalAlignment="middle" :busy="news.length == 0" />
       <RadListView
         row="1"
-        for="item in news"
+        for="item in allNews"
         height="100%"
         v-if="news.length"
-        android.pullToRefresh="true"
-        @pullToRefreshInitiated="updateNews"
-        itemHeight="100"
         @itemTap="loadArticle"
       >
         <v-template>
-          <GridLayout class="article" columns="80, *" rows="30, 20, 250">
+          <GridLayout class="article" columns="80, *" rows="auto, auto, *">
             <CachedImage
               col="0"
               rowSpan="2"
-              class="thumbNail"
+              class="thumbNail img-rounded p-5"
               stretch="aspectFill"
               :source="getImageFromItem(item)"
               height="80"
               placeholder="~/assets/images/route-placeholder.png"
             />
-            <Label col="1" row="0" class="h2" verticalAlignment="top" :text="item.title"></Label>
+            <Label col="1" row="0" class="h2 p-5" :text="item.title"></Label>
             <Label
               col="1"
               row="1"
@@ -36,11 +33,11 @@
               col="0"
               colSpan="2"
               row="2"
-              class="text"
+              height="60"
+              class="text p-5"
               verticalAlignment="top"
-              ref="desc"
               textWrap="true"
-              :text="item.text"
+              :text="item.text ? item.text.replace(/#/i, '') : ''"
             ></Label>
           </GridLayout>
         </v-template>
@@ -55,6 +52,7 @@ import * as myUtils from "~/plugins/utils";
 import { isAndroid, isIOS } from "tns-core-modules/platform";
 
 import { mapGetters } from "vuex";
+import { ObservableArray } from '@nativescript/core/data/observable-array/observable-array';
 
 const moment = require("moment");
 
@@ -63,7 +61,8 @@ export default {
   mounted() {},
   data() {
     return {
-      currentItem: null
+      currentItem: null,
+      allNews: new ObservableArray(this.news)
     };
   },
   computed: {
@@ -94,7 +93,7 @@ export default {
       return moment(date).format("dddd, D MMMM YYYY, h:mm");
     },
     updateNews() {
-      // aooerenlty needed for ios race condition
+      // apparently needed for ios race condition
       this.$nextTick(() => {
         this.$store.dispatch("updateArticles");
         return
@@ -102,6 +101,7 @@ export default {
     },
     loadNews() {
       this.$store.dispatch("getArticles");
+      console.log('news retrieved')
     },
     loadArticle({ item }) {
       console.log('item', item)
@@ -132,6 +132,6 @@ export default {
   border-radius: 5;
 }
 .article {
-  margin: 15;
+  
 }
 </style>

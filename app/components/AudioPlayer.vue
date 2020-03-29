@@ -126,7 +126,7 @@ export default {
 
 
 <style scoped lang="scss">
-@import "~@nativescript/theme/scss/variables/grey";
+//@import "~@nativescript/theme/scss/variables/grey";
 
 @keyframes spin { 
   from { transform:rotate(0); }

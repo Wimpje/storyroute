@@ -53,7 +53,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-@import "~@nativescript/theme/scss/variables/grey";
+//@import "~@nativescript/theme/scss/variables/grey";
 
 .ns-light .fabButton {
   background-color: black;
@@ -75,7 +75,8 @@ export default {
   color: #d1cece5b;
 }
 .routeImage {
-  margin:0;
+  margin: 0;
+  border-radius: 10;
 }
 .action {
   background-color: #ddd;

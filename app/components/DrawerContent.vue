@@ -17,8 +17,8 @@
           :class="'nt-drawer__list-item' + (currentPage.name === item.name ? ' -selected': '')"
           @tap="goToPage(item.name)"
         >
-          <Label row="0" col="0" :text="iconFromCode(item.icon)" class="nt-icon fas"></Label>
-          <Label row="0" col="1" :text="item.text | L" class="p-r-10"></Label>
+          <Label row="0" col="0" :text="iconFromCode(item.icon)" class="nt-icon fas m-y-auto"></Label>
+          <Label row="0" col="1" :text="item.text | L" class="p-r-10 m-y-auto"></Label>
         </GridLayout>
       </v-template>
     </ListView>
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "~@nativescript/theme/scss/variables/grey";
+//@import "~@nativescript/theme/scss/variables/grey";
 
 .nt-drawer__header-brand {
 }

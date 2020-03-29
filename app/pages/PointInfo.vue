@@ -4,10 +4,12 @@
     <GridLayout rows="250,*,auto" columns="*" iosOverflowSafeArea="true">
       <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
       <ScrollView row="1">
-        <GridLayout class="info" rows="auto, *, auto">
-          <Label row="0" :text="point.title" class="h1 name" textWrap="true"></Label>
-          <Label row="1" :text="point.description" class="body description" textWrap="true"></Label>
-        </GridLayout>
+        <StackLayout class="descriptions">
+          <Label :text="point.title" class="h2 name" textWrap="true"></Label>
+          <Label :text="point.description" class="body description" textWrap="true"></Label>
+          <StackLayout v-if="point.routeDescription" class="hr m-10"></StackLayout>
+          <Label v-if="point.routeDescription" :text="point.routeDescription" class="body description" textWrap="true"></Label>
+        </StackLayout>
       </ScrollView>
       <StackLayout class="actions" row="2">
         <AudioPlayer :files="point.files" />
@@ -90,7 +92,7 @@ export default {
 .description {
   vertical-align: top;
   padding: 20 20 20 20;
-  font-size: 18;
+  font-size: 16;
 }
 .name {
   padding: 5 20 5 20;

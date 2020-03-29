@@ -43,8 +43,8 @@ const setupConfigString = (key, value) => {
   }
 }
 
-setupConfigBool('googleAnalytics', false)
-setupConfigBool('googleCrashlytics', false)
+setupConfigBool('googleAnalytics', true)
+setupConfigBool('googleCrashlytics', true)
 setupConfigString('theme', 'default')
 
 Vue.prototype.$player = new AudioService()
@@ -58,14 +58,16 @@ application.on(application.launchEvent, (args) => {
 
 application.on(application.suspendEvent, (args) => {
   Vue.prototype.$player.pause()
+  Vue.prototype.$toast.cancel();
   allowSleepAgain().then(function () {
-    console.log("suspendEvent Insomnia is inactive, good night!");
+    console.log("suspendEvent: Insomnia is inactive, good night!");
   })
 });
 
 application.on(application.exitEvent, (args) => {
   Vue.prototype.$player.pause();
   Vue.prototype.$player.dispose();
+  Vue.prototype.$toast.cancel();
   allowSleepAgain().then(function () {
     console.log("exitEvent Insomnia is inactive, good night!");
   })
@@ -154,15 +156,20 @@ const vueApp = new Vue({
           console.log('getPois called after logging in')
           this.$store.dispatch("initRoutes")
           console.log('initRoutes called after logging in')
-          console.log("User.uid: " + user.uid)
+          console.log(`user.uid: ${user.uid}`)
 
         })
         .catch(error => {
           // TODO handle errors on connections
+          firebase.crashlytics.log("issue with logging in: " + error)
           console.log("Issue with logging in: " + error);
         });
     })
-      .catch(error => console.log("Error initializing Firebase: " + error));
+      .catch(error => {
+        console.log("Error initializing Firebase: " + error)
+        firebase.crashlytics.log("Error initializing Firebase: " + error)
+
+      } );
   }
 })
 

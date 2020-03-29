@@ -2,16 +2,19 @@
   "app.name": "75 jaar bevrijding - Ommen",
   "nav": {
     "routes": "Routes",
+    "route": "Route",
     "points": "Kaart",
     "news": "Nieuws & evenementen",
     "pointinfo": "Locatie info",
+    "articleinfo": "Artikel",
     "routeinfo": "Route info",
     "config": "Help en configuratie",
     "doubletap": "Druk 2x op terug om app te sluiten"
   },
   "route": {
     "moreinfo": "Meer info",
-    "start": "Start"
+    "start": "Start",
+    "directions": "Richting aanwijzingen"
   },
   "drawer": {
     "title": "75 jaar bevrijding - Ommen"
@@ -23,6 +26,7 @@
   "btn": {
     "close": "sluiten",
     "goto": "plan route met externe maps app",
+    "startRoute": "start route",
     "refreshDownloadAll": "ververs downloads",
     "removeDownloadAll": "verwijder downloads"
   },

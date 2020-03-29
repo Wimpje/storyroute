@@ -36,10 +36,10 @@ const pagesInfo = {
   // no tab navigation for the following:
   route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
   routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
-  pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
+  pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 1 },
   testgeo: {    name: 'testgeo', icon: "0xf7a2", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
   config: {     name: 'config', icon: "0xf013", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
-  articleinfo: {name: 'articleinfo', icon: "0xf4d7", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true }  }
+  articleinfo: {name: 'articleinfo', icon: "0xf4d7", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 2  }
 }
 
 export const state = () => {
@@ -81,7 +81,13 @@ export const getters = {
     }
   },
   currentIsTabView(state) {
-    return state.pagesInfo[state.currentPage].isTabView
+    if(state.currentPage && state.pagesInfo[state.currentPage.name]) {
+      return state.pagesInfo[state.currentPage.name].isTabView
+    }
+    else {
+      // default is routes
+      return true
+    }
   },
   pagesInSideDrawer(state) {
     const sideDrawerPages = Object.values(state.pagesInfo).filter(value => {
@@ -112,7 +118,7 @@ export const mutations = {
         screenName: page.name
       }).then(
           function () {
-            console.log("Screen name set");
+            console.log("Screen name set", page.name);
           }
       );
     }

@@ -1,7 +1,8 @@
 <template>
   <Page class="page" @loaded="onLoaded">
-    <GridLayout rows="auto, *, auto">
-      <Label row="0" :text="'config.help' | L" class="helptext"></Label>
+    <GridLayout rows="auto, *, auto" class="container">
+      <Label row="0" :text="'config.help' | L" class="helptext "></Label>
+      <StackLayout class="hr m-20"></StackLayout>
       <StackLayout row="1" class="settings">
         <!-- <StackLayout class="setting" orientation="horizontal">
           <Switch checked="true" @checkedChange="toggleDark" />
@@ -9,22 +10,22 @@
         </StackLayout>-->
         <StackLayout class="setting" orientation="horizontal">
           <Switch v-model="toggleAnalytics"/>
-          <Label :text="'config.analyticsInfo' | L" textWrap="true"></Label>
+          <Label class="m-y-auto" :text="'config.analyticsInfo' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal">
           <Switch v-model="toggleCrashInfo"  />
-          <Label :text="'config.crashInfo' | L" textWrap="true"></Label>
+          <Label class="m-y-auto" :text="'config.crashInfo' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
           <Button text="download" @tap="downloadAll" />
-          <Label :text="'config.downloadAll' | L" textWrap="true"></Label>
+          <Label class="m-y-auto" :text="'config.downloadAll' | L" textWrap="true"></Label>
         </StackLayout>
-        <StackLayout class="setting" orientation="horizontal" v-else>
+        <StackLayout class="setting" orientation="horizontal" v-if="allDownloaded">
           <Button :text="'btn.refreshDownloadAll' | L" @tap="downloadAll" />
-          <Label :text="'config.refreshDownloadAll' | L" textWrap="true"></Label>
+          <Label class="m-y-auto" :text="'config.refreshDownloadAll' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal">
-          <Button text="crash" @tap="crash textWrap="true""></Button>
+          <Button text="crash!" @tap="crash" ></Button>
         </StackLayout>
       </StackLayout>
       <Button row="2" @tap="close" :text="'btn.close' | L" />
@@ -89,6 +90,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.container {
+  margin: 20;
+}
 .info {
   font-size: 20;
 }

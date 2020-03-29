@@ -4,23 +4,58 @@
     <GridLayout rows="250, *, auto" columns="*" iosOverflowSafeArea="true">
       <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
       <ScrollView row="1">
-        <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
-          <Label col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></Label>
-          <Label col="1" row="0" :text="distance" class="h3 distance"></Label>
-          <Label col="2" row="0" :text="route.title" class="h1 routeName" textWrap="true"></Label>
-          <Label
-            col="0"
-            colspan="3"
-            row="1"
-            :text="route.description"
-            class="body routeDescription"
-            textWrap="true"
-          ></Label>
-        </GridLayout>
+        <StackLayout>
+          <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
+            <CenterLabel col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></CenterLabel>
+            <CenterLabel col="1" row="0" :text="distance" class="h3 distance"></CenterLabel>
+            <CenterLabel
+              col="2"
+              row="0"
+              :centerMethod="17"
+              :text="route.title"
+              class="h2 text-left routeName"
+              textWrap="true"
+            ></CenterLabel>
+          </GridLayout>
+          <StackLayout>
+            <Label :text="route.description" class="body p-20 routeDescription" textWrap="true"></Label>
+            <Button
+              verticalAlignment="bottom"
+              horizontalAlignment="right"
+              :text="'btn.startRoute' | L"
+              @tap="startRoute()"
+            ></Button>
+            <StackLayout class="hr m-10"></StackLayout>
+            <StackLayout orientation="horizontal">
+              <Label
+                text.decode="&#xf5eb;"
+                class="fas t-24 p-l-20 p-y-20"
+                horizontalAlignment="center"
+              ></Label>
+              <Label :text="'route.directions' | L" class="h1 p-20 m-x-auto"></Label>
+            </StackLayout>
+            <GridLayout
+              rows="auto, *"
+              columns="auto,*"
+              v-for="(poi, i) in route.pois"
+              :key="poi.id"
+            >
+              <Label row="0" col="0" class="h2 p-y-20 p-l-20" :text="(i + 1) + '. '"></Label>
+              <Label row="0" col="1" class="h2 p-y-20" :text="poi.title"></Label>
+              <Label
+                row="1"
+                colSpan="2"
+                class="body p-x-20 routeDescription"
+                :text="poi.routeDescription"
+                textWrap="true"
+              ></Label>
+            </GridLayout>
+          </StackLayout>
+        </StackLayout>
       </ScrollView>
+
       <StackLayout class="actions" row="2">
         <AudioPlayer :files="route.files" />
-        <Button class="-outline" :text="'route.start' | L" @tap="startRoute"></Button>
       </StackLayout>
     </GridLayout>
   </Page>
@@ -48,7 +83,7 @@ export default {
       utils.navigateTo("route", { props: { route: this.route } });
     },
     close() {
-      this.$modal.close();
+      this.$navigateBack();
     },
     iconFromCode: function(code) {
       return String.fromCharCode(code);
@@ -79,14 +114,27 @@ export default {
         return this.route.files.filter(file => file.type == "image");
       }
       return [];
+    },
+    showPointRouteDescriptions() {
+      this.showDescriptions = !this.showDescriptions;
     }
   },
   data() {
-    return {};
+    return {
+      showDescriptions: false
+    };
   }
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
+.fabButton {
+  margin-right: 20;
+  color: white;
+  margin-bottom: 20;
+  background-color: black;
+  border-radius: 100;
+}
+
 .routeImage {
   margin-bottom: 10;
 }
@@ -98,12 +146,11 @@ export default {
 }
 
 .routeInfo {
-  background-color: #489e9e9e;
+  background-color:#ccc;
 }
 .routeDescription {
   vertical-align: top;
-  padding: 20 20 20 20;
-  font-size: 18;
+  font-size: 16;
 }
 .routeName {
   padding: 5 20 5 20;

@@ -16,7 +16,7 @@
         row="1"
         class="points"
         ref="listView"
-        for="(poi, index) in this.route.pois"
+        for="(poi, index) in poisToDisplay"
         @itemTap="openPoint"
         @loaded="listLoaded"
         itemHeight="50"
@@ -47,6 +47,7 @@ import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters, mapActions } from "vuex";
 import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
 import * as utils from "~/plugins/utils";
+import { ObservableArray } from 'tns-core-modules/data/observable-array';
 
 export default {
   components: {
@@ -55,7 +56,18 @@ export default {
   props: ["route", "activePoi"],
   data() {
     return {
-      currentPoi: null
+      currentPoi: null,
+      poisToDisplay: new ObservableArray(this.route.pois.filter(p => {
+        if (p.tags && p.tags.length) {
+          for (let ti = 0; ti < p.tags.length; ti++) {
+            if(p.tags[ti].toLowerCase() === 'aanwijzing'){
+              console.log('found aanwijzing point, not showing: ', p.title, p.id)
+              return false
+            };
+          }
+        }
+        return true
+      }))
     };
   },
   computed: {},
@@ -127,6 +139,7 @@ export default {
 .pointDescription {
   padding: 5;
   line-height: 100%;
+  font-size:14;
   width: 100%;
   height: 40;
   background-color: white;

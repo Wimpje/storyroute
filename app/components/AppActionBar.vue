@@ -1,6 +1,6 @@
 <template>
   <ActionBar class="action-bar">
-    <!-- <NavigationButton text="back" android.systemIcon="ic_menu_back"></NavigationButton> -->
+    <NavigationButton v-if="shouldShowBack" @tap="backButton" android.systemIcon="ic_menu_back"></NavigationButton>
     <ActionItem
       position="left"
       icon="res://baseline_menu_24"
@@ -18,9 +18,16 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(['currentPageText'])
+    ...mapGetters(['currentPageText', 'currentIsTabView']),
+    shouldShowBack() {
+      console.log('isTabView?', this.currentIsTabView)
+      return !this.currentIsTabView
+    }
   },
   methods: {
+    backButton() {
+      utils.navigateBackFromButton()
+    },
     onDrawerButtonTap() {
       utils.showDrawer();
     }

@@ -1,8 +1,19 @@
+$font-size:15;
+
 @import "~@nativescript/theme/core";
-@import "~@nativescript/theme/forest";
+@import "~@nativescript/theme/default";
 
 // Global SCSS styling
 // @see https://docs.nativescript.org/ui/styling
+
+* {
+  font-family: "Founders Grotesk", "FoundersGrotesk-Regular";
+}
+
+h1,h2,h3 {
+  font-family: "Founders Grotesk", "FoundersGrotesk-Bold";
+  font-weight: bold;
+}
 
 // Font icon class
 .fab {

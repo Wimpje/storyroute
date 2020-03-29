@@ -72,8 +72,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.bottomNavigation {
-  padding-top: 20;
-  color: red;
-}
+
 </style>

@@ -38,9 +38,13 @@ export class ToastService {
     })
   }
 
-  async show(text, opts) {
+  cancel() {
     if (this.currentToast && 'cancel' in this.currentToast)
       this.currentToast.cancel()
+  }
+
+  async show(text, opts) {
+    this.cancel()
 
     if (!opts) {
       opts = {

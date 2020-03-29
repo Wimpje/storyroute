@@ -1,5 +1,5 @@
 <template>
-  <StackLayout width="100%" height="100%" >
+  <StackLayout width="100%" height="100%">
     <MapView
       :latitude="latitude"
       :longitude="longitude"
@@ -53,22 +53,30 @@ export default {
   },
   mounted() {
     // determine if we should use this hook or @loaded... timing sometimes is weird on iOS it seems
-    this.onLoaded()
+    this.onLoaded();
   },
   destroy() {
     if (application.android) {
-      application.android.off(application.AndroidApplication.activityResumedEvent, this.onAndroidActivityResume, this);
+      application.android.off(
+        application.AndroidApplication.activityResumedEvent,
+        this.onAndroidActivityResume,
+        this
+      );
     }
   },
   methods: {
     onAndroidActivityResume(args) {
-      console.log('MAP: ON ANDROID RESUME')
-      if (this.mapView && this.mapView.nativeView && this.mapView._context === args.activity) {
+      console.log("MAP: ON ANDROID RESUME");
+      if (
+        this.mapView &&
+        this.mapView.nativeView &&
+        this.mapView._context === args.activity
+      ) {
         this.mapView.nativeView.onResume();
       }
     },
     onLoaded() {
-      console.log('MAP: ONLOADED')
+      console.log("MAP: ONLOADED");
       if (application.android) {
         application.android.on(
           application.AndroidApplication.activityResumedEvent,
@@ -98,9 +106,13 @@ export default {
                     .then(location => {
                       if (!location) {
                         console.log("Failed to get location!");
-                        this.$toast.show('map.location.nolocation', {shouldLocalize: true})
+                        this.$toast.show("map.location.nolocation", {
+                          shouldLocalize: true
+                        });
                       } else {
-                        console.log("!isEnabled - got user location, not doing anything...");
+                        console.log(
+                          "!isEnabled - got user location, not doing anything..."
+                        );
                         //that.latitude = location.latitude;
                         //that.longitude = location.longitude;
                         //that.zoom = 10;
@@ -115,7 +127,9 @@ export default {
               )
               .catch(ex => {
                 console.log("Unable to Enable Location", ex);
-                this.$toast.show('map.location.enableerror', {shouldLocalize: true})
+                this.$toast.show("map.location.enableerror", {
+                  shouldLocalize: true
+                });
               });
           } else {
             that.isMounted = true;
@@ -131,9 +145,13 @@ export default {
               .then(location => {
                 if (!location) {
                   console.log("Failed to get location!");
-                  this.$toast.errorFriendly('map.location.nolocation', {shouldLocalize: true})
+                  this.$toast.errorFriendly("map.location.nolocation", {
+                    shouldLocalize: true
+                  });
                 } else {
-                  console.log("isEnabled - Got user location, not doing anything");
+                  console.log(
+                    "isEnabled - Got user location, not doing anything"
+                  );
                   //that.latitude = location.latitude;
                   //that.longitude = location.longitude;
                   //that.zoom = 10;
@@ -145,8 +163,7 @@ export default {
         },
         function(e) {
           console.log("Error: " + (e.message || e));
-          this.$toast.show('map.location.error', {shouldLocalize: true})
-
+          this.$toast.show("map.location.error", { shouldLocalize: true });
         }
       );
     },
@@ -182,7 +199,7 @@ export default {
             //iconImg.imageSource = ImageSource.fromResourceSync(icon);
             console.log(`LOADING > ~/assets/images/markers/${icon}@0.75x.png`);
             iconImg.imageSource = ImageSource.fromFileSync(
-              `~/assets/images/markers/${icon}@2x.png`
+              `~/assets/images/markers/${icon}@0.75x.png`
             );
           } else {
             // in android the resources are too big, so just using two sizes...
@@ -196,15 +213,15 @@ export default {
         }
       }
     },
-    
-    addMarkerFromPoi(poi) {
+
+    addMarkerFromPoi(poi, idx) {
       const poiMarker = new Marker();
       poiMarker.position = Position.positionFromLatLng(
         poi.position.latitude,
         poi.position.longitude
       );
-      poiMarker.title = poi.title;
-
+      poiMarker.title = `${idx}. ${poi.title}`;
+      poiMarker.label = idx.toString()
       this.mapView.addMarker(poiMarker);
 
       return poiMarker;
@@ -212,7 +229,7 @@ export default {
     // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
     onMapReady(args) {
       this.mapView = args.object;
-      console.log('what is zoom?', this.mapView.zoom)
+      console.log("what is zoom?", this.mapView.zoom);
       // workaround for sizing the map correctly
       setTimeout(
         () =>
@@ -233,16 +250,16 @@ export default {
       if (isAndroid && this.isMounted && geolocation.isEnabled()) {
         let uiSettings = gMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(true);
-        uiSettings.setTiltGesturesEnabled(true)
-        uiSettings.setRotateGesturesEnabled(true)
+        uiSettings.setTiltGesturesEnabled(true);
+        uiSettings.setRotateGesturesEnabled(true);
         gMap.setMyLocationEnabled(true);
       }
       if (isIOS) {
-        gMap.myLocationEnabled = false;
+        gMap.myLocationEnabled = true;
         gMap.settings.myLocationButton = true;
         gMap.settings.tiltGesturesEnabled = true;
         this.mapView.on("myLocationTapped", event => {
-          console.log('IOS tapped on "my location" button')
+          console.log('IOS tapped on "my location" button');
           geolocation.isEnabled().then(enabled => {
             if (enabled) {
               geolocation
@@ -251,7 +268,7 @@ export default {
                   timeout: 20000
                 })
                 .then(location => {
-                  console.log('-- moving to location', location)
+                  console.log("-- moving to location", location);
                   gMap.animateToLocation(location);
                 });
             }
@@ -271,33 +288,36 @@ export default {
       this.mapView.removeAllMarkers();
 
       if (this.pois && this.pois.length) {
+        let poiIndex = 0
         this.pois.forEach(poi => {
-          const marker = this.addMarkerFromPoi(poi);
+          const marker = this.addMarkerFromPoi(poi, poiIndex);
           if (isIOS) bounds = bounds.includingCoordinate(marker.position);
           marker.poi = poi;
           this.addMarkerIcon(marker, poi);
+          poiIndex++
         });
+
+        // This positions the camera on a box around the points
+        if (isAndroid) {
+          const builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
+          this.mapView.findMarker(function(marker) {
+            builder.include(marker.android.getPosition());
+          });
+          bounds = builder.build();
+          const cu = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(
+            bounds,
+            padding
+          );
+          console.log("ANDROID moving map to bounds of all points on map");
+          this.mapView.gMap.animateCamera(cu);
+        }
+        if (isIOS) {
+          var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
+          console.log("IOS moving map to bounds of all points on map", bounds);
+          this.mapView.gMap.animateWithCameraUpdate(update);
+        }
       }
 
-      // This positions the camera on a box around the points
-      if (isAndroid) {
-        const builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
-        this.mapView.findMarker(function(marker) {
-          builder.include(marker.android.getPosition());
-        });
-        bounds = builder.build();
-        const cu = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(
-          bounds,
-          padding
-        );
-        console.log('ANDROID moving map to bounds of all points on map')
-        this.mapView.gMap.animateCamera(cu);
-      }
-      if (isIOS) {
-        var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
-        console.log('IOS moving map to bounds of all points on map', bounds)
-        this.mapView.gMap.animateWithCameraUpdate(update);
-      }
       // END map positioning
 
       // create route line
@@ -334,5 +354,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+GoogleMap {
+  padding-bottom:100;
+}
 </style>

@@ -71,7 +71,6 @@ export const showMessageLocalized = (text) => {
 
 export const navigateBackFromButton = (backPressArgs) => {
   const page = store.getters.currentPage
-  const prevPage = store.getters.previousPage
   
   if (!page) {
     console.log('show doubletap message...')
@@ -85,7 +84,6 @@ export const navigateBackFromButton = (backPressArgs) => {
   const item = pagesInfo[page.name];
   if (item.isModal) {
     console.log('is modal, closing')
-
     page.instance.$modal.close()
   }
   else if(item.isTabView) {
@@ -122,10 +120,14 @@ export const navigateTo = (to, props) => {
   }
   else if (toPage.isModal) {
     console.log('... modal, open in modal')
-    
+
     Vue.showMyModal(toPage.page, {
       ...props, 
       ...toPage.props
+    }).then(res => {
+      console.log('closing showMyModal', props)
+      console.log('... and setting currentPage back to where we came from', currentPage.name)
+      store.commit("setCurrentPage", { name: currentPage.name, instance: currentPage.instance });
     })
   }
   else {

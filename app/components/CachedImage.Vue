@@ -1,7 +1,6 @@
 <template>
   <Image
     ref="image"
-    class="cachedImage"
     :src="resolvedImage"
     @loaded="imageLoaded">
   </Image>

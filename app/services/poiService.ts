@@ -1,4 +1,4 @@
-const firebase = require("nativescript-plugin-firebase/app");
+import * as firebase from "nativescript-plugin-firebase";
 
 // can probably be abstracted even more (since the name of the collection is all that is different from routes / news / whatever colelction)
 export class PoiService {
@@ -6,7 +6,7 @@ export class PoiService {
   documents: Array<any>;
 
   constructor() {
-    this.collection = firebase.firestore().collection('pois')
+    this.collection = firebase.firestore.collection('pois')
   }
 
   async getPois(force: boolean = false) {
@@ -23,6 +23,8 @@ export class PoiService {
       })
     }
     catch (e) {
+      firebase.crashlytics.log(e)
+
       console.error(e);
     }
     return this.documents = documents

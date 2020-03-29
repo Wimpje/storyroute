@@ -1,5 +1,5 @@
 <template>
-  <RadSideDrawer ref="drawer" gesturesEnabled="true" drawerLocation="left">
+  <RadSideDrawer ref="drawer" gesturesEnabled="true" drawerLocation="left" @loaded="onLoaded">
     <StackLayout ~drawerContent class="drawer">
       <slot name="drawerContent"></slot>
     </StackLayout>
@@ -23,24 +23,33 @@ export default {
     };
   },
   mounted() {
-    const lang = device.language.split("-")[0];
-    console.log("User language = ", lang);
-    if (lang !== "nl" && !getBoolean("englishMessageDisplayed", false)) {
-      dialogs
-        .alert({
-          title: localize("message.englishNotYetSupportedTitle"),
-          message: localize("message.englishNotYetSupportedMessage"),
-          okButtonText: localize("message.englishNotYetSupportedButton")
-        })
-        .then(() => {
-          console.log("English message dialog closed!");
-          setBoolean("englishMessageDisplayed", true);
-        });
+    
+  },
+  methods: {
+    onLoaded() {
+      this.showLanguageWarningPopup()
+    },
+    showLanguageWarningPopup() {
+      const lang = device.language.split("-")[0];
+      console.log("User language = ", lang);
+      if (lang !== "nl" && !getBoolean("englishMessageDisplayed", false)) {
+        console.log("will show english dialog");
+        dialogs
+          .alert({
+            title: localize("message.englishNotYetSupportedTitle"),
+            message: localize("message.englishNotYetSupportedMessage"),
+            okButtonText: localize("message.englishNotYetSupportedButton")
+          })
+          .then(() => {
+            console.log("English message dialog closed!");
+            setBoolean("englishMessageDisplayed", true);
+          });
+      }
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-@import "~@nativescript/theme/scss/variables/grey";
+//@import "~@nativescript/theme/scss/variables/grey";
 </style>
