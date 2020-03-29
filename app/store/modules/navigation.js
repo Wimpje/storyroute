@@ -5,7 +5,7 @@ import PointInfo from "~/pages/PointInfo.vue";
 import Route from "~/pages/Route.vue";
 import Routes from "~/pages/Routes.vue";
 import Config from "~/pages/Config.vue";
-import News from "~/pages/News.vue";
+import Articles from "~/pages/Articles.vue";
 import TestGeo from "~/pages/TestGeo.vue";
 import RouteInfo from "~/pages/RouteInfo.vue";
 import ArticleInfo from "~/pages/ArticleInfo.vue";
@@ -22,7 +22,7 @@ const pages = {
   route: Route,
   routeinfo: RouteInfo,
   config: Config,
-  news: News,
+  articles: Articles,
   testgeo: TestGeo,
   articleinfo: ArticleInfo
 };
@@ -31,7 +31,7 @@ const pagesInfo = {
   // having the name again is a bit overkill, but handy sometimes
   routes: {     name: 'routes', icon: "0xf4d7", text: "nav.routes", page: pages.routes, sideDrawer: true, isTabView: true, tabIndex: 0 },
   points: {     name: 'points', icon: "0xf5a0", text: "nav.points", page: pages.points, sideDrawer: true, isTabView: true, tabIndex: 1 },
-  news: {       name: 'news', icon: "0xf143", text: "nav.news", page: pages.news, sideDrawer: true, isTabView: true, tabIndex: 2 },
+  articles: {   name: 'articles', icon: "0xf1ea", text: "nav.articles", page: pages.articles, sideDrawer: true, isTabView: true, tabIndex: 2 },
   
   // no tab navigation for the following:
   route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, isChild: true },
@@ -39,7 +39,7 @@ const pagesInfo = {
   pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true },
   testgeo: {    name: 'testgeo', icon: "0xf7a2", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
   config: {     name: 'config', icon: "0xf013", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
-  articleinfo: {name: 'articleinfo', icon: "0xf4d7", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true }
+  articleinfo: {name: 'articleinfo', icon: "0xf1ea", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true }
 }
 
 export const state = () => {

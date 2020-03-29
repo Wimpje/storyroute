@@ -5,7 +5,7 @@
         row="1"
         verticalAlignment="center"
         horizontalAlignment="middle"
-        :busy="news.length == 0"
+        :busy="loading"
       />
       <!-- fake tabview, implementation can be a bit nicer, but it works -->
       <GridLayout row="0" width="100%" columns="*,*,*" height="50" class="tabView">
@@ -77,7 +77,8 @@ export default {
   data() {
     return {
       tabActive: "news",
-      currentItem: null
+      currentItem: null,
+      loading: true
     };
   },
   computed: {
@@ -110,8 +111,9 @@ export default {
     },
     onLoaded() {
       this.$store.commit("setCurrentPage", { name: "news", instance: this });
-      if (!this.news || this.news.length === 0) {
+      if (!this.articles || this.articles.length === 0) {
         this.loadArticles();
+        this.loading = false
       }
     },
     getImageFromItem(item) {
@@ -129,8 +131,10 @@ export default {
     },
     updateNews() {
       // apparently needed for ios race condition
+      this.loading = true
       this.$nextTick(() => {
         this.$store.dispatch("updateArticles");
+        this.loading = false
         return;
       });
     },
