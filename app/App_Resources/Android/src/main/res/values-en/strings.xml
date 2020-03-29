@@ -26,6 +26,7 @@
   <string name="_btn_refreshDownloadAll_2akLCj">"refresh downloads"</string>
   <string name="_btn_startRoute_1aJsYp">"start route"</string>
   <string name="_btn_goto_2qXYbv">"plan route with external maps app"</string>
+  <string name="_btn_backIos_Z4PUFc">"ᐸ back"</string>
   <string name="_btn_back_2qXgom">"back"</string>
   <string name="_btn_close_ZyLgre">"close"</string>
   <string name="_nav_doubletap_Z1jXp0x">"Push back twice to exit app"</string>
@@ -33,7 +34,7 @@
   <string name="_nav_routeinfo_ZaAsTv">"Route info"</string>
   <string name="_nav_pointinfo_1thFNC">"Location info"</string>
   <string name="_nav_articleinfo_Z1uy15U">"Article"</string>
-  <string name="_nav_news_2pUJC0">"News &amp; events"</string>
+  <string name="_nav_articles_Z1Cuaqz">"News &amp; more"</string>
   <string name="_nav_points_1xAD9o">"Map"</string>
   <string name="_nav_route_Z15QoBP">"Route"</string>
   <string name="_nav_routes_1BKuwv">"Routes"</string>

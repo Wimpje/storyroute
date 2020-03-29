@@ -1,5 +1,5 @@
 <template>
-  <GridLayout height="100%" width="100%">
+  <GridLayout iosOverflowSafeArea="false" height="100%" width="100%">
     <Carousel
       ref="carousel"
       v-if="images"
@@ -23,6 +23,7 @@
             class="image"
             stretch="aspectFill"
             :source="item.firebaseUrl"
+            verticalAlignment="bottom"
             placeholder="~/assets/images/route-placeholder.png"
           ></CachedImage>
           <Label

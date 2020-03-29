@@ -6,7 +6,7 @@
         row="0"
         rowspan="2"
         :mapId="this.route.id"
-        :pois="this.route.pois"
+        :pois="poisToDisplay"
         :path="this.route.path"
         @markerSelect="selectMarker"
         :currentPoi="currentPoi"
@@ -67,6 +67,7 @@ export default {
           return Object.assign({routePoint: true}, poi)
         })
         pois[0].start = true // for setting start icon... not pretty but hey it works
+        console.log(pois)
         return pois
       }
       else {

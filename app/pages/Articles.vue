@@ -34,6 +34,7 @@
               stretch="aspectFill"
               :source="getImageFromItem(item)"
               height="80"
+              textWrap="true"
               placeholder="~/assets/images/route-placeholder.png"
             />
             <Label col="1" row="0" class="h2 p-5" :text="item.title"></Label>
@@ -110,7 +111,7 @@ export default {
       return item.category === this.tabActive
     },
     onLoaded() {
-      this.$store.commit("setCurrentPage", { name: "news", instance: this });
+      this.$store.commit("setCurrentPage", { name: "articles", instance: this });
       if (!this.articles || this.articles.length === 0) {
         this.loadArticles();
         this.loading = false

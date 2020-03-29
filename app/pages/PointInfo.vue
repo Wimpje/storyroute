@@ -1,19 +1,19 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <GridLayout rows="250,*,auto" columns="*" iosOverflowSafeArea="true">
+    <GridLayout rows="250,auto,*" columns="*" iosOverflowSafeArea="true">
       <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
-      <ScrollView row="1">
+      <ScrollView row="2">
         <StackLayout class="descriptions">
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
           <StackLayout v-if="point.routeDescription" class="hr m-10"></StackLayout>
           <Label v-if="point.routeDescription" :text="point.routeDescription" class="body description" textWrap="true"></Label>
+          <Button verticalAlignment="top" horizontalAlignment="right" class="-outline floatButton" :text="'btn.goto' | L" @tap="openNavigationTo"></Button>
+
         </StackLayout>
       </ScrollView>
-      <StackLayout class="actions" row="2">
+      <StackLayout class="actions" row="1">
         <AudioPlayer :files="point.files" />
-        <Button class="-outline" :text="'btn.close' | L" @tap="close"></Button>
-        <Button class="-outline" :text="'btn.goto' | L" @tap="openNavigationTo"></Button>
       </StackLayout>
     </GridLayout>
   </Page>
@@ -87,6 +87,9 @@ export default {
 
 .info {
   background-color: #489e9e9e;
+}
+.floatButton {
+  margin-bottom: 20;
 }
 .description {
   vertical-align: top;

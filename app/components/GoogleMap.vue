@@ -227,7 +227,12 @@ export default {
         poi.position.latitude,
         poi.position.longitude
       );
-      poiMarker.title = `${idx}. ${poi.title}`;
+      if (poi.routePoint) {
+        poiMarker.title = `${idx + 1}. ${poi.title}`;
+      }
+      else {
+        poiMarker.title = poi.title;
+      }
       poiMarker.label = idx.toString()
       this.mapView.addMarker(poiMarker);
 
