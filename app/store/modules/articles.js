@@ -4,10 +4,14 @@ import { ArticlesService } from "~/services/articlesService"
 export const state = () => {
   return {
     articles: [],
-    currentArticle: null
+    currentArticle: null,
+    categories: ['news', 'event', 'story']
   }
 }
 export const getters = {
+  getArticleCategories(state) {
+    return state.categories
+  },
   currentArticle(state) {
     return state.currentArticle
   },
@@ -15,8 +19,13 @@ export const getters = {
     return state.articles
   },
   getNews (state) {
-    console.log(state.articles)
     return state.articles.filter(a => a.category === 'news')
+  },
+  getEvents (state) {
+    return state.articles.filter(a => a.category === 'event')
+  },
+  getStories (state) {
+    return state.articles.filter(a => a.category === 'story')
   }
 }
 
@@ -36,7 +45,6 @@ export const actions = {
 
 export const mutations = {
   setCurrentArticle(state, article) {
-    console.log('setcurrent', article)
     state.currentArticle = article
   },
   setArticles(state, articles) {

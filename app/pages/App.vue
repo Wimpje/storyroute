@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     onLoaded() {
-      this.showLanguageWarningPopup()
+      // this.showLanguageWarningPopup()
     },
     showLanguageWarningPopup() {
       const lang = device.language.split("-")[0];

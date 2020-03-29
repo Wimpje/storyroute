@@ -36,7 +36,7 @@ const pagesInfo = {
   // no tab navigation for the following:
   route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
   routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
-  pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 1 },
+  pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 0 },
   testgeo: {    name: 'testgeo', icon: "0xf7a2", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
   config: {     name: 'config', icon: "0xf013", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
   articleinfo: {name: 'articleinfo', icon: "0xf4d7", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true, tabIndex: 2  }
@@ -44,6 +44,7 @@ const pagesInfo = {
 
 export const state = () => {
   return {
+    defaultPage: 'routes',
     currentPage: {name: 'routes', instance: null},
     previousPage: {name: '', instance: null},
     pagesInfo: pagesInfo,
@@ -77,17 +78,14 @@ export const getters = {
     }
     else {
       // default is routes
-      return state.pagesInfo['routes'].text
+      return state.pagesInfo[state.defaultPage].text
     }
   },
   currentIsTabView(state) {
-    if(state.currentPage && state.pagesInfo[state.currentPage.name]) {
-      return state.pagesInfo[state.currentPage.name].isTabView
-    }
-    else {
-      // default is routes
-      return true
-    }
+    const curPage = state.currentPage ? state.currentPage.name : state.defaultPage
+    const ret  = state.pagesInfo[curPage].isTabView
+    console.log('currentistabview', ret)
+    return ret
   },
   pagesInSideDrawer(state) {
     const sideDrawerPages = Object.values(state.pagesInfo).filter(value => {

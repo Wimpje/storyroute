@@ -53,7 +53,7 @@ export default {
       return String.fromCharCode(code);
     },
     goToPage(item) {
-      utils.navigateTo(item);
+      this.$myNavigateTo(item);
       utils.closeDrawer();
     }
   }

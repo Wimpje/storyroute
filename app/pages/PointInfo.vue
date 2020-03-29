@@ -1,6 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
-    <AppActionBar></AppActionBar>
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="250,*,auto" columns="*" iosOverflowSafeArea="true">
       <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
       <ScrollView row="1">

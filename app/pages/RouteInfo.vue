@@ -1,6 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
-    <AppActionBar></AppActionBar>
+  <Page class="page" @loaded="onLoaded"  actionBarHidden="true">
     <GridLayout rows="250, *, auto" columns="*" iosOverflowSafeArea="true">
       <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
       <ScrollView row="1">
@@ -8,14 +7,14 @@
           <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
             <CenterLabel col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></CenterLabel>
             <CenterLabel col="1" row="0" :text="distance" class="h3 distance"></CenterLabel>
-            <CenterLabel
+            <Label
               col="2"
               row="0"
               :centerMethod="17"
               :text="route.title"
-              class="h2 text-left routeName"
+              class="h2 text-left m-y-auto routeName"
               textWrap="true"
-            ></CenterLabel>
+            ></Label>
           </GridLayout>
           <StackLayout>
             <Label :text="route.description" class="body p-20 routeDescription" textWrap="true"></Label>
@@ -65,6 +64,7 @@ import ImageCarousel from "~/components/ImageCarousel";
 import * as utils from "~/plugins/utils";
 import AudioPlayer from "~/components/AudioPlayer";
 import { device } from "@nativescript/core/platform";
+import Route from "~/pages/Route.vue";
 
 export default {
   components: { AudioPlayer, ImageCarousel },
@@ -80,7 +80,7 @@ export default {
       });
     },
     startRoute() {
-      utils.navigateTo("route", { props: { route: this.route } });
+      this.$myNavigateTo("route", { props: { route: this.route } });
     },
     close() {
       this.$navigateBack();

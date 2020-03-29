@@ -1,6 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
-    <AppActionBar></AppActionBar>
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <StackLayout>
       <GoogleMap mapId="points" :pois="pois" @markerSelect="showPointInfo"/>
     </StackLayout>
@@ -9,6 +8,8 @@
 
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
+import PointInfo from "~/pages/PointInfo.vue";
+
 import { mapGetters, mapActions } from "vuex";
 import * as utils from "~/plugins/utils";
 
@@ -33,7 +34,7 @@ export default {
     },
     showPointInfo(marker) {
       console.log("should load", marker.poi.title);
-      utils.navigateTo('pointinfo', {
+      this.$myNavigateTo('pointinfo', {
         props: {
           point: marker.poi
         }

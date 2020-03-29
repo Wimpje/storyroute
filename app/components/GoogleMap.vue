@@ -176,13 +176,20 @@ export default {
         // 'duits': 'german',
         // 'geallieerd': 'allies',
         winkel: "shop",
+        start: "start",
         cafe: "coffee",
         restaurant: "restaurant"
       };
 
       if (poi.tags) {
         let icon = "pin";
-        if (Array.isArray(poi.tags)) {
+        if (poi.start) {
+          icon = "start"
+        }
+        else if(poi.routePoint) {
+          // no special markers, but add index to image (?)
+        }
+        else if (Array.isArray(poi.tags)) {
           for (let tagIndex = 0; tagIndex < poi.tags.length; tagIndex++) {
             const tag = poi.tags[tagIndex].toLowerCase().trim();
             console.log("tag", tag);

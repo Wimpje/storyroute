@@ -1,6 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
-    <AppActionBar></AppActionBar>
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="*, 80">
       <!-- <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder"></Label> -->
       <GoogleMap
@@ -48,6 +47,7 @@ import { mapGetters, mapActions } from "vuex";
 import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
 import * as utils from "~/plugins/utils";
 import { ObservableArray } from 'tns-core-modules/data/observable-array';
+import PointInfo from "~/pages/PointInfo.vue";
 
 export default {
   components: {
@@ -56,21 +56,24 @@ export default {
   props: ["route", "activePoi"],
   data() {
     return {
-      currentPoi: null,
-      poisToDisplay: new ObservableArray(this.route.pois.filter(p => {
-        if (p.tags && p.tags.length) {
-          for (let ti = 0; ti < p.tags.length; ti++) {
-            if(p.tags[ti].toLowerCase() === 'aanwijzing'){
-              console.log('found aanwijzing point, not showing: ', p.title, p.id)
-              return false
-            };
-          }
-        }
-        return true
-      }))
+      currentPoi: null
     };
   },
-  computed: {},
+  computed: {
+    poisToDisplay() {
+      if(this.route && this.route.pois) {
+        const pois = this.route.pois.map(poi => {
+          // copy it (not sure if necessary?) and mark as route point, not regular point
+          return Object.assign({routePoint: true}, poi)
+        })
+        pois[0].start = true // for setting start icon... not pretty but hey it works
+        return pois
+      }
+      else {
+        return []
+      }
+    }
+  },
   created() {},
   destroy() {
     // TODO settings?
@@ -93,7 +96,7 @@ export default {
 
     listLoaded(args) {},
     getInfoFor(poi) {
-      utils.navigateTo("pointinfo", {
+      this.$myNavigateTo("pointinfo", {
         props: {
           point: poi
         }

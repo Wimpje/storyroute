@@ -69,14 +69,9 @@ export const showMessageLocalized = (text) => {
   Vue.prototype.$toast.show(text, {shouldLocalize: true})
 }
 
-export const navigateBackFromButton = (backPressArgs) => {
+Vue.prototype.$myNavigateBack = function() {
   const page = store.getters.currentPage
-  
-  if (!page) {
-    console.log('show doubletap message...')
-    showMessageLocalized('nav.doubletap')
-    return
-  }
+
   console.log('Navigate back!', page.name)
   store.commit('popPage')
 
@@ -88,8 +83,6 @@ export const navigateBackFromButton = (backPressArgs) => {
   }
   else if(item.isTabView) {
     // don't do anything
-    console.log('is tabview, wont navigate')
-    showMessageLocalized('nav.doubletap')
   }
   //else if(item.isChild) {
     //const parent = store.getters.pagesInTabNavigation.filter(page => page.tabIndex = item.tabIndex)
@@ -105,7 +98,25 @@ export const navigateBackFromButton = (backPressArgs) => {
   }
 }
 
-export const navigateTo = (to, props) => {
+Vue.prototype.$navigateBackFromButton = function() {
+  const page = store.getters.currentPage
+  
+  if (!page) { 
+    console.log('show doubletap message...')
+    showMessageLocalized('nav.doubletap')
+    // no page to go back to... return
+    return
+  }
+  const item = pagesInfo[page.name];
+  if (item.isTabView) {
+    showMessageLocalized('nav.doubletap')
+  }
+
+
+  Vue.prototype.$myNavigateBack()
+}
+
+Vue.prototype.$myNavigateTo = function(to, props) {
   const topFrame = Frame.topmost();
   console.log(`navigation! topframe = ${topFrame.id}, going to ${to}`)
   const pagesInfo = store.getters.pagesInfo
@@ -120,14 +131,14 @@ export const navigateTo = (to, props) => {
   }
   else if (toPage.isModal) {
     console.log('... modal, open in modal')
-
-    Vue.showMyModal(toPage.page, {
+    const that = this
+    this.$modal.show(toPage.page, {
       ...props, 
       ...toPage.props
     }).then(res => {
-      console.log('closing showMyModal', props)
+      console.log('closing modal', props)
       console.log('... and setting currentPage back to where we came from', currentPage.name)
-      store.commit("setCurrentPage", { name: currentPage.name, instance: currentPage.instance });
+      store.commit("setCurrentPage", { name: currentPage.name, instance: that });
     })
   }
   else {
@@ -138,7 +149,8 @@ export const navigateTo = (to, props) => {
     bottomNav.selectedIndex = toPage.tabIndex
 
     console.log('... navigating in frame='+frame+' to page ', toPage.name, p)
-    currentPage.instance.$navigateTo(toPage.page, p).then(res => {
+
+    this.$navigateTo(toPage.page, p).then(res => {
       console.log('yeah! i navigated from the utils.js thingy to ' + to)
     }).catch(err => console.error('error navigating', err))
   }

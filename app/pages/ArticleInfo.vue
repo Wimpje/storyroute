@@ -1,28 +1,22 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
-    <AppActionBar></AppActionBar>
-      <GridLayout height="100%" rows="150,*,auto" columns="*" iosOverflowSafeArea="true">
-        <CachedImage
-          width="100%"
-          class="image"
-          marginBottom="10"
-          stretch="aspectFill"
-          :source="image"
-          placeholder= "~/assets/images/route-placeholder.png"
-          row="0"
-        />
-        <ScrollView  row="1">
-          <GridLayout class="info" rows="auto, *">
-            <Label row="0" :text="article.title" class="h1 name" textWrap="true"></Label>
-            <Label row="1" ref="text" class="text" textWrap="true"></Label>
-          </GridLayout>
-        </ScrollView>
-        
-        <StackLayout class="actions" row="2">
-          <Button class="-outline" :text="'close' | L" @tap="close"></Button>
-        </StackLayout>
-      </GridLayout>
-     
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
+    <GridLayout height="100%" rows="150, *" columns="*" iosOverflowSafeArea="true">
+      <CachedImage
+        width="100%"
+        class="image"
+        marginBottom="10"
+        stretch="aspectFill"
+        :source="image"
+        placeholder= "~/assets/images/route-placeholder.png"
+        row="0"
+      />
+      <ScrollView  row="1">
+        <GridLayout class="info" rows="auto, *">
+          <Label row="0" :text="article.title" class="h1 name" textWrap="true"></Label>
+          <Label row="1" ref="text" class="text" textWrap="true"></Label>
+        </GridLayout>
+      </ScrollView>
+    </GridLayout>
   </Page>
 </template>
 <script>
@@ -79,7 +73,7 @@ export default {
   },
   computed: {
     image() {
-      if (this.point) {
+      if (this.point && this.point.files) {
         const file = this.point.files.filter(file => file.type == 'image' && file.lead)
         if (file.length)
           return file[0].firebaseUrl;

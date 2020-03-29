@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     image() {
-      if (this.route) {
+      if (this.route && this.route.files) {
         const file = this.route.files.filter(
           file => file.type == "image" && file.lead
         );

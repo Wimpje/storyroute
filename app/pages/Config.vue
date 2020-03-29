@@ -1,5 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="auto, *, auto" class="container">
       <Label row="0" :text="'config.help' | L" class="helptext "></Label>
       <StackLayout class="hr m-20"></StackLayout>

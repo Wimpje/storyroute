@@ -21,6 +21,7 @@
   <string name="_map_location_nolocation_Zz4FIL">"Location could not be retrieved (does app have location access?)"</string>
   <string name="_btn_removeDownloadAll_Z1HrJg9">"remove downloads"</string>
   <string name="_btn_refreshDownloadAll_2akLCj">"refresh downloads"</string>
+  <string name="_btn_startRoute_1aJsYp">"start route"</string>
   <string name="_btn_goto_2qXYbv">"plan route with external maps app"</string>
   <string name="_btn_close_ZyLgre">"close"</string>
   <string name="_nav_doubletap_Z1jXp0x">"Push back twice to exit app"</string>

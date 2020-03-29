@@ -1,7 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
-    <AppActionBar></AppActionBar>
-
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <StackLayout>
       <ListView
         height="100%"
@@ -49,7 +47,7 @@ export default {
     },
     loadRoute(event) {
       console.log("should load", event.item.title);
-      utils.navigateTo('routeinfo', {
+      this.$myNavigateTo('routeinfo', {
         props: {
           route: event.item
         }
