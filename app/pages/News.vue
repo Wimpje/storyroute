@@ -1,21 +1,27 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <StackLayout>
+    <GridLayout rows="50, *">
       <ActivityIndicator
+        row="1"
         verticalAlignment="center"
         horizontalAlignment="middle"
         :busy="news.length == 0"
       />
       <!-- fake tabview, implementation can be a bit nicer, but it works -->
-      <GridLayout orientation="horizontal" width="100%" rows="*,*,*" height="30" class="tabView">
-        <Label v-for="(category, idx) in categories" :row="idx" :text="category" @tap="toggleTab(category)" verticalAlignment="stretch" :class="tabActive == 'news' ? 'tab selected' : 'tab'"></Label>
+      <GridLayout row="0" width="100%" columns="*,*,*" height="50" class="tabView">
+        <CenterLabel v-for="(category, idx) in categories" 
+          :key="category" 
+          :col="idx"
+          :text="'article.'+category | L" 
+          class="tab" 
+          :class="tabActive === category ? 'selected' : ''"
+          @tap="toggleTab(category)" ></CenterLabel>
       </GridLayout>
 
       <RadListView
         row="1"
         for="item in articles"
         height="100%"
-        v-if="articles.length"
         @itemTap="loadArticle"
       
       >
@@ -23,7 +29,7 @@
           <GridLayout class="article" columns="80, *" rows="auto, auto, *">
             <CachedImage
               col="0"
-              rowspan="2"
+              rowSpan="2"
               class="thumbNail img-rounded p-5"
               stretch="aspectFill"
               :source="getImageFromItem(item)"
@@ -40,7 +46,7 @@
             ></Label>
             <Label
               col="0"
-              colspan="2"
+              colSpan="2"
               row="2"
               height="60"
               class="text p-5"
@@ -51,7 +57,7 @@
           </GridLayout>
         </v-template>
       </RadListView>
-    </StackLayout>
+    </GridLayout>
   </Page>
 </template>
 
@@ -87,7 +93,7 @@ export default {
       if(this.tabActive === "event") 
         return this.events
       if(this.tabActive === "story") 
-        return this.story
+        return this.stories
       return []
     }
   },
@@ -96,6 +102,7 @@ export default {
   },
   methods: {
     toggleTab(which) {
+      console.log('toggle tab', which)
       this.tabActive = which;     
     },
     whichCategoryToShow(item) {
@@ -161,12 +168,16 @@ export default {
 }
 .article {
 }
-.tab {
+.tabView {
   background-color: #ddd;
-  padding: 10;
-  .selected {
+  color: black;
+}
+.tab {
+  padding: 25;
+  font-size: 20;
+  &.selected {
     background-color: #ccc;
-     font-weight: bold;
+    font-weight: bold;
   }
 }
 </style>

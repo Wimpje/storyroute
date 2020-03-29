@@ -5,27 +5,23 @@ import Home from './pages/Home'
 import App from './pages/App'
 import { isIOS } from "tns-core-modules/platform"
 import { Frame } from '@nativescript/core/ui/frame';
-
 import { localize } from "nativescript-localize";
-
 import { MapView } from "nativescript-google-maps-sdk";
 import VueDevtools from 'nativescript-vue-devtools'
-
 import DrawerContent from "./components/DrawerContent";
 import AppActionBar from "./components/AppActionBar";
 import CachedImage from '~/components/CachedImage'
 import CenterLabel from '~/components/CenterLabel'
-
 import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
-
 import RadListView from 'nativescript-ui-listview/vue';
 import { android, AndroidApplication, AndroidActivityBundleEventData } from "tns-core-modules/application";
-import * as utils from "~/plugins/utils";
 import { AudioService } from "~/services/audioService"
 import * as application from "tns-core-modules/application";
 import { ToastService } from '~/services/toastService'
 import { allowSleepAgain } from "nativescript-insomnia";
 import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
+const firebase = require("nativescript-plugin-firebase");
+
 
 // Set up config if not there:
 
@@ -52,16 +48,12 @@ Vue.prototype.$store = store
 Vue.prototype.$toast = new ToastService()
 
 application.on(application.launchEvent, (args) => {
-  // appSettings.setNumber("start", 0);
-  // init settings or something?
+    // init settings or something?
 });
 
 application.on(application.suspendEvent, (args) => {
   Vue.prototype.$player.pause()
   Vue.prototype.$toast.cancel();
-  allowSleepAgain().then(function () {
-    console.log("suspendEvent: Insomnia is inactive, good night!");
-  })
 });
 
 application.on(application.exitEvent, (args) => {
@@ -69,7 +61,7 @@ application.on(application.exitEvent, (args) => {
   Vue.prototype.$player.dispose();
   Vue.prototype.$toast.cancel();
   allowSleepAgain().then(function () {
-    console.log("exitEvent Insomnia is inactive, good night!");
+    console.log("exitEvent - insomnia is inactive, good night!");
   })
 });
 
@@ -77,7 +69,6 @@ let lastPress
 let timeDelay = 500 // ms
 if (android) {
   android.on(AndroidApplication.activityBackPressedEvent, function (args) {
-    console.log("Event: " + args.eventName + ", Activity: " + args.activity);
     if (lastPress + timeDelay > Date.now()) {
       // double tap kill
       console.log('bybye')
@@ -86,7 +77,7 @@ if (android) {
     else {
       // navigate back if relevant
       args.cancel = true
-      utils.navigateBackFromButton(args)
+      Vue.prototype.$navigateBackFromButton(args)
     }
     lastPress = Date.now()
   });
@@ -112,7 +103,6 @@ Vue.component('CenterLabel', CenterLabel)
 Vue.component('CachedImage', CachedImage)
 
 console.log("App start - will load firebase stuff now!")
-const firebase = require("nativescript-plugin-firebase");
 const fbInit = firebase.init({
   iOSEmulatorFlush: true,
   analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled

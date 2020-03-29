@@ -84,10 +84,6 @@ Vue.prototype.$myNavigateBack = function() {
   else if(item.isTabView) {
     // don't do anything
   }
-  //else if(item.isChild) {
-    //const parent = store.getters.pagesInTabNavigation.filter(page => page.tabIndex = item.tabIndex)
-    //page.instance.$navigateTo(parent.page)
- // }
   else {
     const frame = 'tabIndex' in item ? 'frameTab' + item.tabIndex : 'mainContent'
     // following line does not work, it cannot find parent frame id
@@ -107,12 +103,12 @@ Vue.prototype.$navigateBackFromButton = function() {
     // no page to go back to... return
     return
   }
+
+  const pagesInfo = store.getters.pagesInfo
   const item = pagesInfo[page.name];
   if (item.isTabView) {
     showMessageLocalized('nav.doubletap')
   }
-
-
   Vue.prototype.$myNavigateBack()
 }
 
@@ -132,7 +128,7 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   else if (toPage.isModal) {
     console.log('... modal, open in modal')
     const that = this
-    this.$modal.show(toPage.page, {
+    Vue.showMyModal(toPage.page, {
       ...props, 
       ...toPage.props
     }).then(res => {

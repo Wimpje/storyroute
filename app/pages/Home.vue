@@ -56,7 +56,7 @@ export default {
       args.cancel = true
       // not awesome, but makes it in sync with how otherrs navigate, and builds navigation stack for android.
       let page = ''
-      switch (args.selectedIndex) {
+      switch (args.object.selectedIndex) {
         case 0:
           page = 'routes'
           break;
@@ -67,8 +67,9 @@ export default {
           page = 'news'
           break;
       }
-      
-      this.$store.commit('bottomNavigatedTo', args.selectedIndex)
+      console.log('bottomnav', page)
+      // this.$myNavigateTo(page)
+      this.$store.commit('bottomNavigatedTo', args.object.selectedIndex)
     }
   }
 };

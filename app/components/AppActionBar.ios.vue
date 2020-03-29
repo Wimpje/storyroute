@@ -1,6 +1,7 @@
 <template>
   <ActionBar class="action-bar">
-    <NavigationButton :visibility="shouldShowBack ? 'visible' : 'collapsed'" @tap="backButton" android.systemIcon="ic_menu_back"></NavigationButton> 
+    <ActionItem :visibility="shouldShowBack ? 'visible' : 'collapsed'" position="left" icon="~/images/back.png" :text="'btn.backIos' | L" @tap="backButton"/>
+
     <ActionItem
       position="left"
       icon="res://baseline_menu_24"
@@ -15,7 +16,6 @@
 import * as utils from "~/plugins/utils";
 import firebase from "nativescript-plugin-firebase";
 import { mapGetters } from "vuex";
-import { isIOS } from '@nativescript/core/ui/page/page';
 
 export default {
   data() {
@@ -27,16 +27,13 @@ export default {
     ...mapGetters(['currentPageText', 'currentIsTabView']),
     shouldShowBack: {
       get() {
-        if(isIOS)
-          return true // ios does this correctly so always just true
-
         return !this.currentIsTabView
       }
     }
   },
   methods: {
     backButton() {
-      this.$navigateBack()
+      this.$myNavigateBack()
     },
     onDrawerButtonTap() {
       utils.showDrawer();

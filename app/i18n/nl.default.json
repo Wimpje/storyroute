@@ -23,8 +23,14 @@
     "info": "info",
     "more": "meer"
   },
+  "article": {
+    "news": "Nieuws",
+    "event": "Activiteiten",
+    "story": "Verhalen"
+  },
   "btn": {
     "close": "sluiten",
+    "back": "terug",
     "goto": "plan route met externe maps app",
     "startRoute": "start route",
     "refreshDownloadAll": "ververs downloads",

@@ -14,6 +14,7 @@
   },
   "btn": {
     "close": "close",
+    "back": "back",
     "goto": "plan route with external maps app",
     "startRoute": "start route",
     "refreshDownloadAll": "refresh downloads",
@@ -44,6 +45,11 @@
   "point": {
     "info": "info",
     "more": "more"
+  }, 
+  "article": {
+    "news": "News",
+    "event": "Activities",
+    "story": "Stories"
   },
   "message": {
     "englishNotYetSupportedTitle": "Language not (fully) supported",
