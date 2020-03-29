@@ -71,7 +71,7 @@ export const showMessageLocalized = (text) => {
 
 Vue.prototype.$myNavigateBack = function() {
   const page = store.getters.currentPage
-
+  const tabIndex = store.getters.bottomNavigationIndex
   console.log('Navigate back!', page.name)
   store.commit('popPage')
 
@@ -85,7 +85,7 @@ Vue.prototype.$myNavigateBack = function() {
     // don't do anything
   }
   else {
-    const frame = 'tabIndex' in item ? 'frameTab' + item.tabIndex : 'mainContent'
+    const frame = 'frameTab' + tabIndex
     // following line does not work, it cannot find parent frame id
     console.log('is part of tab, go back', frame)
     page.instance.$navigateBack( {frame: frame})
@@ -118,7 +118,8 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   const pagesInfo = store.getters.pagesInfo
   const toPage = pagesInfo[to];
   const bottomNav = findNav(topFrame)
-
+  const tabIndex = store.getters.bottomNavigationIndex
+  console.log(`Navigating! current bottomNav idx = ${bottomNav.selectedIndex} in store = ${tabIndex}`)
   const currentPage = store.getters.currentPage
 
   if (toPage.isTabView) {
@@ -139,10 +140,8 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   }
   else {
     // determine which frame to go to
-    const frame = 'frameTab' + toPage.tabIndex
-    const p = { ...props, clearHistory: false, frame: frame }
-    
-    bottomNav.selectedIndex = toPage.tabIndex
+    const frame = 'frameTab' + tabIndex
+    const p = { ...props, frame: frame }
 
     console.log('... navigating in frame='+frame+' to page ', toPage.name, p)
 

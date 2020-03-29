@@ -1,6 +1,6 @@
 <template>
   <ActionBar class="action-bar">
-    <ActionItem :visibility="shouldShowBack ? 'visible' : 'collapsed'" position="left" icon="~/images/back.png" :text="'btn.backIos' | L" @tap="backButton"/>
+    <ActionItem :visibility="shouldShowBack ? 'visible' : 'collapsed'" position="left" :text="'btn.backIos' | L" @tap="backButton"/>
 
     <ActionItem
       position="left"

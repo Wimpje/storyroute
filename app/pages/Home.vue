@@ -1,7 +1,7 @@
 <template>
   <Page>
     <AppActionBar></AppActionBar>
-    <BottomNavigation class="bottomNavigation" @selectedIndexChanged="onTap">
+    <BottomNavigation class="bottomNavigation" @selectedIndexChanged="indexChanged">
       <TabStrip>
         <TabStripItem>
           <Label :text="'nav.routes' | L"></Label>
@@ -51,8 +51,7 @@ export default {
   },
   computed: {},
   methods: {
-    // NOT USED 
-    onTap(args) {
+    indexChanged(args) {
       args.cancel = true
       // not awesome, but makes it in sync with how otherrs navigate, and builds navigation stack for android.
       let page = ''
@@ -67,7 +66,7 @@ export default {
           page = 'news'
           break;
       }
-      console.log('bottomnav', page)
+      console.log('bottomnav', args.object.selectedIndex)
       // this.$myNavigateTo(page)
       this.$store.commit('bottomNavigatedTo', args.object.selectedIndex)
     }

@@ -31,6 +31,7 @@
   "btn": {
     "close": "sluiten",
     "back": "terug",
+    "backIos": "ᐸ back",
     "goto": "plan route met externe maps app",
     "startRoute": "start route",
     "refreshDownloadAll": "ververs downloads",

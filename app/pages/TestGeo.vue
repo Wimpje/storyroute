@@ -1,5 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded">
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="100, *, 50, 50">
       <GridLayout row="0" columns="*, *, *,*, *">
         <Button text="Enable Location" col="0" textWrap="true" @tap="enableLocationTap" />
