@@ -12,6 +12,7 @@ import PointInfo from "~/pages/PointInfo.vue";
 
 import { mapGetters, mapActions } from "vuex";
 import * as utils from "~/plugins/utils";
+import * as firebase from "nativescript-plugin-firebase";
 
 export default {
   mounted() {},
@@ -55,7 +56,26 @@ export default {
 
     showPointInfo(marker) {
       console.log("should load", marker.poi.title);
-
+      firebase.analytics.logEvent({
+        key: "load_point",
+        parameters: [ // optional
+          {
+            key: "source",
+            value: "points"
+          },
+          {
+            key: "point_id",
+            value: marker.poi.id
+          },
+          {
+            key: "point_name",
+            value: marker.poi.title
+          }]
+      }).then(
+          function () {
+            console.log("analytics - logged load_point");
+          }
+      );
       this.$myNavigateTo("pointinfo", {
         props: {
           point: marker.poi

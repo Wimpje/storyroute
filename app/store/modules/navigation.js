@@ -118,15 +118,15 @@ export const getters = {
 export const mutations = {
   setCurrentPage(state, page) {
     state.currentPage = page
-    if (getBoolean('googleAnalytics')) {
-      firebase.analytics.setScreenName({
-        screenName: page.name
-      }).then(
-          function () {
-            console.log("Screen name set", page.name);
-          }
-      );
-    }
+  
+    firebase.analytics.setScreenName({
+      screenName: page.name
+    }).then(
+        function () {
+          console.log("Screen name set", page.name);
+        }
+    );
+    
   },
   bottomNavigatedTo(state, index) {
     state.bottomIndex = index

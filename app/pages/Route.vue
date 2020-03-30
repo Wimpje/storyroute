@@ -48,6 +48,7 @@ import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
 import * as utils from "~/plugins/utils";
 import { ObservableArray } from 'tns-core-modules/data/observable-array';
 import PointInfo from "~/pages/PointInfo.vue";
+import * as firebase from "nativescript-plugin-firebase";
 
 export default {
   components: {
@@ -67,7 +68,7 @@ export default {
           return Object.assign({routePoint: true}, poi)
         })
         pois[0].start = true // for setting start icon... not pretty but hey it works
-        console.log(pois)
+
         return pois
       }
       else {
@@ -89,6 +90,7 @@ export default {
       keepAwake().then(function() {
         console.log("Insomnia is active");
       });
+      this.$refs.listView.refresh()
     },
     openPoint({ item, index }) {
       console.log("tapped poi", item, index);
@@ -97,6 +99,34 @@ export default {
 
     listLoaded(args) {},
     getInfoFor(poi) {
+      firebase.analytics.logEvent({
+        key: "load_point",
+        parameters: [ // optional
+          {
+            key: "source",
+            value: "route"
+          },
+          {
+            key: "from_route_id",
+            value: this.route.id
+          },
+          {
+            key: "from_route_title",
+            value: this.route.title
+          },
+          {
+            key: "point_id",
+            value: poi.id
+          },
+          {
+            key: "point_name",
+            value: poi.title
+          }]
+      }).then(
+          function () {
+            console.log("analytics - logged load_point");
+          }
+      );
       this.$myNavigateTo("pointinfo", {
         props: {
           point: poi
@@ -106,8 +136,10 @@ export default {
     selectMarker(marker) {
       const poi = marker.poi;
       this.currentPoi = poi;
-      const idx = this.route.pois.findIndex(p => poi.id === p.id);
-      if (idx > -1) this.$refs.listView.scrollToIndex(idx, true);
+      const idx = this.poisToDisplay.findIndex(p => poi.id === p.id);
+      this.$nextTick(() => {
+        if (idx > -1) this.$refs.listView.scrollToIndex(idx, true);
+      })
     },
     refreshPoints() {}
   }

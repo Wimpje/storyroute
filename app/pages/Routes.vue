@@ -22,6 +22,7 @@ import RouteListItem from "~/components/RouteListItem";
 import RouteInfo from "~/pages/RouteInfo";
 import Route from "~/pages/Route";
 import * as utils from "~/plugins/utils";
+import * as firebase from "nativescript-plugin-firebase";
 
 export default {
   mounted() {
@@ -47,6 +48,23 @@ export default {
     },
     loadRoute(event) {
       console.log("should load", event.item.title);
+      firebase.analytics.logEvent({
+        key: "load_route",
+        parameters: [ // optional
+          {
+            key: "route_id",
+            value: event.item.id
+          },
+          {
+            key: "route_name",
+            value: event.item.title
+          }]
+      }).then(
+          function () {
+            console.log("analytics - logged load_route");
+          }
+      );
+
       this.$myNavigateTo('routeinfo', {
         props: {
           route: event.item

@@ -6,9 +6,20 @@
         <StackLayout class="descriptions">
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
-          <StackLayout v-if="point.routeDescription" class="hr m-10"></StackLayout>
-          <Label v-if="point.routeDescription" :text="point.routeDescription" class="body description" textWrap="true"></Label>
-          <Button verticalAlignment="top" horizontalAlignment="right" class="-outline floatButton" :text="'btn.goto' | L" @tap="openNavigationTo"></Button>
+          <StackLayout  v-if="point.routeDescription">
+            <StackLayout class="hr m-10"></StackLayout>
+            <StackLayout orientation="horizontal">
+              <Label
+                text.decode="&#xf5eb;"
+                class="fas t-24 p-l-20 p-y-20"
+                horizontalAlignment="center"
+              ></Label>
+              <Label :text="'route.directions' | L" class="h1 p-20 m-x-auto"></Label>
+            </StackLayout>
+            <Label :text="point.routeDescription" class="body description" textWrap="true"></Label>
+          </StackLayout>
+          
+          <Button verticalAlignment="top" horizontalAlignment="right" class="-primary -rounded-sm floatButton" :text="'btn.goto' | L" @tap="openNavigationTo"></Button>
 
         </StackLayout>
       </ScrollView>
@@ -23,6 +34,7 @@ import * as utils from "~/plugins/utils";
 import { Directions } from "nativescript-directions";
 import ImageCarousel from "~/components/ImageCarousel";
 import AudioPlayer from "~/components/AudioPlayer";
+import * as firebase from "nativescript-plugin-firebase";
 
 export default {
   components: {
@@ -40,6 +52,22 @@ export default {
     },
     openNavigationTo() {
       console.log("open maps application to go to:", this.point.title);
+      firebase.analytics.logEvent({
+        key: "open_map",
+        parameters: [ // optional
+          {
+            key: "point_id",
+            value: this.point.id
+          },
+          {
+            key: "point_name",
+            value: this.point.title
+          }]
+      }).then(
+          function () {
+            console.log("analytics - logged open_map");
+          }
+      );
       let directions = new Directions();
       directions.available().then(avail => {
         if (avail) {
@@ -90,6 +118,7 @@ export default {
 }
 .floatButton {
   margin-bottom: 20;
+  margin-top: 60;
 }
 .description {
   vertical-align: top;

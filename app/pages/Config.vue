@@ -1,9 +1,10 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <GridLayout rows="auto, *, auto" class="container">
-      <Label row="0" :text="'config.help' | L" class="helptext "></Label>
-      <StackLayout class="hr m-20"></StackLayout>
-      <StackLayout row="1" class="settings">
+    <GridLayout rows="auto, auto, auto, *, auto" class="container">
+      <Label row="0" :text="'nav.config' | L" class="h1" textWrap="true"></Label>
+      <Label row="1" :text="'config.help' | L" class="helptext" textWrap="true"></Label>
+      <StackLayout row="2" class="hr m-20"></StackLayout>
+      <StackLayout row="3" class="settings">
         <!-- <StackLayout class="setting" orientation="horizontal">
           <Switch checked="true" @checkedChange="toggleDark" />
           <Label :text="'Dark mode' | L"></Label>
@@ -17,18 +18,18 @@
           <Label class="m-y-auto" :text="'config.crashInfo' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
-          <Button text="download" @tap="downloadAll" />
+          <Button class="-primary -rounded-sm" text="download" @tap="downloadAll" />
           <Label class="m-y-auto" :text="'config.downloadAll' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal" v-if="allDownloaded">
-          <Button :text="'btn.refreshDownloadAll' | L" @tap="downloadAll" />
+          <Button class="-primary -rounded-sm" :text="'btn.refreshDownloadAll' | L" @tap="downloadAll" />
           <Label class="m-y-auto" :text="'config.refreshDownloadAll' | L" textWrap="true"></Label>
         </StackLayout>
-        <StackLayout class="setting" orientation="horizontal">
-          <Button text="crash!" @tap="crash" ></Button>
+        <StackLayout v-if="isDebug" class="setting" orientation="horizontal">
+          <Button class="danger -rounded-sm" text="crash!" @tap="crash" ></Button>
         </StackLayout>
       </StackLayout>
-      <Button row="2" @tap="close" :text="'btn.close' | L" />
+      <Button row="4" @tap="close" :text="'btn.close' | L" />
     </GridLayout>
   </Page>
 </template>
@@ -54,6 +55,9 @@ export default {
         setBoolean('googleCrashlytics', val)
         firebase.crashlytics.setCrashlyticsCollectionEnabled(val);
       }
+    },
+    isDebug() {
+      return TNS_ENV !== 'production'
     },
     toggleAnalytics: {
       get () {
@@ -92,6 +96,13 @@ export default {
 <style scoped lang="scss">
 .container {
   margin: 20;
+}
+.helptext {
+  margin-bottom:50;
+}
+.danger {
+  background-color: #dd3d31;
+  color: white;
 }
 .info {
   font-size: 20;

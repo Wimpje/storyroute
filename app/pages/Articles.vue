@@ -9,22 +9,18 @@
       />
       <!-- fake tabview, implementation can be a bit nicer, but it works -->
       <GridLayout row="0" width="100%" columns="*,*,*" height="50" class="tabView">
-        <CenterLabel v-for="(category, idx) in categories" 
-          :key="category" 
+        <CenterLabel
+          v-for="(category, idx) in categories"
+          :key="category"
           :col="idx"
-          :text="'article.'+category | L" 
-          class="tab" 
+          :text="'article.'+category | L"
+          class="tab"
           :class="tabActive === category ? 'selected' : ''"
-          @tap="toggleTab(category)" ></CenterLabel>
+          @tap="toggleTab(category)"
+        ></CenterLabel>
       </GridLayout>
 
-      <RadListView
-        row="1"
-        for="item in articles"
-        height="100%"
-        @itemTap="loadArticle"
-      
-      >
+      <RadListView row="1" for="item in articles" height="100%" @itemTap="loadArticle">
         <v-template>
           <GridLayout class="article" columns="80, *" rows="auto, auto, *">
             <CachedImage
@@ -69,6 +65,7 @@ import { isAndroid, isIOS } from "tns-core-modules/platform";
 import ArticleInfo from "~/pages/ArticleInfo.vue";
 import { mapGetters } from "vuex";
 import { ObservableArray } from "@nativescript/core/data/observable-array/observable-array";
+import * as firebase from "nativescript-plugin-firebase";
 
 const moment = require("moment");
 
@@ -79,7 +76,7 @@ export default {
     return {
       tabActive: "news",
       currentItem: null,
-      loading: true
+      loading: false
     };
   },
   computed: {
@@ -105,7 +102,7 @@ export default {
   methods: {
     toggleTab(which) {
       console.log('toggle tab', which)
-      this.tabActive = which;     
+      this.tabActive = which;
     },
     whichCategoryToShow(item) {
       return item.category === this.tabActive
@@ -113,8 +110,7 @@ export default {
     onLoaded() {
       this.$store.commit("setCurrentPage", { name: "articles", instance: this });
       if (!this.articles || this.articles.length === 0) {
-        this.loadArticles();
-        this.loading = false
+          this.loadArticles();
       }
     },
     getImageFromItem(item) {
@@ -132,19 +128,51 @@ export default {
     },
     updateNews() {
       // apparently needed for ios race condition
-      this.loading = true
+      
       this.$nextTick(() => {
-        this.$store.dispatch("updateArticles");
-        this.loading = false
-        return;
+        try {
+          this.loading = true
+          this.$store.dispatch("updateArticles");
+          this.loading = false
+        }
+        catch(e) {
+          this.loading = false
+        }
       });
     },
     loadArticles() {
-      this.$store.dispatch("getArticles");
+      this.loading = true
+      
+      this.$store.dispatch("getArticles").then(() => {
+        this.loading = false
+      }).catch(err => {
+        this.loading = false
+      })
+
       console.log("news retrieved");
     },
     loadArticle({ item }) {
       this.currentItem = item;
+      firebase.analytics.logEvent({
+        key: "load_article",
+        parameters: [ // optional
+          {
+            key: "article_cat",
+            value: item.category
+          },
+          {
+            key: "article_id",
+            value: item.id
+          },
+          {
+            key: "article_name",
+            value: item.title
+          }]
+      }).then(
+          function () {
+            console.log("analytics - logged load_article");
+          }
+      );
       // do something based on category? maybe different page? for now no
       this.$myNavigateTo("articleinfo", {
         props: {
@@ -175,11 +203,12 @@ export default {
 }
 .tabView {
   background-color: #ddd;
+  
   color: black;
 }
 .tab {
-  padding: 25;
   font-size: 20;
+  padding: 20;
   &.selected {
     background-color: #ccc;
     font-weight: bold;

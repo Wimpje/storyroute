@@ -1,7 +1,8 @@
 <template>
   <Page class="page" @loaded="onLoaded"  actionBarHidden="true">
-    <GridLayout rows="250, *, auto" columns="*" iosOverflowSafeArea="true">
-      <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
+    <GridLayout rows="200, *, auto" columns="*" iosOverflowSafeArea="true">
+      <ImageCarousel height="200" row="0" :images="images"></ImageCarousel>
+    
       <ScrollView row="1">
         <StackLayout>
           <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
@@ -18,12 +19,6 @@
           </GridLayout>
           <StackLayout>
             <Label :text="route.description" class="body p-20 routeDescription" textWrap="true"></Label>
-            <Button
-              verticalAlignment="bottom"
-              horizontalAlignment="right"
-              :text="'btn.startRoute' | L"
-              @tap="startRoute()"
-            ></Button>
             <StackLayout class="hr m-10"></StackLayout>
             <StackLayout orientation="horizontal">
               <Label
@@ -52,7 +47,14 @@
           </StackLayout>
         </StackLayout>
       </ScrollView>
-
+      <Button
+        row="1"
+        verticalAlignment="bottom"
+        horizontalAlignment="right"
+        class="-rounded-sm startRouteButton"
+        :text="'btn.startRoute' | L"
+        @tap="startRoute()"
+      ></Button>
       <StackLayout class="actions" row="2">
         <AudioPlayer :files="route.files" />
       </StackLayout>
@@ -134,7 +136,10 @@ export default {
   background-color: black;
   border-radius: 100;
 }
-
+.startRouteButton {
+  margin-bottom: 20;
+  padding: 10;
+}
 .routeImage {
   margin-bottom: 10;
 }

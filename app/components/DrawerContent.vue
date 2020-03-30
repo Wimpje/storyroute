@@ -28,6 +28,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import * as utils from "~/plugins/utils";
+import * as firebase from "nativescript-plugin-firebase";
 
 export default {
   data() {
@@ -53,6 +54,19 @@ export default {
       return String.fromCharCode(code);
     },
     goToPage(item) {
+      firebase.analytics.logEvent({
+        key: "drawer_nav",
+        parameters: [ // optional
+          {
+            key: "to_page",
+            value: item.name
+          }
+          ]
+      }).then(
+          function () {
+            console.log("analytics - logged drawer_nav");
+          }
+      );
       this.$myNavigateTo(item);
       utils.closeDrawer();
     }
