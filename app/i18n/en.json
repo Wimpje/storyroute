@@ -49,6 +49,10 @@
     "removeDownloadAll": "Remove downloaded files & routes",
     "help": "Here you can toggle settings, and download routes to your phone."
   },
+  "dialog":{
+    "chooseAction": "Choose action",
+    "cancelAction": "Cancel"
+  },
   "help": {
     "credits": "Credits",
     "contact": "Contact info"

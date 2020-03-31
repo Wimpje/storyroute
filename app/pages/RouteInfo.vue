@@ -1,10 +1,10 @@
 <template>
   <Page class="page" @loaded="onLoaded"  actionBarHidden="true">
-    <GridLayout rows="200, *, auto" columns="*" iosOverflowSafeArea="true">
+    <GridLayout rows="200, *, auto" columns="*" iosOverflowSafeArea="true" class="container">
       <ImageCarousel height="200" row="0" :images="images"></ImageCarousel>
     
       <ScrollView row="1">
-        <StackLayout class="container">
+        <StackLayout>
           <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
             <CenterLabel col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></CenterLabel>
             <CenterLabel col="1" row="0" :text="distance" class="h3 distance"></CenterLabel>

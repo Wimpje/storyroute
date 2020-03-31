@@ -38,9 +38,10 @@
             <Label
               col="1"
               row="1"
+              v-if="item.publishedDate && item.category === 'news'"
               class="date"
               verticalAlignment="top"
-              :text="toPrettyDate(item.publishDate)"
+              :text="toPrettyDate(item.publishedDate)"
             ></Label>
            
             <Label
@@ -95,8 +96,9 @@ export default {
       stories: "getStories"
     }),
     articles() {
+     
       if(this.tabActive === "news") 
-        return this.news
+        return this.news.sort(utils.compareValues('publishedDate', 'desc'))
       if(this.tabActive === "event") 
         return this.events
       if(this.tabActive === "story") 
