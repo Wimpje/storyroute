@@ -5,6 +5,7 @@ import PointInfo from "~/pages/PointInfo.vue";
 import Route from "~/pages/Route.vue";
 import Routes from "~/pages/Routes.vue";
 import Config from "~/pages/Config.vue";
+import Help from "~/pages/Help.vue";
 import Articles from "~/pages/Articles.vue";
 import TestGeo from "~/pages/TestGeo.vue";
 import RouteInfo from "~/pages/RouteInfo.vue";
@@ -22,6 +23,7 @@ const pages = {
   route: Route,
   routeinfo: RouteInfo,
   config: Config,
+  help: Help,
   articles: Articles,
   testgeo: TestGeo,
   articleinfo: ArticleInfo
@@ -34,12 +36,13 @@ const pagesInfo = {
   articles: {   name: 'articles', icon: "0xf1ea", text: "nav.articles", page: pages.articles, sideDrawer: true, isTabView: true, tabIndex: 2 },
   
   // no tab navigation for the following:
-  route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, isChild: true },
-  routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true },
-  pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true },
+  route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share'] },
+  routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share']},
+  pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share'] },
   testgeo: {    name: 'testgeo', icon: "0xf7a2", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
-  config: {     name: 'config', icon: "0xf013", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: true, props: { fullscreen: true }  },
-  articleinfo: {name: 'articleinfo', icon: "0xf1ea", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: false, isChild: true }
+  config: {     name: 'config', icon: "0xf013", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: false, mainContent: true  },
+  help: {       name: 'help', icon: "0xf059", text: "nav.help", page: pages.help, sideDrawer: true, isTabView: false, isModal: false, mainContent: true },
+  articleinfo: {name: 'articleinfo', icon: "0xf1ea", text: "nav.articleinfo", page: pages.articleinfo, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['share'] }
 }
 
 export const state = () => {
@@ -86,6 +89,10 @@ export const getters = {
     const ret  = state.pagesInfo[curPage].isTabView
     console.log('currentistabview', ret)
     return ret
+  },
+  currentMenuItems(state) {
+    const curPage = state.currentPage ? state.currentPage.name : state.defaultPage
+    return state.pagesInfo[curPage].menuItems
   },
   pagesInSideDrawer(state) {
     const sideDrawerPages = Object.values(state.pagesInfo).filter(value => {

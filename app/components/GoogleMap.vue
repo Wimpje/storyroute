@@ -123,10 +123,12 @@ export default {
                 },
                 e => {
                   console.log("Error: " + (e.message || e));
+                  firebase.crashlytics.log("Unable to Enable Location" + (e.message || e));
                 }
               )
               .catch(ex => {
                 console.log("Unable to Enable Location", ex);
+                firebase.crashlytics.log("Unable to Enable Location" + ex);
                 this.$toast.show("map.location.enableerror", {
                   shouldLocalize: true
                 });
@@ -160,12 +162,51 @@ export default {
                 }
               });
           }
+          that.initMapSettings()
+
         },
         function(e) {
           console.log("Error: " + (e.message || e));
           this.$toast.show("map.location.error", { shouldLocalize: true });
         }
       );
+    },
+    initMapSettings() {
+
+      this.mapView.setStyle(mapStyles.retro);
+      
+      const gMap = this.mapView.gMap;
+      // can be done to hide infowindow
+      // this.mapview.infoWindowTemplate = ''
+
+      if (isAndroid && this.isMounted && geolocation.isEnabled()) {
+        let uiSettings = gMap.getUiSettings();
+        uiSettings.setMyLocationButtonEnabled(true);
+        uiSettings.setTiltGesturesEnabled(true);
+        uiSettings.setRotateGesturesEnabled(true);
+        gMap.setMyLocationEnabled(true);
+      }
+      if (isIOS) {
+        gMap.myLocationEnabled = true;
+        gMap.settings.myLocationButton = true;
+        gMap.settings.tiltGesturesEnabled = true;
+        this.mapView.on("myLocationTapped", event => {
+          console.log('IOS tapped on "my location" button');
+          geolocation.isEnabled().then(enabled => {
+            if (enabled) {
+              geolocation
+                .getCurrentLocation({
+                  maximumAge: 5000,
+                  timeout: 20000
+                })
+                .then(location => {
+                  console.log("-- moving to location", location);
+                  gMap.animateToLocation(location);
+                });
+            }
+          });
+        });
+      }
     },
 
     addMarkerIcon(marker, poi) {
@@ -176,6 +217,7 @@ export default {
         // 'duits': 'german',
         // 'geallieerd': 'allies',
         winkel: "shop",
+        vliegtuig: "plane",
         start: "start",
         cafe: "coffee",
         restaurant: "restaurant"
@@ -200,6 +242,7 @@ export default {
           }
         }
         if (icon) {
+          // TODO cache?
           const iconImg = new Image();
 
           if (isIOS) {
@@ -242,7 +285,7 @@ export default {
     onMapReady(args) {
       this.mapView = args.object;
       console.log("what is zoom?", this.mapView.zoom);
-      // workaround for sizing the map correctly
+      // workaround for sizing the map correctly, at least on iOS
       setTimeout(
         () =>
           (this.mapView.height = {
@@ -252,51 +295,45 @@ export default {
         1
       );
 
-      var gMap = this.mapView.gMap;
+      this.addMapMarkers()
 
-      this.mapView.setStyle(mapStyles.retro);
+      this.addPath()
 
-      // can be done to hide infowindow
-      // this.mapview.infoWindowTemplate = ''
+      this.$emit("mapReady");
+    },
+    addPath() {
+      // create route line
+      if (this.path && this.path.length) {
+        this.mapView.removeAllShapes();
 
-      if (isAndroid && this.isMounted && geolocation.isEnabled()) {
-        let uiSettings = gMap.getUiSettings();
-        uiSettings.setMyLocationButtonEnabled(true);
-        uiSettings.setTiltGesturesEnabled(true);
-        uiSettings.setRotateGesturesEnabled(true);
-        gMap.setMyLocationEnabled(true);
-      }
-      if (isIOS) {
-        gMap.myLocationEnabled = true;
-        gMap.settings.myLocationButton = true;
-        gMap.settings.tiltGesturesEnabled = true;
-        this.mapView.on("myLocationTapped", event => {
-          console.log('IOS tapped on "my location" button');
-          geolocation.isEnabled().then(enabled => {
-            if (enabled) {
-              geolocation
-                .getCurrentLocation({
-                  maximumAge: 5000,
-                  timeout: 20000
-                })
-                .then(location => {
-                  console.log("-- moving to location", location);
-                  gMap.animateToLocation(location);
-                });
-            }
-          });
+        // draw the polyline
+        const polyline = new Polyline();
+        console.log("want to create a line...", this.path.length);
+
+        this.path.forEach(geoPoint => {
+          const pos = Position.positionFromLatLng(
+            geoPoint.latitude,
+            geoPoint.longitude
+          );
+          polyline.addPoint(pos);
         });
+        polyline.visible = true;
+        polyline.width = 5;
+        polyline.geodesic = false;
+        polyline.color = new Color("#8ABF5F");
+        this.mapView.addPolyline(polyline);
       }
-
+    },
+    addMapMarkers() {
+      console.log(
+        "MAPREADY -  ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
+      );
       let bounds;
-      let padding = 100;
+      let padding = 40;
       if (isIOS) {
         bounds = GMSCoordinateBounds.alloc().init();
       }
 
-      console.log(
-        "MAPREADY -  ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
-      );
       this.mapView.removeAllMarkers();
 
       if (this.pois && this.pois.length) {
@@ -325,36 +362,15 @@ export default {
         }
         if (isIOS) {
           var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
-          console.log("IOS moving map to bounds of all points on map", bounds);
-          this.mapView.gMap.animateWithCameraUpdate(update);
+          console.log("IOS moving map to bounds of all points on map");
+          // setting timeout... https://github.com/dapriett/nativescript-google-maps-sdk/issues/106
+          setTimeout(() => {
+            this.mapView.gMap.animateWithCameraUpdate(update);
+          }, 100)
         }
       }
 
       // END map positioning
-
-      // create route line
-      if (this.path && this.path.length) {
-        this.mapView.removeAllShapes();
-
-        // draw the polyline
-        const polyline = new Polyline();
-        console.log("want to create a line...", this.path.length);
-
-        this.path.forEach(geoPoint => {
-          const pos = Position.positionFromLatLng(
-            geoPoint.latitude,
-            geoPoint.longitude
-          );
-          polyline.addPoint(pos);
-        });
-        polyline.visible = true;
-        polyline.width = 5;
-        polyline.geodesic = false;
-        polyline.color = new Color("#8ABF5F");
-        this.mapView.addPolyline(polyline);
-      }
-
-      this.$emit("mapReady");
     },
     onMarkerSelect(m) {
       this.$emit("markerSelect", m.marker);

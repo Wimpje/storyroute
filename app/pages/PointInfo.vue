@@ -18,9 +18,6 @@
             </StackLayout>
             <Label :text="point.routeDescription" class="body description" textWrap="true"></Label>
           </StackLayout>
-          
-          <Button verticalAlignment="top" horizontalAlignment="right" class="-primary -rounded-sm floatButton" :text="'btn.goto' | L" @tap="openNavigationTo"></Button>
-
         </StackLayout>
       </ScrollView>
       <StackLayout class="actions" row="1">
@@ -31,7 +28,6 @@
 </template>
 <script>
 import * as utils from "~/plugins/utils";
-import { Directions } from "nativescript-directions";
 import ImageCarousel from "~/components/ImageCarousel";
 import AudioPlayer from "~/components/AudioPlayer";
 import * as firebase from "nativescript-plugin-firebase";
@@ -41,7 +37,13 @@ export default {
     ImageCarousel,
     AudioPlayer
   },
-  mounted() {},
+  mounted() {
+    this.$store.commit('setCurrentPoi', this.point)
+  },
+  destroy() {
+    console.log("DESTROY poi")
+    this.$store.commit('setCurrentPoi', null)
+  },
   props: ["point"],
   methods: {
     onLoaded() {
@@ -50,47 +52,7 @@ export default {
         instance: this
       });
     },
-    openNavigationTo() {
-      console.log("open maps application to go to:", this.point.title);
-      firebase.analytics.logEvent({
-        key: "open_map",
-        parameters: [ // optional
-          {
-            key: "point_id",
-            value: this.point.id
-          },
-          {
-            key: "point_name",
-            value: this.point.title
-          }]
-      }).then(
-          function () {
-            console.log("analytics - logged open_map");
-          }
-      );
-      let directions = new Directions();
-      directions.available().then(avail => {
-        if (avail) {
-          directions
-            .navigate({
-              to: {
-                lat: this.point.position.latitude,
-                lng: this.point.position.longitude
-              }
-            })
-            .then(
-              function() {
-                console.log("Maps app launched.");
-              },
-              function(error) {
-                console.log(error);
-              }
-            );
-        } else {
-          this.$store.setMessage("No maps application found to open");
-        }
-      });
-    },
+   
     close() {
       this.$modal.close();
     }

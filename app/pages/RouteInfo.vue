@@ -4,7 +4,7 @@
       <ImageCarousel height="200" row="0" :images="images"></ImageCarousel>
     
       <ScrollView row="1">
-        <StackLayout>
+        <StackLayout class="container">
           <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
             <CenterLabel col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></CenterLabel>
             <CenterLabel col="1" row="0" :text="distance" class="h3 distance"></CenterLabel>
@@ -54,6 +54,7 @@
         class="-rounded-sm startRouteButton"
         :text="'btn.startRoute' | L"
         @tap="startRoute()"
+        textWrap="true"
       ></Button>
       <StackLayout class="actions" row="2">
         <AudioPlayer :files="route.files" />
@@ -125,6 +126,13 @@ export default {
     return {
       showDescriptions: false
     };
+  },
+  mounted() {
+    this.$store.commit('setCurrentRoute', this.route)
+  },
+  destroy() {
+    console.log("DESTROY ROUTE")
+    this.$store.commit('setCurrentRoute', null)
   }
 };
 </script>
@@ -139,6 +147,13 @@ export default {
 .startRouteButton {
   margin-bottom: 20;
   padding: 10;
+  font-size: 20;
+  height: 100;
+  width: 100;
+  border-radius:50;
+  border-width: 1;
+  border-color: #999;
+  text-align: center;
 }
 .routeImage {
   margin-bottom: 10;
@@ -149,7 +164,9 @@ export default {
 .distance {
   margin: 15;
 }
-
+.container {
+  margin-bottom: 100;
+}
 .routeInfo {
   background-color:#ccc;
 }

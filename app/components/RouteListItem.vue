@@ -1,23 +1,22 @@
 <template>
-  <GridLayout rows="160, auto, auto" columns="*, 50">
+  <GridLayout rows="190, auto, auto" columns="*, 50">
     <CachedImage
       row="0"
       colSpan="2"
-      class="routeImage"
+      class="routeImage m-b-10"
       stretch="aspectFill"
       :source="image"
-      placeholder= "~/assets/images/route-placeholder.png"
+      placeholder= "~/assets/images/placeholder.png"
     />
-    <Label row="1" col="0" :text="route.title" class="routeTitle" textwrap="true"></Label>
-    <Label row="2" col="0" verticalAlignment="top" :text="route.subtitle" class="routeSubTitle" textwrap="true"></Label>
+    <Label row="1" col="0" :text="route.title" class="routeTitle" textWrap="true"></Label>
+    <Label row="2" col="0"  :text="route.subtitle" class="routeSubTitle" textWrap="true"></Label>
     <CenterLabel
       row="1"
       rowSpan="2"
       col="1"
       :centerMethod="17"
-      text.decode="&#xf0a9;"
-      class="fas fabButton"
-      @tap="startRoute()"
+      text.decode="&#xf061;"
+      class="fas t-36"
     ></CenterLabel>
   </GridLayout>
 </template>
@@ -75,24 +74,22 @@ export default {
   color: #d1cece5b;
 }
 .routeImage {
-  margin: 0;
   border-radius: 10;
 }
 .action {
   background-color: #ddd;
 }
 
-.routeSubTitle {
-  font-size: 14;
+.ns-dark .routeSubTitle {
+  color: white;
 }
-
 .routeTitle {
   font-size: 18;
   font-weight: bold;
+  line-height:18;
 }
-
-.ns-dark .routeSubTitle {
-  color: white;
+.routeSubTitle  {
+  font-size: 16;
 }
 
 .routeItemBackground {

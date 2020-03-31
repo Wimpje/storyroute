@@ -9,7 +9,8 @@
     "articleinfo": "Article",
     "pointinfo": "Location info",
     "routeinfo": "Route info",
-    "config": "Help and configuration",
+    "config": "Configuration",
+    "help": "Help",
     "doubletap": "Push back twice to exit app"
   },
   "btn": {
@@ -17,15 +18,28 @@
     "back": "back",
     "backIos": "ᐸ back",
     "goto": "navigate here",
+    "openmaps": "go here with external maps app",
+    "share": "share",
     "startRoute": "start route",
     "refreshDownloadAll": "refresh downloads",
     "removeDownloadAll": "remove downloads"
+  },
+  "email": {
+    "appnotfound": "Could not find an email app, please send an email to: ",
+    "subject": "Question / feedback 75 years liberation app",
+    "body": "Hi, I have some feedback or a question about the 75 years of liberation app"
   },
   "map": {
     "location": {
       "nolocation": "Location could not be retrieved (does app have location access?)",
       "error": "Error getting location (heeft de app toestemming?)"
-    }
+    },
+    "noappfound": "No maps app found to plan route with"
+  },
+  "share": {
+    "point": "I found an interesting point with this app!",
+    "route": "I found an interesting route with this app!",
+    "how":"How do you want to share this?"
   },
   "config": {
     "crashInfo": "Enable collecting crash information (helps us fix bugs!)",
@@ -34,6 +48,10 @@
     "refreshDownloadAll": "Refresh downloaded files & routes",
     "removeDownloadAll": "Remove downloaded files & routes",
     "help": "Here you can toggle settings, and download routes to your phone."
+  },
+  "help": {
+    "credits": "Credits",
+    "contact": "Contact info"
   },
   "drawer": {
     "title": "75 year liberty - Ommen"

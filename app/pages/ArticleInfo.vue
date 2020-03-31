@@ -7,7 +7,7 @@
         marginBottom="10"
         stretch="aspectFill"
         :source="image"
-        placeholder= "~/assets/images/route-placeholder.png"
+        placeholder= "~/assets/images/placeholder.png"
         row="0"
       />
       <ScrollView  row="1">
@@ -22,11 +22,15 @@
 <script>
 
 import * as utils from "~/plugins/utils";
-import { Directions }from "nativescript-directions"
 
 export default {
   components: {  },
-  mounted() {
+ mounted() {
+    this.$store.commit('setCurrentArticle', this.article)
+  },
+  destroy() {
+    console.log("DESTROY poi")
+    this.$store.commit('setCurrentArticle', null)
   },
   props: ["article"],
   methods: {
@@ -42,30 +46,6 @@ export default {
         console.log('setting height', height)
         webView.object.height = Number(height);
       }
-    },
-    openNavigationTo(){
-      console.log('open maps application to go to:', this.point.title)
-      let directions = new Directions();
-      directions.available().then(avail => {
-          if (avail) {
-            directions.navigate({
-              to: {
-                lat: this.point.position.latitude,
-                lng: this.point.position.longitude
-              }
-            }).then(
-              function() {
-                console.log("Maps app launched.");
-              },
-              function(error) {
-                console.log(error);
-              }
-            );
-          }
-          else {
-            this.$store.setMessage('No maps application found to open')
-          }
-      });
     },
     close() {
       this.$modal.close();
@@ -93,9 +73,6 @@ export default {
   margin-bottom: 10;
 }
 
-.info {
-  background-color: #489e9e9e;
-}
 .text {
   vertical-align: top;
   padding: 20 20 20 20;

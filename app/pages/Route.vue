@@ -76,9 +76,13 @@ export default {
       }
     }
   },
-  created() {},
+  mounted() {
+    this.$store.commit('setCurrentRoute', this.route)
+  },
   destroy() {
-    // TODO settings?
+    console.log("DESTROY ROUTE")
+    this.$store.commit('setCurrentRoute', null)
+      // TODO settings?
     allowSleepAgain().then(function() {
       console.log("Insomnia is inactive, good night!");
     });

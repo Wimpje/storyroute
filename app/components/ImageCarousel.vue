@@ -24,7 +24,7 @@
             stretch="aspectFill"
             :source="item.firebaseUrl"
             verticalAlignment="bottom"
-            placeholder="~/assets/images/route-placeholder.png"
+            placeholder="~/assets/images/placeholder.png"
           ></CachedImage>
           <Label
             row="0"
@@ -55,7 +55,7 @@ export default {
     allImages() {
       if (this.images.length === 0) {
         // dummy
-        return { firebaseUrl: "~/assets/images/route-placeholder.png" };
+        return { firebaseUrl: "~/assets/images/placeholder.png" };
       } else {
         return this.images;
       }

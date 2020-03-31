@@ -2,6 +2,10 @@
 <resources>
   <string name="_ios_info_plist_NSLocationWhenInUseUsageDescription_ZpKiIF">"Gebruik je huidige locatie om interessante plekken dichtbij te vinden"</string>
   <string name="_ios_info_plist_NSLocationUsageDescription_1bdb1b">"Gebruik je huidige locatie om interessante plekken dichtbij te vinden"</string>
+  <string name="_dialog_cancelAction_ZOILYF">"Annuleren"</string>
+  <string name="_dialog_chooseAction_epnuj">"Kies een actie"</string>
+  <string name="_help_contact_Z1BKgHm">"Contact informatie"</string>
+  <string name="_help_credits_Z1wbyuT">"Mede mogelijk gemaakt door"</string>
   <string name="_config_help_Z21MrJ">"Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon."</string>
   <string name="_config_removeDownloadAll_Z1su72v">"Verwijder alle gedownloadede bestanden &amp; routes"</string>
   <string name="_config_refreshDownloadAll_Zog54J">"Ververs alle gedownloade bestanden en routes (om problemen te verhelpen &amp; nieuwe routes op te halen)"</string>
@@ -11,10 +15,16 @@
   <string name="_message_englishNotYetSupportedButton_ZWxmtg">"OK"</string>
   <string name="_message_englishNotYetSupportedMessage_1ALc4X">"Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you\'d like a translation in a different language."</string>
   <string name="_message_englishNotYetSupportedTitle_NjpfQ">"Language not (fully) supported"</string>
+  <string name="_share_how_Z1RkSqN">"Hoe wil je dit delen?"</string>
+  <string name="_share_route_Z1aYL5b">"Ik heb een leuke route gevonden met deze app!"</string>
+  <string name="_share_point_Z1b7WBp">"Ik heb een interessante plek gevonden met deze app!"</string>
+  <string name="_map_noappfound_XuPyK">"Geen maps app gevonden om een route mee te plannen"</string>
   <string name="_map_location_error_Z12s6Yy">"Fout bij het ophalen van locatie (heeft de app toestemming?)"</string>
   <string name="_map_location_nolocation_Zz4FIL">"Locatie kon niet worden opgehaald (heeft de app toestemming?)"</string>
   <string name="_btn_removeDownloadAll_Z1HrJg9">"verwijder downloads"</string>
   <string name="_btn_refreshDownloadAll_2akLCj">"ververs downloads"</string>
+  <string name="_btn_share_ZxHK1M">"share"</string>
+  <string name="_btn_openmaps_ZtJpPn">"ga hierheen met externe maps app"</string>
   <string name="_btn_startRoute_1aJsYp">"start route"</string>
   <string name="_btn_goto_2qXYbv">"navigeer hierheen"</string>
   <string name="_btn_backIos_Z4PUFc">"ᐸ back"</string>
@@ -25,12 +35,16 @@
   <string name="_article_news_ZvKbBc">"Nieuws"</string>
   <string name="_point_more_1rasN0">"meer"</string>
   <string name="_point_info_1r9VpN">"info"</string>
+  <string name="_email_body_1uUYAx">"Dag, ik heb een vraag of feedback over de 75 jaar vrijheid app"</string>
+  <string name="_email_subject_Z1am4mv">"Vraag / feedback 75 jaar vrijheid app"</string>
+  <string name="_email_appnotfound_rg4qJ">"Kon geen email app vinden, stuur aub zelf een email naar:"</string>
   <string name="_drawer_title_Z1GOBux">"75 jaar bevrijding - Ommen"</string>
   <string name="_route_directions_Z2fEBra">"Richting aanwijzingen"</string>
   <string name="_route_start_1k1oqJ">"Start"</string>
   <string name="_route_moreinfo_ZeWsVn">"Meer info"</string>
   <string name="_nav_doubletap_Z1jXp0x">"Druk 2x op terug om app te sluiten"</string>
-  <string name="_nav_config_16IyMY">"Help en configuratie"</string>
+  <string name="_nav_help_2pTWu6">"Help &amp; contact"</string>
+  <string name="_nav_config_16IyMY">"Instellingen"</string>
   <string name="_nav_routeinfo_ZaAsTv">"Route info"</string>
   <string name="_nav_articleinfo_Z1uy15U">"Artikel"</string>
   <string name="_nav_pointinfo_1thFNC">"Locatie info"</string>

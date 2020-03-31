@@ -85,7 +85,7 @@ Vue.prototype.$myNavigateBack = function() {
     // don't do anything
   }
   else {
-    const frame = 'frameTab' + tabIndex
+    const frame = item.mainContent ? 'mainContent' : 'frameTab' + tabIndex
     // following line does not work, it cannot find parent frame id
     console.log('is part of tab, go back', frame)
     page.instance.$navigateBack( {frame: frame})
@@ -119,7 +119,11 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   const toPage = pagesInfo[to];
   const bottomNav = findNav(topFrame)
   const tabIndex = store.getters.bottomNavigationIndex
-  console.log(`Navigating! current bottomNav idx = ${bottomNav.selectedIndex} in store = ${tabIndex}`)
+  if(!bottomNav) {
+    console.error('bottom nav not found!')
+  }else {
+    console.log(`Navigating! current bottomNav idx = ${bottomNav.selectedIndex} in store = ${tabIndex}`)
+  }
   const currentPage = store.getters.currentPage
 
   if (toPage.isTabView) {
@@ -140,7 +144,7 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   }
   else {
     // determine which frame to go to
-    const frame = 'frameTab' + tabIndex
+    const frame = toPage.mainContent ? 'mainContent' : 'frameTab' + tabIndex
     const p = { ...props, frame: frame }
 
     console.log('... navigating in frame='+frame+' to page ', toPage.name, p)

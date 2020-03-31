@@ -56,6 +56,7 @@ export class ToastService {
       opts = Object.assign({}, this.defaults, opts)
     }
     opts.text = opts.shouldLocalize ? localize(text) : text
-    this.currentToast = new Toasty(opts).show()
+    this.currentToast = new Toasty(opts)
+    this.currentToast.show()
   }
 };

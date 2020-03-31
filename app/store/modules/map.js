@@ -4,7 +4,6 @@ export const state = () => {
   return {
     center:  { lat: 52.5248059, lng: 6.426292600000011 },
     zoom: 12,
-    currentRoute: null,
     ref: null,
     showAutocomplete: false,
     pois: [],

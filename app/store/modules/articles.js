@@ -21,6 +21,27 @@ export const getters = {
   getNews (state) {
     return state.articles.filter(a => a.category === 'news')
   },
+  getCredits (state) {
+    const ret = state.articles.filter(a => a.category === 'credits')
+    if (ret && ret.length > 0) {
+      return ret[0]
+    }
+    return ''
+  },
+  getHelp (state) {
+    const ret = state.articles.filter(a => a.category === 'help')
+    if (ret && ret.length > 0) {
+      return ret[0]
+    }
+    return ''
+  },
+  getContact (state) {
+    const ret = state.articles.filter(a => a.category === 'contact')
+    if (ret && ret.length > 0) {
+      return ret[0]
+    }
+    return ''
+  },
   getEvents (state) {
     return state.articles.filter(a => a.category === 'event')
   },

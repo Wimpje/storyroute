@@ -13,6 +13,7 @@
           v-for="(category, idx) in categories"
           :key="category"
           :col="idx"
+          height="50"
           :text="'article.'+category | L"
           class="tab"
           :class="tabActive === category ? 'selected' : ''"
@@ -31,7 +32,7 @@
               :source="getImageFromItem(item)"
               height="80"
               textWrap="true"
-              placeholder="~/assets/images/route-placeholder.png"
+              placeholder="~/assets/images/placeholder.png"
             />
             <Label col="1" row="0" class="h2 p-5" :text="item.title"></Label>
             <Label
@@ -41,6 +42,7 @@
               verticalAlignment="top"
               :text="toPrettyDate(item.publishDate)"
             ></Label>
+           
             <Label
               col="0"
               colSpan="2"
@@ -51,6 +53,12 @@
               textWrap="true"
               :text="item.text ? item.text.replace(/#/i, '') : ''"
             ></Label>
+             <Label col="0"
+              colSpan="2"
+              row="2"
+              height="60"
+              class="overlay"
+              ></Label>
           </GridLayout>
         </v-template>
       </RadListView>
@@ -206,9 +214,11 @@ export default {
   
   color: black;
 }
+.overlay {
+  background: linear-gradient(0deg, rgba(255,255,255,1) 18%, rgba(255,255,255,0) 65%);
+}
 .tab {
   font-size: 20;
-  padding: 20;
   &.selected {
     background-color: #ccc;
     font-weight: bold;

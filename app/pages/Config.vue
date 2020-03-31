@@ -1,7 +1,9 @@
 <template>
-  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <GridLayout rows="auto, auto, auto, *, auto" class="container">
-      <Label row="0" :text="'nav.config' | L" class="h1" textWrap="true"></Label>
+  <Page class="page" @loaded="onLoaded" ios.actionBarHidden="false">
+    <android>
+      <AppActionBar></AppActionBar>
+    </android>
+    <GridLayout rows="auto, auto, auto, *" class="container">
       <Label row="1" :text="'config.help' | L" class="helptext" textWrap="true"></Label>
       <StackLayout row="2" class="hr m-20"></StackLayout>
       <StackLayout row="3" class="settings">
@@ -29,7 +31,6 @@
           <Button class="danger -rounded-sm" text="crash!" @tap="crash" ></Button>
         </StackLayout>
       </StackLayout>
-      <Button row="4" @tap="close" :text="'btn.close' | L" />
     </GridLayout>
   </Page>
 </template>
@@ -45,7 +46,14 @@ export default {
   mounted() {
     this.allDownloaded = getBoolean('allDownloaded', false)
   },
+  data() {
+    return {
+      loading: false,
+      allDownloaded: false
+    }
+  },
   computed: {
+
     toggleCrashInfo: {
       get() {
         return getBoolean('googleCrashlytics')
@@ -77,6 +85,15 @@ export default {
     },
     onLoaded() {
       this.$store.commit("setCurrentPage", { name: "config", instance: this });
+  
+      if (!this.credits) {
+        this.$store.dispatch("getArticles").then(() => {
+          this.loading = false
+          
+        }).catch(err => {
+          this.loading = false
+        })
+      }
     },
 
     downloadAll() {
@@ -98,7 +115,7 @@ export default {
   margin: 20;
 }
 .helptext {
-  margin-bottom:50;
+  margin-bottom:20;
 }
 .danger {
   background-color: #dd3d31;
