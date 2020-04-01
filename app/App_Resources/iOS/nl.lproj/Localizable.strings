@@ -1,5 +1,9 @@
 "_ios_info_plist_NSLocationWhenInUseUsageDescription_ZpKiIF" = "Gebruik je huidige locatie om interessante plekken dichtbij te vinden";
 "_ios_info_plist_NSLocationUsageDescription_1bdb1b" = "Gebruik je huidige locatie om interessante plekken dichtbij te vinden";
+"_dialog_cancelAction_ZOILYF" = "Annuleren";
+"_dialog_chooseAction_epnuj" = "Kies een actie";
+"_help_contact_Z1BKgHm" = "Contact informatie";
+"_help_credits_Z1wbyuT" = "Mede mogelijk gemaakt door";
 "_config_help_Z21MrJ" = "Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon.";
 "_config_removeDownloadAll_Z1su72v" = "Verwijder alle gedownloadede bestanden & routes";
 "_config_refreshDownloadAll_Zog54J" = "Ververs alle gedownloade bestanden en routes (om problemen te verhelpen & nieuwe routes op te halen)";

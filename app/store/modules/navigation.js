@@ -12,7 +12,7 @@ import RouteInfo from "~/pages/RouteInfo.vue";
 import ArticleInfo from "~/pages/ArticleInfo.vue";
 import * as utils from "~/plugins/utils";
 import * as firebase from"nativescript-plugin-firebase";
-import { getBoolean } from "tns-core-modules/application-settings";
+import { localize } from "nativescript-localize";
 
 const pages = {
   app: App,
@@ -77,7 +77,10 @@ export const getters = {
   },
   currentPageText(state) {
     if(state.currentPage) {
-      return state.pagesInfo[state.currentPage.name].text
+      if('title' in state.currentPage) 
+        return state.currentPage.title
+
+      return localize(state.pagesInfo[state.currentPage.name].text)
     }
     else {
       // default is routes

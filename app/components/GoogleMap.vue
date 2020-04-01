@@ -41,6 +41,7 @@ export default {
       zoom: "",
       bearing: "",
       tilt: "",
+      markers: [],
       mapView: null
     };
   },
@@ -86,6 +87,8 @@ export default {
       }
 
       let that = this;
+      
+
       geolocation.isEnabled().then(
         function(isEnabled) {
           if (!isEnabled) {
@@ -162,8 +165,6 @@ export default {
                 }
               });
           }
-          that.initMapSettings()
-
         },
         function(e) {
           console.log("Error: " + (e.message || e));
@@ -172,12 +173,11 @@ export default {
       );
     },
     initMapSettings() {
-
-      this.mapView.setStyle(mapStyles.retro);
       
       const gMap = this.mapView.gMap;
       // can be done to hide infowindow
       // this.mapview.infoWindowTemplate = ''
+      this.mapView.setStyle(mapStyles.retro);
 
       if (isAndroid && this.isMounted && geolocation.isEnabled()) {
         let uiSettings = gMap.getUiSettings();
@@ -208,7 +208,18 @@ export default {
         });
       }
     },
+    showTitleForPoint(poi) {
+      this.markers.forEach(m => { 
 
+        if(m.poiId === poi.id) {
+          m.showInfoWindow()
+        }
+        else {
+          m.hideInfoWindow()
+        }
+      })
+
+    },
     addMarkerIcon(marker, poi) {
       //TODO icon map somewhere in settings
       const iconMap = {
@@ -247,13 +258,13 @@ export default {
 
           if (isIOS) {
             //iconImg.imageSource = ImageSource.fromResourceSync(icon);
-            console.log(`LOADING > ~/assets/images/markers/${icon}@0.75x.png`);
+            //console.log(`LOADING > ~/assets/images/markers/${icon}@0.75x.png`);
             iconImg.imageSource = ImageSource.fromFileSync(
               `~/assets/images/markers/${icon}@0.75x.png`
             );
           } else {
             // in android the resources are too big, so just using two sizes...
-            console.log(`LOADING > ~/assets/images/markers/${icon}@1.5x.png`);
+            //console.log(`LOADING > ~/assets/images/markers/${icon}@1.5x.png`);
             iconImg.imageSource = ImageSource.fromFileSync(
               `~/assets/images/markers/${icon}@1.5x.png`
             );
@@ -277,6 +288,7 @@ export default {
         poiMarker.title = poi.title;
       }
       poiMarker.label = idx.toString()
+      poiMarker.poiId = poi.id
       this.mapView.addMarker(poiMarker);
 
       return poiMarker;
@@ -295,11 +307,33 @@ export default {
         1
       );
 
+      this.initMapSettings()
+
       this.addMapMarkers()
 
       this.addPath()
 
       this.$emit("mapReady");
+    },
+    animateToPoint(poi, padding) {
+      padding = padding || 100;
+      if (isIOS) {
+        let bounds = GMSCoordinateBounds.alloc().init();
+        let position1 = CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude);
+        bounds = bounds.includingCoordinate(position1);
+        let update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding); 
+        this.mapView.gMap.animateWithCameraUpdate(update);
+      }
+      if (isAndroid) {
+        let builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
+        let position1 = new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude);
+        
+        builder.include(position1);
+        let bounds = builder.build();
+        
+        let cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        this.mapView.gMap.animateCamera(cameraUpdate);
+      }
     },
     addPath() {
       // create route line
@@ -338,8 +372,10 @@ export default {
 
       if (this.pois && this.pois.length) {
         let poiIndex = 0
+        this.markers = []
         this.pois.forEach(poi => {
           const marker = this.addMarkerFromPoi(poi, poiIndex);
+          this.markers.push(marker)
           if (isIOS) bounds = bounds.includingCoordinate(marker.position);
           marker.poi = poi;
           this.addMarkerIcon(marker, poi);

@@ -1,7 +1,7 @@
 <template>
   <Page>
     <AppActionBar></AppActionBar>
-    <BottomNavigation class="bottomNavigation" @selectedIndexChanged="indexChanged">
+    <BottomNavigation id="bottomNavigation" class="bottomNavigation" @selectedIndexChanged="indexChanged">
       <TabStrip>
         <TabStripItem>
           <Label :text="'nav.routes' | L"></Label>

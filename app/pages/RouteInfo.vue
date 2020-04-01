@@ -1,10 +1,9 @@
 <template>
   <Page class="page" @loaded="onLoaded"  actionBarHidden="true">
-    <GridLayout rows="200, *, auto" columns="*" iosOverflowSafeArea="true" class="container">
+    <GridLayout rows="200, *, auto" columns="*" iosOverflowSafeArea="true" >
       <ImageCarousel height="200" row="0" :images="images"></ImageCarousel>
-    
       <ScrollView row="1">
-        <StackLayout>
+        <StackLayout class="container">
           <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
             <CenterLabel col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></CenterLabel>
             <CenterLabel col="1" row="0" :text="distance" class="h3 distance"></CenterLabel>
@@ -165,7 +164,7 @@ export default {
   margin: 15;
 }
 .container {
-  margin-bottom: 100;
+  padding-bottom: 100;
 }
 .routeInfo {
   background-color:#ccc;

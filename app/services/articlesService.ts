@@ -10,9 +10,10 @@ export class ArticlesService {
   }
 
   async getArticles(force: boolean = false) {
-    if (this.documents && this.documents.length > 0 && !force)
+    if (this.documents && this.documents.length > 0 && !force) {
+      console.log('ArticlesService - from "cache"')
       return this.documents
-
+    }
     const documents = []
     try {
       const snapShot = await this.collection.get()

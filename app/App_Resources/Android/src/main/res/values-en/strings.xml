@@ -16,6 +16,8 @@
   <string name="_drawer_title_Z1GOBux">"75 year liberty - Ommen"</string>
   <string name="_help_contact_Z1BKgHm">"Contact info"</string>
   <string name="_help_credits_Z1wbyuT">"Credits"</string>
+  <string name="_dialog_cancelAction_ZOILYF">"Cancel"</string>
+  <string name="_dialog_chooseAction_epnuj">"Choose action"</string>
   <string name="_config_help_Z21MrJ">"Here you can toggle settings, and download routes to your phone."</string>
   <string name="_config_removeDownloadAll_Z1su72v">"Remove downloaded files &amp; routes"</string>
   <string name="_config_refreshDownloadAll_Zog54J">"Refresh downloaded files &amp; routes"</string>
@@ -54,6 +56,4 @@
   <string name="_app_name_1k3Sbz">"75 years of liberation - Ommen"</string>
   <string name="app_name">"75 years of liberation - Ommen"</string>
   <string name="title_activity_kimera">"75 years of liberation - Ommen"</string>
-  <string name="_dialog_cancelAction_ZOILYF">"Annuleren"</string>
-  <string name="_dialog_chooseAction_epnuj">"Kies een actie"</string>
 </resources>

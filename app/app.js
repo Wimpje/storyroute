@@ -14,7 +14,7 @@ import CachedImage from '~/components/CachedImage'
 import CenterLabel from '~/components/CenterLabel'
 import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 import RadListView from 'nativescript-ui-listview/vue';
-import { android, AndroidApplication, AndroidActivityBundleEventData } from "tns-core-modules/application";
+import { android, AndroidApplication } from "tns-core-modules/application";
 import { AudioService } from "~/services/audioService"
 import * as application from "tns-core-modules/application";
 import { ToastService } from '~/services/toastService'
@@ -27,14 +27,14 @@ const firebase = require("nativescript-plugin-firebase");
 
 const setupConfigBool = (key, value) => {
   if (!hasKey(key)) {
-    console.log(`creating key ${key}, and setting it to ${value}`)
+    console.log(`Config: creating key ${key}, and setting  it to ${value}`)
     setBoolean(key, value)
   }
 }
 
 const setupConfigString = (key, value) => {
   if (!hasKey(key)) {
-    console.log(`creating key ${key}, and setting it to ${value}`)
+    console.log(`Config: creating key ${key}, and setting it to ${value}`)
     setString(key, value)
   }
 }
@@ -61,7 +61,7 @@ application.on(application.exitEvent, (args) => {
   Vue.prototype.$player.dispose();
   Vue.prototype.$toast.cancel();
   allowSleepAgain().then(function () {
-    console.log("exitEvent - insomnia is inactive, good night!");
+    console.log("exitEvent: insomnia is inactive, good  night!");
   })
 });
 
@@ -86,6 +86,11 @@ if (android) {
 Vue.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
 Vue.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
 
+Vue.registerElement(
+  'CardView',
+  () => require('@nstudio/nativescript-cardview').CardView
+);
+
 if (TNS_ENV !== 'production') {
   Vue.use(VueDevtools)
 }
@@ -108,7 +113,7 @@ const fbInit = firebase.init({
   analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled
   crashlyticsCollectionEnabled: getBoolean('googleCrashlytics'), // enabled
   onAuthStateChanged: data => {
-    console.log("auth state changed: ", data)
+    console.log("FB: auth state changed: ", data)
     store.dispatch('setUser', data)
   }
 })
@@ -136,31 +141,29 @@ const vueApp = new Vue({
   created() {
     // load the FB stuff when Vue is done creating itself (?needed)
     fbInit.then((resp) => {
-      console.log("Firebase initialized")
+      console.log("FB: initialized")
       firebase.login(
         {
           type: firebase.LoginType.ANONYMOUS
         })
         .then(user => {
           this.$store.dispatch("getPois")
-          console.log('getPois called after logging in')
+          console.log('FB: getPois called after logging in')
           this.$store.dispatch("initRoutes")
-          console.log('initRoutes called after logging in')
-          console.log(`user.uid: ${user.uid}`)
-
+          console.log('FB: initRoutes called after logging in')
         })
         .catch(error => {
           // TODO handle errors on connections
-          firebase.crashlytics.log("issue with logging in: " + error)
-          console.log("Issue with logging in: " + error);
+          firebase.crashlytics.log("FB: issue with logging in: " + error)
+          console.error("FB: issue with logging in: " + error);
         });
     })
       .catch(error => {
-        console.log("Error initializing Firebase: " + error)
-        firebase.crashlytics.log("Error initializing Firebase: " + error)
-
+        console.error("FB: Error initializing " + error)
+        firebase.crashlytics.log("FB: Error initializing: " + error)
+        // TODO this should cause a modal popup, with a 'try again later'
       } );
-  }
+    }
 })
 
 Vue.showMyModal = function (component, options) {

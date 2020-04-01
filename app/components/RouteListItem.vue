@@ -8,6 +8,7 @@
       :source="image"
       placeholder= "~/assets/images/placeholder.png"
     />
+    <!-- check text overflow for small screensizes-->
     <Label row="1" col="0" :text="route.title" class="routeTitle" textWrap="true"></Label>
     <Label row="2" col="0"  :text="route.subtitle" class="routeSubTitle" textWrap="true"></Label>
     <CenterLabel

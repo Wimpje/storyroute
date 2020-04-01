@@ -35,7 +35,7 @@
       </ActionItem>
     </android>  
    
-    <Label class="action-bar-title" :text="currentPageText | L"></Label>
+    <Label class="action-bar-title" :text="currentPageText"></Label>
   </ActionBar>
 </template>
 

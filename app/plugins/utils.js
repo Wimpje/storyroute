@@ -117,7 +117,7 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   console.log(`navigation! topframe = ${topFrame.id}, going to ${to}`)
   const pagesInfo = store.getters.pagesInfo
   const toPage = pagesInfo[to];
-  const bottomNav = findNav(topFrame)
+  let bottomNav = findNav(topFrame)
   const tabIndex = store.getters.bottomNavigationIndex
   if (!bottomNav) {
     console.error('bottom nav not found!')

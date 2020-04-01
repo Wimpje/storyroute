@@ -1,40 +1,40 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <GridLayout rows="*, 80">
-      <!-- <Label row="0" rowSpan="2" width="100%" height="100%" class="mapPlaceholder"></Label> -->
-      <GoogleMap
-        row="0"
-        rowspan="2"
-        :mapId="this.route.id"
+    <GridLayout rows="*, auto, 150">
+      <GoogleMap :mapId="route.id" 
+        ref="gMap" 
+        row="0" 
         :pois="poisToDisplay"
-        :path="this.route.path"
-        @markerSelect="selectMarker"
-        :currentPoi="currentPoi"
-      ></GoogleMap>
-      <RadListView
-        row="1"
-        class="points"
-        ref="listView"
-        for="(poi, index) in poisToDisplay"
-        @itemTap="openPoint"
-        @loaded="listLoaded"
-        itemHeight="50"
-        itemInsertAnimation="Fade"
-        itemDeleteAnimation="Fade"
-      >
+        :path="route.path" 
+        @markerSelect="scrollToPoint" />
+      
+      <RadListView for="(poi, index) in poisToDisplay"
+         row="2"
+         height="150"
+         ref="listView"
+         orientation="horizontal"
+         layout="linear"
+         :itemWidth="width"
+         itemHeight="150"
+         @scrolled="onScrolled"
+         @itemTap="showPointInfoFromList">
         <v-template>
-          <GridLayout rows="*" columns="70, 0, *, 100" :key="poi.id" :id="poi.id" class="point">
-            <Button row="0" col="0" class="-rounded-lg pointIndex" :text="index + 1"></Button>
-            <CenterLabel
-              row="0"
-              col="2"
-              class="-rounded pointDescription"
-              :text="poi.title"
-              :centerMethod="16"
-              textWrap="true"
-            ></CenterLabel>
-            <Button col="3" class="pointButton" :text="'point.info' | L" @tap="getInfoFor(poi)"></Button>
-          </GridLayout>
+          <CardView class="cardStyle" radius="10" height="140" :width="width">
+            <StackLayout>
+              <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
+                <FormattedString>
+                  <Span class="fas" text.decode="&#xf3c5; "/>
+                  <Span :text="(index + 1) + '. ' + poi.title" />
+                </FormattedString>
+              </Label>
+              <CachedImage
+                :source="getPoiImage(poi)" 
+                stretch="aspectFit"
+                placeholder="~/assets/images/placeholder.png"
+                height="100"/>
+              <Button :text="'point.info' | L" />
+            </StackLayout>
+          </CardView>
         </v-template>
       </RadListView>
     </GridLayout>
@@ -43,12 +43,12 @@
 
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
 import * as utils from "~/plugins/utils";
-import { ObservableArray } from 'tns-core-modules/data/observable-array';
-import PointInfo from "~/pages/PointInfo.vue";
 import * as firebase from "nativescript-plugin-firebase";
+import { ListViewItemSnapMode } from "nativescript-ui-listview";
+import debounce from 'lodash/debounce';
 
 export default {
   components: {
@@ -57,7 +57,9 @@ export default {
   props: ["route", "activePoi"],
   data() {
     return {
-      currentPoi: null
+      scrollIndex: 0,
+      scrollOffset: 0,
+      width: 150
     };
   },
   computed: {
@@ -89,24 +91,36 @@ export default {
   },
   methods: {
     onLoaded() {
-      this.$store.commit("setCurrentPage", { name: "route", instance: this });
+      this.$store.commit("setCurrentPage", { name: "route", title: this.route.title, instance: this });
       // TODO settings?
       keepAwake().then(function() {
         console.log("Insomnia is active");
       });
-      this.$refs.listView.refresh()
     },
-    openPoint({ item, index }) {
-      console.log("tapped poi", item, index);
-      this.currentPoi = item;
+    getPoiImage(poi) {
+      const imgs =  poi.files.filter(file => file.type == "image");
+      if(imgs.length > 0) {
+        return imgs[0].firebaseUrl
+      }
     },
-
-    listLoaded(args) {},
-    getInfoFor(poi) {
+    showPointInfoFromList(event) {
+      console.log("should load", event.item.title);
+      setTimeout(() => {
+          this.showPointInfo(event.item)
+      }, 100)
+    },
+    scrollToPoint(marker) {
+      const idx = this.poisToDisplay.findIndex(p => marker.poi.id === p.id);
+      this.$nextTick(() => {
+        this.$refs.listView.scrollToIndex(idx, false, ListViewItemSnapMode.Center); 
+      })
+    },
+    showPointInfo(poi) {
+      console.log("should load", poi.title);
       firebase.analytics.logEvent({
         key: "load_point",
         parameters: [ // optional
-          {
+         {
             key: "source",
             value: "route"
           },
@@ -117,6 +131,10 @@ export default {
           {
             key: "from_route_title",
             value: this.route.title
+          },
+          {
+            key: "source",
+            value: "points"
           },
           {
             key: "point_id",
@@ -137,13 +155,20 @@ export default {
         }
       });
     },
-    selectMarker(marker) {
-      const poi = marker.poi;
-      this.currentPoi = poi;
-      const idx = this.poisToDisplay.findIndex(p => poi.id === p.id);
-      this.$nextTick(() => {
-        if (idx > -1) this.$refs.listView.scrollToIndex(idx, true);
-      })
+    zoomToMarkerByScroll(scrollOffset) {
+      console.log('zoom', scrollOffset)
+      const newScrollIndex = Math.round(this.scrollOffset / this.width)
+      if (this.scrollIndex != newScrollIndex) {
+        const activePoi = this.poisToDisplay[newScrollIndex]
+        this.$refs.gMap.showTitleForPoint(activePoi)
+        this.$refs.gMap.animateToPoint(activePoi, 200)
+      }
+      this.scrollIndex = newScrollIndex
+    },
+    onScrolled ({ scrollOffset }) {
+      this.scrollOffset = scrollOffset
+      const debounced = debounce(this.zoomToMarkerByScroll, 500)
+      debounced(scrollOffset)
     },
     refreshPoints() {}
   }
@@ -152,7 +177,7 @@ export default {
 
 <style scoped lang="scss">
 .info {
-  font-size: 20;
+  font-size: 18;
 }
 .pushDown {
   height: 10;
