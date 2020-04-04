@@ -69,9 +69,10 @@ export default {
       this.$modal.close();
     }
   },
-   beforeDestroy(){
+  destroy(){
     console.log('destroy video player')
-    this.$refs.video.nativeView.destroy();
+    if (this.$refs.video && this.$refs.video.nativeView)
+      this.$refs.video.nativeView.destroy();
   },
   computed: {
     images() {

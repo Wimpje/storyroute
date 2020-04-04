@@ -27,6 +27,7 @@
     "nativescript-email": "^1.6.0",
     "nativescript-geolocation": "^5.1.0",
     "nativescript-google-maps-sdk": "^2.9.1",
+    "nativescript-image": "^3.0.5",
     "nativescript-insomnia": "^1.2.3",
     "nativescript-localize": "^4.2.1",
     "nativescript-permissions": "^1.3.8",

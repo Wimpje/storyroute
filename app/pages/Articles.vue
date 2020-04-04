@@ -208,7 +208,10 @@ export default {
   color: black;
 }
 .overlay {
-  background: linear-gradient(0deg, rgba(255,255,255,1) 18%, rgba(255,255,255,0) 65%);
+  background: linear-gradient(0deg, light(rgba(255,255,255,1)) 18%, rgba(255,255,255,0) 65%);
+}
+.ns-dark .overlay {
+  background: linear-gradient(0deg, dark(rgba(255,255,255,1)) 18%, rgba(255,255,255,0) 65%);
 }
 .tab {
   font-size: 20;

@@ -29,6 +29,17 @@
     "info": "info",
     "more": "meer"
   },
+  "discover": {
+    "headerText": "Swipe langs alle punten",
+    "footerText": "Swipe terug lans alle punten",
+    "category": {
+      "all": "alles",
+      "rest": "rustpunten",
+      "planes": "vliegtuigen",
+      "routes": "routes",
+      "stolpersteine": "stolpersteine"
+    } 
+  },
   "article": {
     "news": "Nieuws",
     "event": "Activiteiten",

@@ -20,6 +20,9 @@ import * as application from "tns-core-modules/application";
 import { ToastService } from '~/services/toastService'
 import { allowSleepAgain } from "nativescript-insomnia";
 import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
+import * as imageModule from 'nativescript-image';
+import ImagePlugin from 'nativescript-image/vue';
+
 const firebase = require("nativescript-plugin-firebase");
 Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
 
@@ -41,19 +44,25 @@ const setupConfigString = (key, value) => {
 
 setupConfigBool('googleAnalytics', true)
 setupConfigBool('googleCrashlytics', true)
+setupConfigBool('screenOnWithMap', true)
 setupConfigString('theme', 'default')
 
 Vue.prototype.$player = new AudioService()
 Vue.prototype.$store = store
 Vue.prototype.$toast = new ToastService()
 
+
 application.on(application.launchEvent, (args) => {
     // init settings or something?
+    imageModule.initialize({ isDownsampleEnabled: true })
 });
 
 application.on(application.suspendEvent, (args) => {
   Vue.prototype.$player.pause()
   Vue.prototype.$toast.cancel();
+});
+application.on(application.orientationChangedEvent, (args) => {
+ console.log('rotated!', args.newValue)
 });
 
 application.on(application.exitEvent, (args) => {
@@ -63,6 +72,7 @@ application.on(application.exitEvent, (args) => {
   allowSleepAgain().then(function () {
     console.log("exitEvent: insomnia is inactive, good  night!");
   })
+  imageModule.shutDown()
 });
 
 let lastPress
@@ -99,6 +109,8 @@ Vue.config.silent = (TNS_ENV === 'production')
 
 Vue.use(RadListView);
 Vue.use(RadSideDrawer);
+Vue.use(ImagePlugin);
+
 
 Vue.registerElement('MapView', () => MapView)
 

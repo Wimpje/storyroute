@@ -68,7 +68,18 @@
   "point": {
     "info": "info",
     "more": "more"
-  }, 
+  },
+  "discover": {
+    "headerText": "Swipe langs alle punten",
+    "footerText": "",
+    "category": {
+      "all": "all",
+      "rest": "rest stops",
+      "planes": "planes",
+      "routes": "routes",
+      "stolpersteine": "stolpersteine"
+    } 
+  },
   "article": {
     "news": "News",
     "event": "Activities",

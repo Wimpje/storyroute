@@ -8,6 +8,13 @@
   <string name="_article_story_ZRvbqK">"Stories"</string>
   <string name="_article_event_ZSqUIi">"Activities"</string>
   <string name="_article_news_ZvKbBc">"News"</string>
+  <string name="_discover_category_stolpersteine_2iKs8W">"stolpersteine"</string>
+  <string name="_discover_category_routes_tPGIP">"routes"</string>
+  <string name="_discover_category_planes_pszB1">"planes"</string>
+  <string name="_discover_category_rest_1UckSI">"rest stops"</string>
+  <string name="_discover_category_all_1mOFTd">"all"</string>
+  <string name="_discover_footerText_zbFUq">""</string>
+  <string name="_discover_headerText_1eppyI">"Swipe langs alle punten"</string>
   <string name="_point_more_1rasN0">"more"</string>
   <string name="_point_info_1r9VpN">"info"</string>
   <string name="_route_directions_Z2fEBra">"Directions"</string>
@@ -49,7 +56,7 @@
   <string name="_nav_pointinfo_1thFNC">"Location info"</string>
   <string name="_nav_articleinfo_Z1uy15U">"Article"</string>
   <string name="_nav_articles_Z1Cuaqz">"News &amp; more"</string>
-  <string name="_nav_points_1xAD9o">"Map"</string>
+  <string name="_nav_discover_8Yo9z">"Discover"</string>
   <string name="_nav_route_Z15QoBP">"Route"</string>
   <string name="_nav_routes_1BKuwv">"Routes"</string>
   <string name="_75_jaar_bevrijding_Z2wmU9D">"75 years of liberation"</string>

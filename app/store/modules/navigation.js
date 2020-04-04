@@ -2,7 +2,6 @@ import App from "~/pages/App.vue";
 import Home from "~/pages/Home.vue";
 import Discover from "~/pages/Discover.vue";
 import PointInfo from "~/pages/PointInfo.vue";
-import Route from "~/pages/Route.vue";
 import Routes from "~/pages/Routes.vue";
 import Config from "~/pages/Config.vue";
 import Help from "~/pages/Help.vue";
@@ -20,7 +19,6 @@ const pages = {
   discover: Discover,
   pointinfo: PointInfo,
   routes: Routes,
-  route: Route,
   routeinfo: RouteInfo,
   config: Config,
   help: Help,
@@ -36,7 +34,7 @@ const pagesInfo = {
   articles: {   name: 'articles', icon: "0xf1ea", text: "nav.articles", page: pages.articles, sideDrawer: true, isTabView: true, tabIndex: 2 },
   
   // no tab navigation for the following:
-  route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.route, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share'] },
+  route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.discover, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share'] },
   routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share']},
   pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share'] },
   testgeo: {    name: 'testgeo', icon: "0xf7a2", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },

@@ -66,7 +66,6 @@ import ImageCarousel from "~/components/ImageCarousel";
 import * as utils from "~/plugins/utils";
 import AudioPlayer from "~/components/AudioPlayer";
 import { device } from "@nativescript/core/platform";
-import Route from "~/pages/Route.vue";
 
 export default {
   components: { AudioPlayer, ImageCarousel },
@@ -78,6 +77,7 @@ export default {
     onLoaded() {
       this.$store.commit("setCurrentPage", {
         name: "routeinfo",
+        title: this.route.title,
         instance: this
       });
     },
@@ -129,7 +129,7 @@ export default {
   mounted() {
     this.$store.commit('setCurrentRoute', this.route)
   },
-  destroy() {
+  beforeDestroy() {
     console.log("DESTROY ROUTE")
     this.$store.commit('setCurrentRoute', null)
   }

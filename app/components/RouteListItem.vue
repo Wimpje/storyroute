@@ -17,7 +17,7 @@
       col="1"
       :centerMethod="17"
       text.decode="&#xf061;"
-      class="fas t-36"
+      class="fas t-24"
     ></CenterLabel>
   </GridLayout>
 </template>
@@ -38,7 +38,7 @@ export default {
     image() {
       if (this.route && this.route.files) {
         const file = this.route.files.filter(
-          file => file.type == "image" && file.lead
+          file => file.type == "image"
         );
         if (file.length) return file[0].firebaseUrl;
       }

@@ -20,7 +20,6 @@
 import { mapGetters } from "vuex";
 import RouteListItem from "~/components/RouteListItem";
 import RouteInfo from "~/pages/RouteInfo";
-import Route from "~/pages/Route";
 import * as utils from "~/plugins/utils";
 import * as firebase from "nativescript-plugin-firebase";
 

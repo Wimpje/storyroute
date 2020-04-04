@@ -33,6 +33,13 @@
   <string name="_article_story_ZRvbqK">"Verhalen"</string>
   <string name="_article_event_ZSqUIi">"Activiteiten"</string>
   <string name="_article_news_ZvKbBc">"Nieuws"</string>
+  <string name="_discover_category_stolpersteine_2iKs8W">"stolpersteine"</string>
+  <string name="_discover_category_routes_tPGIP">"routes"</string>
+  <string name="_discover_category_planes_pszB1">"vliegtuigen"</string>
+  <string name="_discover_category_rest_1UckSI">"rustpunten"</string>
+  <string name="_discover_category_all_1mOFTd">"alles"</string>
+  <string name="_discover_footerText_zbFUq">"Swipe terug lans alle punten"</string>
+  <string name="_discover_headerText_1eppyI">"Swipe langs alle punten"</string>
   <string name="_point_more_1rasN0">"meer"</string>
   <string name="_point_info_1r9VpN">"info"</string>
   <string name="_email_body_1uUYAx">"Dag, ik heb een vraag of feedback over de 75 jaar vrijheid app"</string>
@@ -49,7 +56,7 @@
   <string name="_nav_articleinfo_Z1uy15U">"Artikel"</string>
   <string name="_nav_pointinfo_1thFNC">"Locatie info"</string>
   <string name="_nav_articles_Z1Cuaqz">"Nieuws &amp; meer"</string>
-  <string name="_nav_points_1xAD9o">"Kaart"</string>
+  <string name="_nav_discover_8Yo9z">"Ontdek"</string>
   <string name="_nav_route_Z15QoBP">"Route"</string>
   <string name="_nav_routes_1BKuwv">"Routes"</string>
   <string name="_app_name_1k3Sbz">"75 jaar bevrijding - Ommen"</string>

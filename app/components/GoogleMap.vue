@@ -6,6 +6,8 @@
       :zoom="zoom"
       :bearing="bearing"
       :tilt="tilt"
+      :padding="padding"
+    
       height="100%"
       width="100%"
       @mapReady="onMapReady"
@@ -33,16 +35,22 @@ import { ImageSource } from "tns-core-modules/image-source";
 import * as application from "tns-core-modules/application";
 
 export default {
-  props: ["pois", "currentPoi", "path"],
+  props: ["pois", "currentPoi", "padding", "paths"],
   data() {
     return {
+      enableMyLocation: true,
+      enableMyLocationButton: true,
+      enableCompass: true,
+      enableTilt: true,
       latitude: "",
       longitude: "",
       zoom: "",
       bearing: "",
       tilt: "",
       markers: [],
-      mapView: null
+      mapView: null,
+      ommenCenter: Position.positionFromLatLng(52.4958, 6.44117),
+      mapAnimationsEnabled: true
     };
   },
   computed: {
@@ -92,16 +100,15 @@ export default {
       geolocation.isEnabled().then(
         function(isEnabled) {
           if (!isEnabled) {
+            // only enable if geolocation is enabled
+            this.mapView.myLocationEnabled = that.enableMyLocation;
+            this.mapView.settings.myLocationButtonEnabled = that.enableMyLocationButton;
+
             geolocation
               .enableLocationRequest(true, true)
               .then(
                 () => {
                   that.isMounted = true;
-                  if (isAndroid && that.mapView) {
-                    let uiSettings = that.mapView.gMap.getUiSettings();
-                    uiSettings.setMyLocationButtonEnabled(true);
-                    that.mapView.gMap.setMyLocationEnabled(true);
-                  }
                   geolocation
                     .getCurrentLocation({
                       timeout: 20000
@@ -138,11 +145,6 @@ export default {
               });
           } else {
             that.isMounted = true;
-            if (isAndroid && that.mapView) {
-              let uiSettings = that.mapView.gMap.getUiSettings();
-              uiSettings.setMyLocationButtonEnabled(true);
-              that.mapView.gMap.setMyLocationEnabled(true);
-            }
             geolocation
               .getCurrentLocation({
                 timeout: 20000
@@ -200,7 +202,7 @@ export default {
                   timeout: 20000
                 })
                 .then(location => {
-                  console.log("-- moving to location", location);
+                  console.log("--moving to location", location);
                   gMap.animateToLocation(location);
                 });
             }
@@ -209,24 +211,23 @@ export default {
       }
     },
     showTitleForPoint(poi) {
-      this.markers.forEach(m => { 
+      if (!poi || !poi.id) 
+        return 
 
-        if(m.poiId === poi.id) {
+      this.markers.forEach(m => { 
+        if (m.userData.id === poi.id) {
           m.showInfoWindow()
         }
         else {
           m.hideInfoWindow()
         }
       })
-
+      
     },
     addMarkerIcon(marker, poi) {
       //TODO icon map somewhere in settings
       const iconMap = {
         stolperstein: "starofdavid",
-        //'verzet': 'resistance',
-        // 'duits': 'german',
-        // 'geallieerd': 'allies',
         winkel: "shop",
         vliegtuig: "plane",
         start: "start",
@@ -239,7 +240,7 @@ export default {
         if (poi.start) {
           icon = "start"
         }
-        else if(poi.routePoint) {
+        else if (poi.routePoint) {
           // no special markers, but add index to image (?)
         }
         else if (Array.isArray(poi.tags)) {
@@ -287,8 +288,7 @@ export default {
       else {
         poiMarker.title = poi.title;
       }
-      poiMarker.label = idx.toString()
-      poiMarker.poiId = poi.id
+      poiMarker.userData = Object.assign({poiIndex: idx}, poi)
       this.mapView.addMarker(poiMarker);
 
       return poiMarker;
@@ -311,56 +311,96 @@ export default {
 
       this.addMapMarkers()
 
-      this.addPath()
+      this.addPaths()
 
       this.$emit("mapReady");
     },
-    animateToPoint(poi, padding) {
-      padding = padding || 100;
-      if (isIOS) {
-        let bounds = GMSCoordinateBounds.alloc().init();
-        let position1 = CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude);
-        bounds = bounds.includingCoordinate(position1);
-        let update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding); 
-        this.mapView.gMap.animateWithCameraUpdate(update);
-      }
-      if (isAndroid) {
-        let builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
-        let position1 = new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude);
-        
-        builder.include(position1);
-        let bounds = builder.build();
-        
-        let cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        this.mapView.gMap.animateCamera(cameraUpdate);
+    // https://cloud.google.com/blog/products/maps-platform/how-calculate-distances-map-maps-javascript-api
+    distanceBetween(poi1, poi2) {
+      var R = 6371.0710; // Radius of the Earth in km
+      var rlat1 = poi1.position.latitude * (Math.PI/180); // Convert degrees to radians
+      var rlat2 = poi2.position.latitude * (Math.PI/180); // Convert degrees to radians
+      var difflat = rlat2-rlat1; // Radian difference (latitudes)
+      var difflon = (poi2.position.longitude - poi1.position.longitude) * (Math.PI/180); // Radian difference (longitudes)
+
+      var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+      return d;
+    },
+    distanceFromOmmen(poi1, poi2) {
+      return distanceBetween(poi1, this.ommen) - distanceBetween(poi2, this.ommen)
+    },
+    sortPointsOnDistance(pois) {
+      if(pois && pois.length) {
+        pois.sort(distanceBetween)
       }
     },
-    addPath() {
+    pointWithinBounds(poi) {
+      let bounds = this.mapView.projection.visibleRegion.bounds
+      let pos = Position.positionFromLatLng(poi.position.latitude, poi.position.longitude)
+      if (isAndroid) {
+        return bounds.android.contains(pos)
+      }
+      else if (isIOS) {
+        return bounds.ios.containsCoordinate(pos)
+      }
+    },
+    animateToPoint(poi, padding, zoomLevel) {
+      padding = padding || 40;
+      zoomLevel = zoomLevel || 11;
+      if (!poi) 
+        return
+
+      if (isIOS) {
+
+        let locationToSet = CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude);
+        let updateLocationCamera = GMSCameraUpdate.setTargetZoom(locationToSet, zoomLevel);
+
+        this.mapView.gMap.animateWithCameraUpdate(updateLocationCamera);
+      }
+      if (isAndroid) {
+
+        let cpBuilder = new com.google.android.gms.maps.model.CameraPosition.Builder();
+        cpBuilder.target(
+           new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude)
+        )
+        cpBuilder.zoom(zoomLevel);
+        let cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cpBuilder.build());
+        if (this.mapAnimationsEnabled) {
+          this.mapView.gMap.animateCamera(cameraUpdate);
+        }
+        else {
+          this.gMap.moveCamera(cameraUpdate);
+        }
+      }
+    },
+    addPaths() {
       // create route line
-      if (this.path && this.path.length) {
+      if (this.paths && this.paths.length) {
         this.mapView.removeAllShapes();
 
-        // draw the polyline
-        const polyline = new Polyline();
-        console.log("want to create a line...", this.path.length);
-
-        this.path.forEach(geoPoint => {
-          const pos = Position.positionFromLatLng(
-            geoPoint.latitude,
-            geoPoint.longitude
-          );
-          polyline.addPoint(pos);
-        });
-        polyline.visible = true;
-        polyline.width = 5;
-        polyline.geodesic = false;
-        polyline.color = new Color("#8ABF5F");
-        this.mapView.addPolyline(polyline);
+        this.paths.forEach( path => {
+          
+          // draw the polyline
+          const polyline = new Polyline();
+          console.log("creating a line...", path.length);
+          path.forEach(geoPoint => {
+            const pos = Position.positionFromLatLng(
+              geoPoint.latitude,
+              geoPoint.longitude
+            );
+            polyline.addPoint(pos);
+          });
+          polyline.visible = true;
+          polyline.width = 5;
+          polyline.geodesic = false;
+          polyline.color = new Color("#141f17");
+          this.mapView.addPolyline(polyline);
+        })
       }
     },
     addMapMarkers() {
       console.log(
-        "MAPREADY -  ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
+        " ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
       );
       let bounds;
       let padding = 40;
@@ -377,7 +417,6 @@ export default {
           const marker = this.addMarkerFromPoi(poi, poiIndex);
           this.markers.push(marker)
           if (isIOS) bounds = bounds.includingCoordinate(marker.position);
-          marker.poi = poi;
           this.addMarkerIcon(marker, poi);
           poiIndex++
         });

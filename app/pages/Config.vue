@@ -16,6 +16,10 @@
           <Switch v-model="toggleCrashInfo"  />
           <Label class="m-y-auto" :text="'config.crashInfo' | L" textWrap="true"></Label>
         </StackLayout>
+        <StackLayout class="setting" orientation="horizontal">
+          <Switch v-model="toggleScreenOn"  />
+          <Label class="m-y-auto" :text="'config.screenon' | L" textWrap="true"></Label>
+        </StackLayout>
         <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
           <Button class="-primary -rounded-sm" text="download" @tap="downloadAll" />
           <Label class="m-y-auto" :text="'config.downloadAll' | L" textWrap="true"></Label>
@@ -51,6 +55,15 @@ export default {
   },
   computed: {
 
+    toggleScreenOn: {
+      get() {
+        return getBoolean('screenOnWithMap')
+      },
+      set(val) {
+        console.log("screenOnWithMap", val);
+        setBoolean('screenOnWithMap', val)
+      }
+    },
     toggleCrashInfo: {
       get() {
         return getBoolean('googleCrashlytics')
