@@ -19,7 +19,7 @@
 "_config_help_Z21MrJ" = "Here you can toggle settings, and download routes to your phone.";
 "_config_removeDownloadAll_Z1su72v" = "Remove downloaded files & routes";
 "_config_refreshDownloadAll_Zog54J" = "Refresh downloaded files & routes";
-"_config_downloadAll_29yUK2" = "Download all files & routes (not necessery, but convenient when you have limited or no mobile internet)";
+"_config_downloadAll_29yUK2" = "Download all files & routes (not necessary, but convenient when you have limited or no mobile internet)";
 "_config_analyticsInfo_1vPaqx" = "Enable collecting analytics (no personal info is stored)";
 "_config_crashInfo_Z1GWQFB" = "Enable collecting crash information (helps us fix bugs!)";
 "_share_how_Z1RkSqN" = "How do you want to share this?";
