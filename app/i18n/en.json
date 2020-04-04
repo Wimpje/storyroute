@@ -4,7 +4,7 @@
   "nav": {
     "routes": "Routes",
     "route": "Route",
-    "points": "Map",
+    "discover": "Discover",
     "articles": "News & more",
     "articleinfo": "Article",
     "pointinfo": "Location info",
@@ -44,7 +44,7 @@
   "config": {
     "crashInfo": "Enable collecting crash information (helps us fix bugs!)",
     "analyticsInfo": "Enable collecting analytics (no personal info is stored)",
-    "downloadAll": "Download all files & routes (not necessery, but convenient when you have limited or no mobile internet)",
+    "downloadAll": "Download all files & routes (not necessary, but convenient when you have limited or no mobile internet)",
     "refreshDownloadAll": "Refresh downloaded files & routes",
     "removeDownloadAll": "Remove downloaded files & routes",
     "help": "Here you can toggle settings, and download routes to your phone."

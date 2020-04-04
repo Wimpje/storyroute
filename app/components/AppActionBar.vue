@@ -4,7 +4,7 @@
       <ActionItem :visibility="shouldShowBack ? 'visible' : 'collapsed'" position="left" :text="'btn.backIos' | L" @tap="backButton"/>
       <ActionItem
         v-show="!shouldShowBack"
-        icon="res://baseline_menu_24"
+        :icon="menuIcon"
         @tap="onDrawerButtonTap"
         ios.position="left"
       ></ActionItem>
@@ -18,7 +18,7 @@
     </ios>
     <android>
       <NavigationButton :visibility="isAndroid ? 'visible' : 'collapsed'"
-        :icon="androidIcon"
+        :icon="menuIcon"
         @tap="androidMenuTap"></NavigationButton> 
       <ActionItem
         android.position="popup"
@@ -48,6 +48,7 @@ import { Directions } from "nativescript-directions";
 import * as SocialShare from "nativescript-social-share";
 import { localize } from "nativescript-localize";
 import * as dialogs from "tns-core-modules/ui/dialogs";
+import * as application from "tns-core-modules/application";
 
 export default {
   data() {
@@ -72,13 +73,20 @@ export default {
     isIOS() {
       return isIOS
     },
-    androidIcon() {
+    menuIcon() {
       if(this.shouldShowBack) {
-        return 'res://ic_action_arrow_back'
+        // application.systemAppearance() crashes iOS atm TODO make bug report
+        if(isAndroid && application.systemAppearance() === 'dark')
+          return 'res://action_back_white'
+        else 
+          return 'res://action_back_black'
       }
       else {
-        // return android.content.res.Resources.getSystem().getIdentifier( 'title_bar', "drawable", "android");
-        return 'res://baseline_menu_24'
+        if(isAndroid && application.systemAppearance() === 'dark')
+          return 'res://action_menu_white'
+        else {
+          return 'res://action_menu_black'
+        }
       }
     }
   },

@@ -85,7 +85,15 @@ Vue.prototype.$myNavigateBack = function() {
     // don't do anything
   }
   else {
-    const frame = item.mainContent ? 'mainContent' : 'frameTab' + tabIndex
+    // mainContent hack, use existing frame to not break navigation
+    const frame = 'frameTab' + tabIndex
+
+    if (item.mainContent) {
+      const topFrame = Frame.topmost();
+      let bottomNav = findNav(topFrame)
+      bottomNav.tabStrip.visibility = 'visible'
+    }
+
     // following line does not work, it cannot find parent frame id
     console.log('is part of tab, go back', frame)
     page.instance.$navigateBack( {frame: frame})
@@ -146,9 +154,12 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   }
   else {
     // determine which frame to go to
-    const frame = toPage.mainContent ? 'mainContent' : 'frameTab' + tabIndex
+    // mainContent hack, use existing frame to not break navigation
+    const frame = 'frameTab' + tabIndex
     const p = { ...props, frame: frame }
-
+    if(toPage.mainContent) {
+      bottomNav.tabStrip.visibility = 'collapse'
+    }
     console.log('... navigating in frame='+frame+' to page ', toPage.name, p)
 
     this.$navigateTo(toPage.page, p).then(res => {

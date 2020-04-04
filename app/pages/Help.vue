@@ -1,10 +1,7 @@
 <template>
-  <Page class="page" @loaded="onLoaded" ios.actionBarHidden="false">
-    <android>
-      <AppActionBar></AppActionBar>
-    </android>
-      <ScrollView>
-        <StackLayout class="m-20">
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
+    <ScrollView>
+      <StackLayout class="m-20">
         <Label :text="help.text" class="helptext" textWrap="true"></Label>
         <StackLayout v-if="credits">
           <StackLayout class="hr m-20"></StackLayout>

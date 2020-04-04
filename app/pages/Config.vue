@@ -1,8 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded" ios.actionBarHidden="false">
-    <android>
-      <AppActionBar></AppActionBar>
-    </android>
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="auto, auto, auto, *" class="container">
       <Label row="1" :text="'config.help' | L" class="helptext" textWrap="true"></Label>
       <StackLayout row="2" class="hr m-20"></StackLayout>

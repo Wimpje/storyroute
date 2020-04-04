@@ -1,17 +1,37 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="*, auto, 150">
-      <GoogleMap mapId="points" ref="gMap" row="0" :pois="poisToDisplay" @markerSelect="scrollToPoint" />
+      <GoogleMap
+        ref="gMap"
+        row="0"
+        :pois="poisToDisplay" 
+        @markerSelect="scrollToPoint"
+        @cameraChanged="onCameraChanged" />
+
       <RadListView for="poi in poisToDisplay"
          row="2"
          height="150"
          ref="listView"
          orientation="horizontal"
+         layout="linear"
          :itemWidth="width"
-         @scrolled="onScrolled"
+         itemHeight="150"
+         @scrollDragEnded="onScrolled"
          @itemTap="showPointInfoFromList">
+        <v-template name="header">
+           <CardView class="cardStyle" radius="10" height="140" width="135">
+            <StackLayout>
+              <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
+                <FormattedString>
+                  <Span class="fas" text.decode="&#xf3c5; "/>
+                  <Span text="Swipe langs alle punten" />
+                </FormattedString>
+              </Label>
+            </StackLayout>
+          </CardView>
+        </v-template>
         <v-template>
-          <CardView class="cardStyle" radius="5" height="140" :width="width">
+          <CardView class="cardStyle" radius="10" height="140" width="135">
             <StackLayout>
               <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
                 <FormattedString>
@@ -24,9 +44,11 @@
                 stretch="aspectFit"
                 placeholder="~/assets/images/placeholder.png"
                 height="100"/>
-              <Button :text="'point.info' | L" />
             </StackLayout>
           </CardView>
+        </v-template>
+        <v-template name="footer">
+          <!-- buffer -->
         </v-template>
       </RadListView>
     </GridLayout>
@@ -35,9 +57,8 @@
 
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
-import PointInfo from "~/pages/PointInfo.vue";
-
 import { mapGetters } from "vuex";
+
 import * as utils from "~/plugins/utils";
 import * as firebase from "nativescript-plugin-firebase";
 import { ListViewItemSnapMode } from "nativescript-ui-listview";
@@ -84,7 +105,7 @@ export default {
   created() {},
   methods: {
     onLoaded() {
-      this.$store.commit("setCurrentPage", { name: "points", instance: this });
+      this.$store.commit("setCurrentPage", { name: "discover", instance: this });
     },
     getPoiImage(poi) {
       const imgs =  poi.files.filter(file => file.type == "image");
@@ -98,7 +119,13 @@ export default {
           this.showPointInfo(event.item)
       }, 100)
     },
+    onCameraChanged(args) {
+      console.log('Camera changed: ' + JSON.stringify(args.camera)); 
+    },
     scrollToPoint(marker) {
+      if(!marker || !marker.poi)
+        return
+
       const idx = this.poisToDisplay.findIndex(p => marker.poi.id === p.id);
       this.$nextTick(() => {
         this.$refs.listView.scrollToIndex(idx, false, ListViewItemSnapMode.Center); 
@@ -111,7 +138,7 @@ export default {
         parameters: [ // optional
           {
             key: "source",
-            value: "points"
+            value: "discover"
           },
           {
             key: "point_id",
@@ -138,13 +165,13 @@ export default {
       if (this.scrollIndex != newScrollIndex) {
         const activePoi = this.poisToDisplay[newScrollIndex]
         this.$refs.gMap.showTitleForPoint(activePoi)
-        // this.$refs.gMap.animateToPoint(activePoi, 200)
+        this.$refs.gMap.animateToPoint(activePoi, 200, 13)
       }
       this.scrollIndex = newScrollIndex
     },
     onScrolled ({ scrollOffset }) {
       this.scrollOffset = scrollOffset
-      const debounced = debounce(this.zoomToMarkerByScroll, 200)
+      const debounced = debounce(this.zoomToMarkerByScroll, 500)
       debounced(scrollOffset)
 
     },
@@ -156,13 +183,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.info {
-  font-size: 20;
-}
 .cardStyle {
     background-color: #fff;
     color: rgb(43, 43, 43);
-    border-width: 1;
     margin: 3 10 3 5;
 }
 

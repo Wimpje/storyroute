@@ -14,9 +14,18 @@
                 class="fas t-24 p-l-20 p-y-20"
                 horizontalAlignment="center"
               ></Label>
+              <VideoPlayer v-if="video"
+                :src="video"
+                autoplay="false"
+                height="250"
+                loop="false"
+                muted="false"
+                ref="video"
+                ></VideoPlayer>
               <Label :text="'route.directions' | L" class="h1 p-20 m-x-auto"></Label>
             </StackLayout>
             <Label :text="point.routeDescription" class="body description" textWrap="true"></Label>
+            <UrlContents row="2" class="p-20 m-t-10" :addDivider="true" :urls="point.urls"></UrlContents>
           </StackLayout>
         </StackLayout>
       </ScrollView>
@@ -31,10 +40,12 @@ import * as utils from "~/plugins/utils";
 import ImageCarousel from "~/components/ImageCarousel";
 import AudioPlayer from "~/components/AudioPlayer";
 import * as firebase from "nativescript-plugin-firebase";
+import UrlContents from "~/components/UrlContents";
 
 export default {
   components: {
     ImageCarousel,
+    UrlContents,
     AudioPlayer
   },
   mounted() {
@@ -49,6 +60,7 @@ export default {
     onLoaded() {
       this.$store.commit("setCurrentPage", {
         name: "pointinfo",
+        title: this.point.title,
         instance: this
       });
     },
@@ -57,12 +69,25 @@ export default {
       this.$modal.close();
     }
   },
+   beforeDestroy(){
+    console.log('destroy video player')
+    this.$refs.video.nativeView.destroy();
+  },
   computed: {
     images() {
       if (this.point) {
         return this.point.files.filter(file => file.type == "image");
       }
       return [];
+    },
+    video() {
+      if (this.point) {
+        const videos =  this.point.files.filter(file => file.type == "video");
+        if(videos && videos.length) {
+          return videos[0].firebaseUrl
+        }
+      }
+      return ''
     }
   },
   data() {

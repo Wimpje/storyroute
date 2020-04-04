@@ -1,6 +1,6 @@
 import App from "~/pages/App.vue";
 import Home from "~/pages/Home.vue";
-import Points from "~/pages/Points.vue";
+import Discover from "~/pages/Discover.vue";
 import PointInfo from "~/pages/PointInfo.vue";
 import Route from "~/pages/Route.vue";
 import Routes from "~/pages/Routes.vue";
@@ -17,7 +17,7 @@ import { localize } from "nativescript-localize";
 const pages = {
   app: App,
   home: Home,
-  points: Points,
+  discover: Discover,
   pointinfo: PointInfo,
   routes: Routes,
   route: Route,
@@ -32,7 +32,7 @@ const pages = {
 const pagesInfo = {
   // having the name again is a bit overkill, but handy sometimes
   routes: {     name: 'routes', icon: "0xf4d7", text: "nav.routes", page: pages.routes, sideDrawer: true, isTabView: true, tabIndex: 0 },
-  points: {     name: 'points', icon: "0xf5a0", text: "nav.points", page: pages.points, sideDrawer: true, isTabView: true, tabIndex: 1 },
+  discover: {     name: 'discover', icon: "0xf06e", text: "nav.discover", page: pages.discover, sideDrawer: true, isTabView: true, tabIndex: 1 },
   articles: {   name: 'articles', icon: "0xf1ea", text: "nav.articles", page: pages.articles, sideDrawer: true, isTabView: true, tabIndex: 2 },
   
   // no tab navigation for the following:

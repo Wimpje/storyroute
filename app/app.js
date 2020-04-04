@@ -21,7 +21,7 @@ import { ToastService } from '~/services/toastService'
 import { allowSleepAgain } from "nativescript-insomnia";
 import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
 const firebase = require("nativescript-plugin-firebase");
-
+Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
 
 // Set up config if not there:
 

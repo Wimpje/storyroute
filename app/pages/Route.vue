@@ -1,7 +1,7 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="*, auto, 150">
-      <GoogleMap :mapId="route.id" 
+      <GoogleMap
         ref="gMap" 
         row="0" 
         :pois="poisToDisplay"
@@ -16,8 +16,20 @@
          layout="linear"
          :itemWidth="width"
          itemHeight="150"
-         @scrolled="onScrolled"
+         @scrollDragEnded="onScrolled"
          @itemTap="showPointInfoFromList">
+        <v-template name="header">
+           <CardView class="cardStyle" radius="10" height="140" width="135">
+            <StackLayout>
+              <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
+                <FormattedString>
+                  <Span class="fas" text.decode="&#xf3c5; "/>
+                  <Span text="Swipe langs alle punten" />
+                </FormattedString>
+              </Label>
+            </StackLayout>
+          </CardView>
+        </v-template>
         <v-template>
           <CardView class="cardStyle" radius="10" height="140" :width="width">
             <StackLayout>
@@ -32,9 +44,11 @@
                 stretch="aspectFit"
                 placeholder="~/assets/images/placeholder.png"
                 height="100"/>
-              <Button :text="'point.info' | L" />
             </StackLayout>
           </CardView>
+        </v-template>
+        <v-template name="footer">
+          <!-- buffer -->
         </v-template>
       </RadListView>
     </GridLayout>
@@ -133,10 +147,6 @@ export default {
             value: this.route.title
           },
           {
-            key: "source",
-            value: "points"
-          },
-          {
             key: "point_id",
             value: poi.id
           },
@@ -161,7 +171,7 @@ export default {
       if (this.scrollIndex != newScrollIndex) {
         const activePoi = this.poisToDisplay[newScrollIndex]
         this.$refs.gMap.showTitleForPoint(activePoi)
-        this.$refs.gMap.animateToPoint(activePoi, 200)
+        this.$refs.gMap.animateToPoint(activePoi, 40, 16)
       }
       this.scrollIndex = newScrollIndex
     },
@@ -176,39 +186,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.info {
-  font-size: 18;
+
+.cardStyle {
+    background-color: #fff;
+    color: rgb(43, 43, 43);
+    margin: 3 10 3 5;
 }
-.pushDown {
-  height: 10;
-}
-.index {
-  horizontal-align: center;
-}
-.outside {
-  background: linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 1) 36%,
-    rgba(0, 212, 255, 0) 100%
-  );
-}
-.points {
-}
-.pointsContainer {
-}
-.point {
-  margin: 5;
-  color: black;
-}
-.pointDescription {
-  padding: 5;
-  line-height: 100%;
-  font-size:14;
-  width: 100%;
-  height: 40;
-  background-color: white;
-  color: black;
+
+.cardContent {
+    padding: 20;
+    font-weight: bold;
+    border:1;
+    font-size: 30;
 }
 .mapPlaceholder {
   background-color: green;

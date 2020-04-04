@@ -11,9 +11,10 @@
         row="0"
       />
       <ScrollView  row="1">
-        <GridLayout class="info" rows="auto, *">
+        <GridLayout class="info" rows="auto, *, auto">
           <Label row="0" :text="article.title" class="h1 name" textWrap="true"></Label>
-          <Label row="1" ref="text" class="text" textWrap="true"></Label>
+          <Label row="1" ref="text" class="text p-20" textWrap="true"></Label>
+          <UrlContents row="2" class="p-20" :addDivider="true" :urls="article.urls"></UrlContents>
         </GridLayout>
       </ScrollView>
     </GridLayout>
@@ -22,9 +23,10 @@
 <script>
 
 import * as utils from "~/plugins/utils";
+import UrlContents from "~/components/UrlContents";
 
 export default {
-  components: {  },
+  components: { UrlContents },
  mounted() {
     this.$store.commit('setCurrentArticle', this.article)
   },
@@ -35,7 +37,7 @@ export default {
   props: ["article"],
   methods: {
     onLoaded(args) {
-      this.$store.commit('setCurrentPage', {name: 'articleinfo', instance: this})
+      this.$store.commit('setCurrentPage', {name: 'articleinfo', title: this.article.title, instance: this})
 
       console.log('loading & formatting article')
       this.$refs.text.nativeView.formattedText = utils.createFormattedString(this.article.text)
@@ -75,7 +77,6 @@ export default {
 
 .text {
   vertical-align: top;
-  padding: 20 20 20 20;
   font-size: 18;
 }
 .name {
