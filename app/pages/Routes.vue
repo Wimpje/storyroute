@@ -1,9 +1,10 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <StackLayout>
-      <LoadData :data="routes" @reload="reloadData"/>
-      <ListView
-        height="100%"
+    <GridLayout rows="*">
+      <LoadData row="0" :data="routes" @reload="reloadData"/>
+        <ListView
+        v-if="routes && routes.length > 0"
+        row="0"
         ref="routesListView"
         @itemTap="loadRoute"
         for="route in routes"
@@ -13,7 +14,8 @@
           <RouteListItem :route="route"></RouteListItem>
         </v-template>
       </ListView>
-    </StackLayout>
+
+    </GridLayout>
   </Page>
 </template>
 
@@ -34,8 +36,7 @@ export default {
   },
   data() {
     return {
-      cache: null,
-     
+      
     };
   },
   created() {},

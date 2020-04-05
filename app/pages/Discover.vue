@@ -19,9 +19,9 @@
             <Button v-for="category in categories" :key="category"
               :text="`discover.category.${category}` | L"
               @tap="filterCategory(category)"
-              horizontalAlignment="middle"
+              horizontalAlignment="center"
               verticalAlignment="middle"
-              class="categoryButton m-l-4">
+              class="categoryButton m-x-4">
             </Button>
         </StackLayout>
       </ScrollView>
@@ -33,6 +33,7 @@
         :horizontalAlignment="horizontalAlignment">
         <RadListView for="(poi, index) in poisToDisplay"
           ref="listView"
+          @loaded="listViewLoaded"
           :orientation="orientation"
           layout="linear"
           :ios.itemWidth="screenOrientation == 'portrait' ? 150 : 120"
@@ -233,7 +234,11 @@ export default {
               }
             }
           }
-          return true;
+          // no tags, but a category is set, so filtering
+          if (this.currentCategory === 'all') {
+            return true
+          }
+          return false
         });
         // sort the points on distance so the map doesn't move around too much
         // filtered.sort(this.distanceFromOmmen);
@@ -244,6 +249,18 @@ export default {
     }
   },
   created() {},
+  watch: {
+    screenOrientation(oldVal, newVal) {
+      // refresh the list to re-render properly
+      this.$nextTick(() => {
+        if (this.$refs.listView) {
+          this.$refs.listView.refresh();
+          if(isIOS)
+            this.$refs.listView.nativeView.updateHeaderFooter();
+        }
+      });
+    }
+  },
   methods: {
     onLoaded() {
       const curPage = { 
@@ -260,9 +277,19 @@ export default {
         });
       }
     },
+    listViewLoaded(args) {
+      console.log('listview loaded event')
+    },
     filterCategory(category) {
       console.log('filtering to category', category)
       this.currentCategory = category
+      this.$nextTick(() => {
+        if (this.$refs.listView) {
+          this.$refs.listView.refresh();
+          if(isIOS)
+            this.$refs.listView.nativeView.updateHeaderFooter();
+        }
+      });
     },
     getPoiTitle(poi) {
       if(poi.routePoint) {
@@ -292,7 +319,7 @@ export default {
       const idx = this.poisToDisplay.findIndex(p => marker.userData.id === p.id);
       console.log(`scrolling to pois[${idx}]: ${marker.userData.title}`)
       this.$nextTick(() => {
-        this.$refs.listView.scrollToIndex(idx, true, ListViewItemSnapMode.Center); 
+        this.$refs.listView.scrollToIndex(idx, false, ListViewItemSnapMode.Start); 
       })
     },
     showPointInfo(poi) {
@@ -370,16 +397,14 @@ export default {
 }
 .cardStyle {
   background-color: #fff;
-  color: rgb(43, 43, 43);
-  
+  color: rgb(43, 43, 43); 
 }
-
 .cardContent {
   font-weight: bold;
   font-size: 30;
 }
 .categoryButton {
-  font-size: 16;
+  font-size: 14;
   height: 22;
   border-radius: 10;
 }

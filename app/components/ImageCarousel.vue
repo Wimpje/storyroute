@@ -21,7 +21,7 @@
             row="0"
             width="100%"
             class="image"
-            stretch="aspectFill"
+            :stretch="imageStretchMode"
             :source="item.firebaseUrl"
             verticalAlignment="bottom"
             placeholder="~/assets/images/placeholder.png"
@@ -43,7 +43,7 @@
 <script>
 export default {
   components: {},
-  props: ["images"],
+  props: ["images", "stretch"],
   watch: {
     // hack, according to demo of nativesccript-carousel on github
     async images(to) {
@@ -52,6 +52,12 @@ export default {
     }
   },
   computed: {
+    imageStretchMode() {
+      if (this.stretch) 
+        return this.stretch
+      else 
+        return 'aspectFill'
+    },
     allImages() {
       if (this.images.length === 0) {
         // dummy

@@ -1,63 +1,65 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <LoadData :data="allArticles" @reload="reloadData" />
-    <Tabs selectedIndex="0" tabsPosition="top">
+    <GridLayout rows="*">
+      <LoadData :data="allArticles" @reload="reloadData" row="0" />
+      <Tabs selectedIndex="0" tabsPosition="top" row="0">
 
-      <TabStrip>
-          <TabStripItem  
-              v-for="(category, idx) in categories"
-              :key="category">
-            <Label :text="'article.'+category | L"></Label>
-          </TabStripItem>
-      </TabStrip>
+        <TabStrip>
+            <TabStripItem  
+                v-for="(category, idx) in categories"
+                :key="category">
+              <Label :text="'article.'+category | L"></Label>
+            </TabStripItem>
+        </TabStrip>
 
-      <TabContentItem v-for="(category, idx) in categories"  :key="category">
-          <GridLayout class="m-10">
-            <RadListView row="1" for="item in articles[category]" height="100%" @itemTap="loadArticle">
-              <v-template>
-                <GridLayout class="article" columns="80, *" rows="auto, auto, *">
-                  <CachedImage
-                    col="0"
-                    rowSpan="2"
-                    class="thumbNail img-rounded p-5"
-                    stretch="aspectFill"
-                    :source="getImageFromItem(item)"
-                    height="80"
-                    
-                    placeholder="~/assets/images/placeholder.png"
-                  />
-                  <Label col="1" row="0" class="h2 p-5" :text="item.title" textWrap="true"></Label>
-                  <Label
-                    col="1"
-                    row="1"
-                    v-if="item.publishedDate && item.category === 'news'"
-                    class="date"
-                    verticalAlignment="top"
-                    :text="toPrettyDate(item.publishedDate)"
-                  ></Label>
-                
-                  <Label
-                    col="0"
-                    colSpan="2"
-                    row="2"
-                    height="80"
-                    class="text p-5"
-                    verticalAlignment="top"
-                    textWrap="true"
-                    :text="item.text ? item.text.replace(/#/i, '') : ''"
-                  ></Label>
-                  <Label col="0"
-                    colSpan="2"
-                    row="2"
-                    height="80"
-                    class="overlay"
+        <TabContentItem v-for="(category, idx) in categories"  :key="category">
+            <GridLayout class="m-10">
+              <RadListView row="1" for="item in articles[category]" height="100%" @itemTap="loadArticle">
+                <v-template>
+                  <GridLayout class="article" columns="80, *" rows="auto, auto, *">
+                    <CachedImage
+                      col="0"
+                      rowSpan="2"
+                      class="thumbNail img-rounded p-5"
+                      stretch="aspectFill"
+                      :source="getImageFromItem(item)"
+                      height="80"
+                      
+                      placeholder="~/assets/images/placeholder.png"
+                    />
+                    <Label col="1" row="0" class="h2 p-5" :text="item.title" textWrap="true"></Label>
+                    <Label
+                      col="1"
+                      row="1"
+                      v-if="item.publishedDate && item.category === 'news'"
+                      class="date"
+                      verticalAlignment="top"
+                      :text="toPrettyDate(item.publishedDate)"
                     ></Label>
-                </GridLayout>
-              </v-template>
-            </RadListView>
-          </GridLayout>
-      </TabContentItem>
-    </Tabs>
+                  
+                    <Label
+                      col="0"
+                      colSpan="2"
+                      row="2"
+                      height="80"
+                      class="text p-5"
+                      verticalAlignment="top"
+                      textWrap="true"
+                      :text="item.text ? item.text.replace(/#/i, '') : ''"
+                    ></Label>
+                    <Label col="0"
+                      colSpan="2"
+                      row="2"
+                      height="80"
+                      class="overlay"
+                      ></Label>
+                  </GridLayout>
+                </v-template>
+              </RadListView>
+            </GridLayout>
+        </TabContentItem>
+      </Tabs>
+    </GridLayout>
   </Page>
 </template>
 

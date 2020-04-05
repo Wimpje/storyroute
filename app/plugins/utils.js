@@ -7,14 +7,14 @@ import { FormattedString } from "text/formatted-string"
 import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
 
 const firebase = require("nativescript-plugin-firebase");
-let fbInit = null
+
 let fbIsInitialized = false
 export const firebaseInitialized = () => {
   return fbIsInitialized
 }
 
 export const initFirebase = () => {
-  fbInit = firebase.init({
+  return firebase.init({
     iOSEmulatorFlush: true,
     analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled
     crashlyticsCollectionEnabled: getBoolean('googleCrashlytics'), // enabled
@@ -29,14 +29,17 @@ export const initFirebase = () => {
   .catch((err) => {
     console.error("FB: error initializing data", err)
   })
-  return fbInit
+  
 }
 
-export const loadFirebaseData = async () => {
+export const loadFirebaseData = () => {
+  let fbInit = null
   if (!fbIsInitialized)
-    await initFirebase()
+    fbInit = initFirebase()
+  else 
+    fbInit = Promise.resolve()
 
-  fbInit.then((resp) => {
+  return fbInit.then((resp) => {
     firebase.login(
       {
         type: firebase.LoginType.ANONYMOUS

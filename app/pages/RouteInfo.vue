@@ -167,7 +167,7 @@ export default {
   padding-bottom: 100;
 }
 .routeInfo {
-  background-color: #ccc;
+  
 }
 .routeDescription {
   vertical-align: top;

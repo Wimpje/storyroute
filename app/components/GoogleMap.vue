@@ -60,6 +60,16 @@ export default {
       } else return null;
     }
   },
+  watch: {
+    pois (oldVal, newVal) {
+      console.log('google map, markers changed! updating...')
+      this.addMapMarkers()
+    },
+    paths (oldVal, newVal) {
+      console.log('google map, paths changed! updating...')
+      this.addPaths()
+    }
+  },
   mounted() {
     // determine if we should use this hook or @loaded... timing sometimes is weird on iOS it seems
     this.onLoaded();
@@ -293,6 +303,7 @@ export default {
 
       return poiMarker;
     },
+   
     // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
     onMapReady(args) {
       this.mapView = args.object;
@@ -375,9 +386,10 @@ export default {
     },
     addPaths() {
       // create route line
-      if (this.paths && this.paths.length) {
-        this.mapView.removeAllShapes();
+      if (this.paths) {
 
+        this.mapView.removeAllShapes();
+        
         this.paths.forEach( path => {
           
           // draw the polyline

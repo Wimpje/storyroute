@@ -142,7 +142,6 @@ Vue.filter("L", localize);
 
 Vue.use(Vuex);
 
-
 const vueApp = new Vue({
   store,
   render(h) {
@@ -157,6 +156,7 @@ const vueApp = new Vue({
   created() {
     utils.initFirebase().then(() => {
       // load the FB stuff when Vue is done creating itself (?needed)
+      console.log('init FB from app.js, now loading data')
       utils.loadFirebaseData()
     })
   }

@@ -138,7 +138,7 @@ export default {
     shareAction() {
       const actionObj = this.createActionObject()
       if(actionObj.type) {
-        SocialShare.shareUrl('https://nosmallthing.nl/app75jaarvrijheidommen', localize(`share.${actionObj.type} - '${actionObj.title}'`));
+        SocialShare.shareText(localize(`share.${actionObj.type}`) + ` - ${actionObj.title} @ https://75jaarbevrijdingommenapp.nl/${actionObj.type}/${actionObj.id}` );
         console.log('sharing this')
         firebase.analytics.logEvent({
           key: "share_action",
@@ -167,6 +167,7 @@ export default {
         // go to point
         ret.position = this.$store.getters.currentPoi.position
         ret.title = this.$store.getters.currentPoi.title
+        ret.id = this.$store.getters.currentPoi.id
         ret.description =  this.$store.getters.currentPoi.description
         ret.type = 'point'
       }
@@ -176,6 +177,7 @@ export default {
         if(startPoint) {
           ret.position = startPoint.position
           ret.title = this.$store.getters.currentRoute.title
+          ret.id = this.$store.getters.currentRoute.id
           ret.text = this.$store.getters.currentRoute.description
           ret.type = 'route'
         }
@@ -183,6 +185,7 @@ export default {
       else if (this.$store.getters.currentArticle) {
         ret.title = this.$store.getters.currentArticle.title
         ret.description =  this.$store.getters.currentArticle.text
+        ret.id =  this.$store.getters.currentArticle.id
         ret.type = 'article'
       }
       return ret

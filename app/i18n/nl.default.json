@@ -74,7 +74,8 @@
     "englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
     "englishNotYetSupportedButton": "OK",
     "loadingTroubleInitial": "Het duurt even om de data te laden, wellicht een trage internetverbinding, aub nog even geduld...",
-    "loadingTrouble": "Er is een probleem met het ophalen van de gegevens, is er internet?"
+    "loadingTrouble": "Er is een probleem met het ophalen van de gegevens, is er internet?",
+    "loadingTroubleFinal": "Er is een probleem opgetreden, ik kan het helaas niet verhelpen. Probeer het later nog eens."
   },
   "config": {
     "crashInfo": "Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!",

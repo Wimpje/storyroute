@@ -1,12 +1,12 @@
 <template>
-  <GridLayout row="*" @loaded="onLoaded" v-if="!loading">
+  <GridLayout row="*" @loaded="onLoaded" v-if="!loaded">
     <ActivityIndicator :busy="loading"
       row="0"
       verticalAlignment="middle"
       horizontalAlignment="middle" />
     <Label v-if="loadingTrouble"
       row="0"
-      marginTop="60"
+      marginTop="80"
       class="loadingTrouble" 
       verticalAlignment="middle" 
       horizontalAlignment="middle" 
@@ -28,6 +28,7 @@
 
 <script>
 import { localize } from "nativescript-localize";
+import * as utils from "~/plugins/utils";
 
 export default {
   props: ["data"],
@@ -68,6 +69,7 @@ export default {
       if (hasData) {
         this.loadingTrouble = ''
         this.showReloader = false
+        this.loaded = true
       }
       return hasData
     },
@@ -75,7 +77,12 @@ export default {
       this.startChecking() 
     },
     reload() {
-      this.$emit('reload', true)
+      utils.loadFirebaseData().then(() => {
+        this.$emit('reload', true)
+      }).catch((err) => {
+        this.loadingTrouble = localize('message.loadingTroubleFinal')
+      });
+      
     },
     reset() {
       this.loading = false
@@ -89,6 +96,7 @@ export default {
       const hasData = this.checkData()
 
       if(!hasData) {
+        this.loaded = false
         // load 10 sec, then display initial message, then another 10, and give up
         this.timeout = setTimeout(() => {
          if (!this.checkData()) {
