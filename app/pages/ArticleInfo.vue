@@ -26,7 +26,7 @@ export default {
   mounted() {
     this.$store.commit("setCurrentArticle", this.article);
   },
-  destroy() {
+  beforeDestroy() {
     console.log("DESTROY poi");
     this.$store.commit("setCurrentArticle", null);
   },

@@ -27,7 +27,7 @@ export default {
     };
   },
   created() {},
-  destroy() {
+  beforeDestroy() {
     this.$player.pause();
     clearInterval(this.progressInterval)
   },

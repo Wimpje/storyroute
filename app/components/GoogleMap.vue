@@ -64,7 +64,7 @@ export default {
     // determine if we should use this hook or @loaded... timing sometimes is weird on iOS it seems
     this.onLoaded();
   },
-  destroy() {
+  beforeDestroy() {
     if (application.android) {
       application.android.off(
         application.AndroidApplication.activityResumedEvent,

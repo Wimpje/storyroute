@@ -20,6 +20,7 @@
     "goto": "navigate here",
     "openmaps": "go here with external maps app",
     "share": "share",
+    "reload": "try to reload data",
     "startRoute": "start route",
     "refreshDownloadAll": "refresh downloads",
     "removeDownloadAll": "remove downloads"
@@ -56,8 +57,7 @@
   },
   "help": {
     "credits": "Credits",
-    "contact": "Contact info",
-    "loadingTrouble": "There is a problem retrieving data, is wifi or mobile data enabled?"
+    "contact": "Contact info"
   },
   "drawer": {
     "title": "75 year liberty - Ommen"
@@ -90,7 +90,9 @@
   "message": {
     "englishNotYetSupportedTitle": "Language not (fully) supported",
     "englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
-    "englishNotYetSupportedButton": "OK"
+    "englishNotYetSupportedButton": "OK",
+    "loadingTroubleInitial": "There is a problem retrieving data, mayber the connection is slow, please wait...",
+    "loadingTrouble": "There is a problem retrieving data, is wifi or mobile data enabled?"
   },
   "ios.info.plist": {
     "NSLocationUsageDescription": "Find your current location to see interesting points nearby.",

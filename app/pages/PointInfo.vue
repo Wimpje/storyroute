@@ -51,9 +51,11 @@ export default {
   mounted() {
     this.$store.commit('setCurrentPoi', this.point)
   },
-  destroy() {
-    console.log("DESTROY poi")
+  beforeDestroy() {
+    console.log("DESTROY poi & video player (if exists)")
     this.$store.commit('setCurrentPoi', null)
+    if (this.$refs.video && this.$refs.video.nativeView)
+      this.$refs.video.nativeView.destroy();
   },
   props: ["point"],
   methods: {
@@ -68,11 +70,6 @@ export default {
     close() {
       this.$modal.close();
     }
-  },
-  destroy(){
-    console.log('destroy video player')
-    if (this.$refs.video && this.$refs.video.nativeView)
-      this.$refs.video.nativeView.destroy();
   },
   computed: {
     images() {

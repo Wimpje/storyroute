@@ -8,7 +8,7 @@
       indicatorColor="#ccc"
       indicatorColorUnselected="#ddd"
       indicatorOffset="0, -20"
-      showIndicator="true"
+      :showIndicator="allImages.length > 1"
     >
       <CarouselItem
         v-for="(item, i) in allImages"

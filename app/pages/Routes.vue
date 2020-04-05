@@ -1,16 +1,8 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <StackLayout>
-      <ActivityIndicator :busy="showLoading"
-        verticalAlignment="middle"
-        horizontalAlignment="middle" />
-      <Label class="warning" verticalAlignment="middle" horizontalAlignment="middle" v-if="loadingTrouble">
-        <FormattedString>
-          <Span class="fas" text.decode="&#xf35d; "/>
-          <Span :text="'help.loadingTrouble' | L" class="title" />
-        </FormattedString>
-      </Label>
-      <ListView
+      <LoadData :data="routes" @reload="reloadData"/>
+      <ListView v-if="routes"
         height="100%"
         ref="routesListView"
         @itemTap="loadRoute"
@@ -28,7 +20,8 @@
 <script>
 import { mapGetters } from "vuex";
 import RouteListItem from "~/components/RouteListItem";
-import RouteInfo from "~/pages/RouteInfo";
+import LoadData from "~/components/LoadData";
+
 import * as utils from "~/plugins/utils";
 import * as firebase from "nativescript-plugin-firebase";
 
@@ -37,13 +30,12 @@ export default {
   },
   components: {
     RouteListItem,
-    RouteInfo
+    LoadData
   },
   data() {
     return {
       cache: null,
-      showLoading: false,
-      loadingTrouble: false
+     
     };
   },
   created() {},
@@ -52,27 +44,12 @@ export default {
       routes: "getRoutes"
     }),
   },
-  watch: {
-    routes(oldVal, newVal) {
-      if(newVal && newVal.length > 0) {
-        this.loadingTrouble = false
-        this.showLoading = false
-      }
-    }
-  },
   methods: {
     onLoaded() {
-      if(this.routes && this.routes.length === 0)
-        this.showLoading = true
-
       this.$store.commit('setCurrentPage',  { name: 'routes', instance: this })
-      // 
-      setTimeout(() => {
-        if(!this.routes || this.routes.length === 0) {
-          this.loadingTrouble = true
-          this.showLoading = false
-        }
-      }, 10000)
+    },
+    reloadData() {
+      this.refreshRoutes()
     },
     loadRoute(event) {
       console.log("should load", event.item.title);
@@ -107,4 +84,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 </style>

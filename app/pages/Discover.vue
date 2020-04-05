@@ -1,5 +1,5 @@
 <template>
-  <Page class="page" :class="screenOrientation" @loaded="onLoaded" actionBarHidden="true">
+  <Page :class="screenOrientation" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="*">
       <GoogleMap
         ref="gMap"
@@ -35,13 +35,13 @@
           ref="listView"
           :orientation="orientation"
           layout="linear"
-          :ios.itemWidth="width"
-          :ios.itemHeight="110"
+          :ios.itemWidth="screenOrientation == 'portrait' ? 150 : 120"
+          :ios.itemHeight="screenOrientation == 'portrait' ? 120 : 150"
           ios.dynamicItemSize="false"
           @scrollDragEnded="onScrolled"
           @itemTap="showPointInfoFromList">
           <v-template name="header">
-            <CardView class="cardStyle" radius="10" height="100" width="130">
+            <CardView class="cardStyle" radius="10" height="110" width="130">
               <StackLayout>
                 <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
                   <FormattedString>
@@ -53,24 +53,26 @@
             </CardView>
           </v-template>
           <v-template>
-            <CardView class="cardStyle" radius="10" height="100" width="130">
+            <CardView class="cardStyle" radius="10" height="110" width="130">
               <StackLayout>
                 <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
                   <FormattedString>
                     <Span class="fas" text.decode="&#xf3c5; "/>
-                    <Span :text="poi.title" />
+                    <Span :text="getPoiTitle(poi)" />
                   </FormattedString>
                 </Label>
                 <CachedImage
                   :source="getPoiImage(poi)" 
                   stretch="aspectFit"
-                  placeholder="~/assets/images/placeholder.png"
-                  height="100"/>
+                  width="100"
+                  height="90"
+                  placeholder="~/assets/images/placeholder.png">
+                </CachedImage>
               </StackLayout>
             </CardView>
           </v-template>
           <v-template name="footer">
-            <CardView class="cardStyle" radius="10" height="100" width="130">
+            <CardView class="cardStyle" radius="10" height="110" width="130">
               <StackLayout>
                 <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
                   <FormattedString>
@@ -108,14 +110,14 @@ export default {
     return {
       scrollIndex: 0,
       scrollOffset: 0,
-      width: 140,
+      width: 130,
       currentCategory: 'all',
       ommenCenter: {position: {latitude: 52.4958, longitude: 6.44117} },
       categories: ['all', 'stolpersteine', 'routes', 'planes', 'rest']
     };
   },
   mounted() {},
-  destroy() {
+  beforeDestroy() {
     console.log('DESTROY')
 
     this.$store.commit('setCurrentRoute', null)
@@ -152,7 +154,7 @@ export default {
       return this.screenOrientation === 'landscape' ? 'right' : 'middle'
     },
     marginBottomButtons() {
-      return this.screenOrientation === 'landscape' ? 0 : 120
+      return this.screenOrientation === 'landscape' ? 0 : 130
     },
     widthButtons() {
       return this.screenOrientation === 'landscape' ? '100%' : '100%'
@@ -184,9 +186,10 @@ export default {
     poisToDisplay() {
       // if we display a route, display everything
       if (this.route && this.route.pois) {
+        let idx = 1;
         const pois = this.route.pois.map(poi => {
           // copy it (not sure if necessary?) and mark as route point, not regular point
-          return Object.assign({routePoint: true}, poi)
+          return Object.assign({routePoint: true, routeIndex: idx++}, poi)
         })
         pois[0].start = true // for setting start icon... not pretty but hey it works
 
@@ -211,7 +214,7 @@ export default {
                       return true
                     }
                     break;
-                  case 'airplanes':
+                  case 'planes':
                     if (p.tags[ti].toLowerCase() === 'vliegtuig') {
                       return true
                     }
@@ -233,7 +236,7 @@ export default {
           return true;
         });
         // sort the points on distance so the map doesn't move around too much
-        filtered.sort(this.distanceFromOmmen);
+        // filtered.sort(this.distanceFromOmmen);
         return filtered
       } else {
         return [];
@@ -243,7 +246,14 @@ export default {
   created() {},
   methods: {
     onLoaded() {
-      this.$store.commit("setCurrentPage", { name: this.pageName, instance: this });
+      const curPage = { 
+        name: this.pageName, 
+        instance: this 
+      }
+      if (this.pageName === 'route') 
+        curPage.title = this.route.title
+      this.$store.commit("setCurrentPage", curPage);
+      
       if(getBoolean('screenOnWithMap')) {
         keepAwake().then(function() {
           console.log("Insomnia is active");
@@ -253,6 +263,12 @@ export default {
     filterCategory(category) {
       console.log('filtering to category', category)
       this.currentCategory = category
+    },
+    getPoiTitle(poi) {
+      if(poi.routePoint) {
+        return `${poi.routeIndex}. ${poi.title}`
+      }
+      return poi.title
     },
     getPoiImage(poi) {
       const imgs =  poi.files.filter(file => file.type == "image");
@@ -274,8 +290,9 @@ export default {
         return
 
       const idx = this.poisToDisplay.findIndex(p => marker.userData.id === p.id);
+      console.log(`scrolling to pois[${idx}]: ${marker.userData.title}`)
       this.$nextTick(() => {
-        this.$refs.listView.scrollToIndex(idx, false, ListViewItemSnapMode.Center); 
+        this.$refs.listView.scrollToIndex(idx, true, ListViewItemSnapMode.Center); 
       })
     },
     showPointInfo(poi) {
@@ -326,7 +343,7 @@ export default {
     refreshPoints() {
       this.$store.dispatch("updatePois");
     },
-     distanceBetween(poi1, poi2) {
+    distanceBetween(poi1, poi2) {
       var R = 6371.0710; // Radius of the Earth in km
       var rlat1 = poi1.position.latitude * (Math.PI/180); // Convert degrees to radians
       var rlat2 = poi2.position.latitude * (Math.PI/180); // Convert degrees to radians
@@ -346,10 +363,10 @@ export default {
 <style scoped lang="scss">
 
 .landscape .cardStyle {
-  margin: 10 0 10 10;
+  margin: 0 10 10 0;
 }
 .portrait .cardStyle {
-  margin: 0 10 0 0;
+  margin: 0 10 10 0;
 }
 .cardStyle {
   background-color: #fff;
@@ -358,10 +375,8 @@ export default {
 }
 
 .cardContent {
-  padding: 20;
   font-weight: bold;
   font-size: 30;
-
 }
 .categoryButton {
   font-size: 16;

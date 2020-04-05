@@ -50,6 +50,7 @@
     "back": "terug",
     "backIos": "ᐸ terug",
     "goto": "navigeer hierheen",
+    "reload": "probeer opnieuw te laden",
     "startRoute": "start route",
     "openmaps": "ga hierheen met externe maps app",
     "share": "share",
@@ -71,7 +72,9 @@
   "message": {
     "englishNotYetSupportedTitle": "Language not (fully) supported",
     "englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
-    "englishNotYetSupportedButton": "OK"
+    "englishNotYetSupportedButton": "OK",
+    "loadingTroubleInitial": "Het duurt even om de data te laden, wellicht een trage internetverbinding, aub nog even geduld...",
+    "loadingTrouble": "Er is een probleem met het ophalen van de gegevens, is er internet?"
   },
   "config": {
     "crashInfo": "Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!",

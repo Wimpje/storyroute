@@ -1,65 +1,63 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
+    <LoadData :data="articles" @reload="reloadData"/>
     <Tabs selectedIndex="0" tabsPosition="top">
 
-    <!-- The bottom tab UI is created via TabStrip (the containier) and TabStripItem (for each tab)-->
-    <TabStrip>
-        <TabStripItem  
-            v-for="(category, idx) in categories"
-            :key="category">
-          <Label :text="'article.'+category | L"></Label>
-            <!-- <Image src="font://&#xf015;" class="fas"></Image> -->
-        </TabStripItem>
-    </TabStrip>
-    <!-- The number of TabContentItem components should corespond to the number of TabStripItem components -->
-    <TabContentItem v-for="(category, idx) in categories"  :key="category">
-        <GridLayout class="m-10">
-          <RadListView row="1" for="item in articles[category]" height="100%" @itemTap="loadArticle">
-            <v-template>
-              <GridLayout class="article" columns="80, *" rows="auto, auto, *">
-                <CachedImage
-                  col="0"
-                  rowSpan="2"
-                  class="thumbNail img-rounded p-5"
-                  stretch="aspectFill"
-                  :source="getImageFromItem(item)"
-                  height="80"
-                  
-                  placeholder="~/assets/images/placeholder.png"
-                />
-                <Label col="1" row="0" class="h2 p-5" :text="item.title" textWrap="true"></Label>
-                <Label
-                  col="1"
-                  row="1"
-                  v-if="item.publishedDate && item.category === 'news'"
-                  class="date"
-                  verticalAlignment="top"
-                  :text="toPrettyDate(item.publishedDate)"
-                ></Label>
-              
-                <Label
-                  col="0"
-                  colSpan="2"
-                  row="2"
-                  height="80"
-                  class="text p-5"
-                  verticalAlignment="top"
-                  textWrap="true"
-                  :text="item.text ? item.text.replace(/#/i, '') : ''"
-                ></Label>
-                <Label col="0"
-                  colSpan="2"
-                  row="2"
-                  height="80"
-                  class="overlay"
-                  ></Label>
-              </GridLayout>
-            </v-template>
-          </RadListView>
-        </GridLayout>
-    </TabContentItem>
+      <TabStrip>
+          <TabStripItem  
+              v-for="(category, idx) in categories"
+              :key="category">
+            <Label :text="'article.'+category | L"></Label>
+          </TabStripItem>
+      </TabStrip>
 
-</Tabs>
+      <TabContentItem v-for="(category, idx) in categories"  :key="category">
+          <GridLayout class="m-10">
+            <RadListView row="1" for="item in articles[category]" height="100%" @itemTap="loadArticle">
+              <v-template>
+                <GridLayout class="article" columns="80, *" rows="auto, auto, *">
+                  <CachedImage
+                    col="0"
+                    rowSpan="2"
+                    class="thumbNail img-rounded p-5"
+                    stretch="aspectFill"
+                    :source="getImageFromItem(item)"
+                    height="80"
+                    
+                    placeholder="~/assets/images/placeholder.png"
+                  />
+                  <Label col="1" row="0" class="h2 p-5" :text="item.title" textWrap="true"></Label>
+                  <Label
+                    col="1"
+                    row="1"
+                    v-if="item.publishedDate && item.category === 'news'"
+                    class="date"
+                    verticalAlignment="top"
+                    :text="toPrettyDate(item.publishedDate)"
+                  ></Label>
+                
+                  <Label
+                    col="0"
+                    colSpan="2"
+                    row="2"
+                    height="80"
+                    class="text p-5"
+                    verticalAlignment="top"
+                    textWrap="true"
+                    :text="item.text ? item.text.replace(/#/i, '') : ''"
+                  ></Label>
+                  <Label col="0"
+                    colSpan="2"
+                    row="2"
+                    height="80"
+                    class="overlay"
+                    ></Label>
+                </GridLayout>
+              </v-template>
+            </RadListView>
+          </GridLayout>
+      </TabContentItem>
+    </Tabs>
   </Page>
 </template>
 
@@ -67,7 +65,8 @@
 import * as utils from "@nativescript/core/utils/utils";
 import * as myUtils from "~/plugins/utils";
 import { isAndroid, isIOS } from "tns-core-modules/platform";
-import ArticleInfo from "~/pages/ArticleInfo.vue";
+
+import LoadData from "~/components/LoadData";
 import { mapGetters } from "vuex";
 import { ObservableArray } from "@nativescript/core/data/observable-array/observable-array";
 import * as firebase from "nativescript-plugin-firebase";
@@ -75,13 +74,12 @@ import * as firebase from "nativescript-plugin-firebase";
 const moment = require("moment");
 
 export default {
-  components: {},
+  components: {LoadData},
   mounted() {},
   data() {
     return {
       tabActive: "news",
-      currentItem: null,
-      loading: false
+      currentItem: null
     };
   },
   computed: {
@@ -129,27 +127,12 @@ export default {
     },
     updateNews() {
       // apparently needed for ios race condition
-      
       this.$nextTick(() => {
-        try {
-          this.loading = true
-          this.$store.dispatch("updateArticles");
-          this.loading = false
-        }
-        catch(e) {
-          this.loading = false
-        }
+        this.$store.dispatch("updateArticles");
       });
     },
     loadArticles() {
-      this.loading = true
-      
-      this.$store.dispatch("getArticles").then(() => {
-        this.loading = false
-      }).catch(err => {
-        this.loading = false
-      })
-
+      this.$store.dispatch("getArticles")
       console.log("news retrieved");
     },
     loadArticle({ item }) {
@@ -191,6 +174,9 @@ export default {
       if (isAndroid) {
         args.object.android.setMaxLines(2);
       }
+    },
+    reloadData() {
+      this.updateNews()
     }
   }
 };

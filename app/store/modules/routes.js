@@ -22,7 +22,7 @@ export const actions = {
   async initRoutes({ commit }) {
     const service = new RouteService()
     const docs = await service.getRoutes()
-    commit("setRoutes", docs)
+    commit("setRoutes", docs.filter(d => d.visible))
   }
 }
 
@@ -35,8 +35,6 @@ export const mutations = {
   setRoutes(state, routes) {
     state.routes = routes
   },
-  
-
   setCurrentRouteToNone(state) {
     state.currentRoute = null
   },
