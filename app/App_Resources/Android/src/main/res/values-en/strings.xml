@@ -2,6 +2,8 @@
 <resources>
   <string name="_ios_info_plist_NSLocationWhenInUseUsageDescription_ZpKiIF">"Find your current location to see interesting points nearby."</string>
   <string name="_ios_info_plist_NSLocationUsageDescription_1bdb1b">"Find your current location to see interesting points nearby."</string>
+  <string name="_message_loadingTrouble_1XLkBq">"There is a problem retrieving data, is wifi or mobile data enabled?"</string>
+  <string name="_message_loadingTroubleInitial_1Ev4FF">"There is a problem retrieving data, mayber the connection is slow, please wait..."</string>
   <string name="_message_englishNotYetSupportedButton_ZWxmtg">"OK"</string>
   <string name="_message_englishNotYetSupportedMessage_1ALc4X">"Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you\'d like a translation in a different language."</string>
   <string name="_message_englishNotYetSupportedTitle_NjpfQ">"Language not (fully) supported"</string>
@@ -21,7 +23,6 @@
   <string name="_route_start_1k1oqJ">"Start"</string>
   <string name="_route_moreinfo_ZeWsVn">"More info"</string>
   <string name="_drawer_title_Z1GOBux">"75 year liberty - Ommen"</string>
-  <string name="_help_loadingTrouble_Z24VYx4">"There is a problem retrieving data, is wifi or mobile data enabled?"</string>
   <string name="_help_contact_Z1BKgHm">"Contact info"</string>
   <string name="_help_credits_Z1wbyuT">"Credits"</string>
   <string name="_dialog_cancelAction_ZOILYF">"Cancel"</string>
@@ -45,6 +46,7 @@
   <string name="_btn_removeDownloadAll_Z1HrJg9">"remove downloads"</string>
   <string name="_btn_refreshDownloadAll_2akLCj">"refresh downloads"</string>
   <string name="_btn_startRoute_1aJsYp">"start route"</string>
+  <string name="_btn_reload_Z1TRQFv">"try to reload data"</string>
   <string name="_btn_share_ZxHK1M">"share"</string>
   <string name="_btn_openmaps_ZtJpPn">"go here with external maps app"</string>
   <string name="_btn_goto_2qXYbv">"navigate here"</string>

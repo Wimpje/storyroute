@@ -13,6 +13,8 @@
   <string name="_config_downloadAll_29yUK2">"Download alle bestanden en routes. Niet nodig, maar handig als je geen of weinig mobiele data kunt gebruiken."</string>
   <string name="_config_analyticsInfo_1vPaqx">"Toestemming gebruiksinformatie te verzamelen (geen persoonlijke informatie). Dat helpt ons de app te verbeteren!"</string>
   <string name="_config_crashInfo_Z1GWQFB">"Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!"</string>
+  <string name="_message_loadingTrouble_1XLkBq">"Er is een probleem met het ophalen van de gegevens, is er internet?"</string>
+  <string name="_message_loadingTroubleInitial_1Ev4FF">"Het duurt even om de data te laden, wellicht een trage internetverbinding, aub nog even geduld..."</string>
   <string name="_message_englishNotYetSupportedButton_ZWxmtg">"OK"</string>
   <string name="_message_englishNotYetSupportedMessage_1ALc4X">"Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you\'d like a translation in a different language."</string>
   <string name="_message_englishNotYetSupportedTitle_NjpfQ">"Language not (fully) supported"</string>
@@ -27,6 +29,7 @@
   <string name="_btn_share_ZxHK1M">"share"</string>
   <string name="_btn_openmaps_ZtJpPn">"ga hierheen met externe maps app"</string>
   <string name="_btn_startRoute_1aJsYp">"start route"</string>
+  <string name="_btn_reload_Z1TRQFv">"probeer opnieuw te laden"</string>
   <string name="_btn_goto_2qXYbv">"navigeer hierheen"</string>
   <string name="_btn_backIos_Z4PUFc">"ᐸ terug"</string>
   <string name="_btn_back_2qXgom">"terug"</string>
@@ -63,6 +66,5 @@
   <string name="_app_name_1k3Sbz">"75 jaar bevrijding - Ommen"</string>
   <string name="app_name">"75 jaar bevrijding - Ommen"</string>
   <string name="title_activity_kimera">"75 jaar bevrijding - Ommen"</string>
-  <string name="_help_loadingTrouble_Z24VYx4">"help.loadingTrouble"</string>
   <string name="_75_jaar_bevrijding_Z2wmU9D">"75 jaar bevrijding"</string>
 </resources>

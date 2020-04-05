@@ -22,8 +22,8 @@ import { allowSleepAgain } from "nativescript-insomnia";
 import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
 import * as imageModule from 'nativescript-image';
 import ImagePlugin from 'nativescript-image/vue';
+import * as utils from "~/plugins/utils";
 
-const firebase = require("nativescript-plugin-firebase");
 Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
 
 // Set up config if not there:
@@ -133,15 +133,6 @@ Vue.component('CenterLabel', CenterLabel)
 Vue.component('CachedImage', CachedImage)
 
 console.log("App start - will load firebase stuff now!")
-const fbInit = firebase.init({
-  iOSEmulatorFlush: true,
-  analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled
-  crashlyticsCollectionEnabled: getBoolean('googleCrashlytics'), // enabled
-  onAuthStateChanged: data => {
-    console.log("FB: auth state changed: ", data)
-    store.dispatch('setUser', data)
-  }
-})
 
 if (isIOS) {
   GMSServices.provideAPIKey("<keyhere>");
@@ -164,31 +155,11 @@ const vueApp = new Vue({
     )
   },
   created() {
-    // load the FB stuff when Vue is done creating itself (?needed)
-    fbInit.then((resp) => {
-      console.log("FB: initialized")
-      firebase.login(
-        {
-          type: firebase.LoginType.ANONYMOUS
-        })
-        .then(user => {
-          this.$store.dispatch("getPois")
-          console.log('FB: getPois called after logging in')
-          this.$store.dispatch("initRoutes")
-          console.log('FB: initRoutes called after logging in')
-        })
-        .catch(error => {
-          // TODO handle errors on connections
-          firebase.crashlytics.log("FB: issue with logging in: " + error)
-          console.error("FB: issue with logging in: " + error);
-        });
+    utils.initFirebase().then(() => {
+      // load the FB stuff when Vue is done creating itself (?needed)
+      utils.loadFirebaseData()
     })
-      .catch(error => {
-        console.error("FB: Error initializing " + error)
-        firebase.crashlytics.log("FB: Error initializing: " + error)
-        // TODO this should cause a modal popup, with a 'try again later'
-      } );
-    }
+  }
 })
 
 Vue.showMyModal = function (component, options) {

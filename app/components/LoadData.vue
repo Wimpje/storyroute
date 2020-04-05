@@ -1,5 +1,5 @@
 <template>
-  <GridLayout row="*" @loaded="onLoaded">
+  <GridLayout row="*" @loaded="onLoaded" v-if="!loading">
     <ActivityIndicator :busy="loading"
       row="0"
       verticalAlignment="middle"
@@ -72,14 +72,14 @@ export default {
       return hasData
     },
     onLoaded() {
-      startChecking() 
+      this.startChecking() 
     },
     reload() {
       this.$emit('reload', true)
     },
     reset() {
       this.loading = false
-      this.showLoader = false
+      this.showReloader = false
       this.loadingTrouble = ''
       if (this.timeout) 
         clearTimeout(this.timeout)

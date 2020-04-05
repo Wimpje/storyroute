@@ -1,6 +1,6 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <LoadData :data="articles" @reload="reloadData"/>
+    <LoadData :data="allArticles" @reload="reloadData" />
     <Tabs selectedIndex="0" tabsPosition="top">
 
       <TabStrip>
@@ -84,6 +84,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      allArticles: "getArticles",
       categories: "getArticleCategories",
       news: "getNews",
       events: "getEvents",
@@ -194,12 +195,12 @@ export default {
   color: black;
 }
 .overlay {
-  $color: light(rgba(255,255,255,1));
-  background: linear-gradient(0deg, $color 18%, rgba(255,255,255,0) 65%);
+  $color: rgba(255,255,255,1);
+  background: linear-gradient(0deg, $color 18%, rgba(255,255,255,0) 75%);
 }
 .ns-dark .overlay {
-  $color: dark(rgba(255,255,255,1));
-  background: linear-gradient(0deg, $color 18%, rgba(255,255,255,0) 65%);
+  $color:rgba(255,255,255,0);
+  background: linear-gradient(0deg, $color 18%, rgba(255,255,255,0) 75%);
 }
 .tab {
   font-size: 20;

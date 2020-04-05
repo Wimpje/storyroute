@@ -2,7 +2,7 @@
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <StackLayout>
       <LoadData :data="routes" @reload="reloadData"/>
-      <ListView v-if="routes"
+      <ListView
         height="100%"
         ref="routesListView"
         @itemTap="loadRoute"

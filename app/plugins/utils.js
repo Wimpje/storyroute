@@ -4,6 +4,61 @@ import store from '~/store/index.js'
 import Vue from 'nativescript-vue'
 import { Span } from "text/span";
 import { FormattedString } from "text/formatted-string"
+import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
+
+const firebase = require("nativescript-plugin-firebase");
+let fbInit = null
+let fbIsInitialized = false
+export const firebaseInitialized = () => {
+  return fbIsInitialized
+}
+
+export const initFirebase = () => {
+  fbInit = firebase.init({
+    iOSEmulatorFlush: true,
+    analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled
+    crashlyticsCollectionEnabled: getBoolean('googleCrashlytics'), // enabled
+    onAuthStateChanged: data => {
+      console.log("FB: auth state changed: ", data)
+      store.dispatch('setUser', data)
+    }
+  }).then(() => {
+    fbIsInitialized = true
+    console.log("FB: initialized, you can load data and log in and stuff")
+  })
+  .catch((err) => {
+    console.error("FB: error initializing data", err)
+  })
+  return fbInit
+}
+
+export const loadFirebaseData = async () => {
+  if (!fbIsInitialized)
+    await initFirebase()
+
+  fbInit.then((resp) => {
+    firebase.login(
+      {
+        type: firebase.LoginType.ANONYMOUS
+      })
+      .then(user => {
+        store.dispatch("getPois")
+        console.log('FB: getPois called after logging in')
+        store.dispatch("initRoutes")
+        console.log('FB: initRoutes called after logging in')
+      })
+      .catch(error => {
+        // TODO handle errors on connections
+        firebase.crashlytics.log("FB: issue with logging in: " + error)
+        console.error("FB: issue with logging in: " + error);
+      });
+  })
+  .catch(error => {
+    console.error("FB: Error initializing " + error)
+    firebase.crashlytics.log("FB: Error initializing: " + error)
+    // TODO this should cause a modal popup, with a 'try again later'
+  });
+}
 
 export const showDrawer = () => {
   let drawerNativeView = getRootView();
