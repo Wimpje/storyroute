@@ -12,6 +12,9 @@ export const getters = {
   },
   getRoutes(state) {
     return state.routes
+  },
+  getRoutesStartPois(state) {
+    return state.routes.map(route => route.pois[0])
   }
 }
 
@@ -32,6 +35,7 @@ export const mutations = {
   setRoutes(state, routes) {
     state.routes = routes
   },
+  
 
   setCurrentRouteToNone(state) {
     state.currentRoute = null

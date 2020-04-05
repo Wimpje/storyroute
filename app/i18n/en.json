@@ -1,6 +1,6 @@
 {
-  "app.name": "75 years of liberation - Ommen",
-  "75 jaar bevrijding": "75 years of liberation",
+  "app.name": "75 years of freedom - Ommen",
+  "75 jaar bevrijding": "75 years of freedom",
   "nav": {
     "routes": "Routes",
     "route": "Route",
@@ -26,8 +26,8 @@
   },
   "email": {
     "appnotfound": "Could not find an email app, please send an email to: ",
-    "subject": "Question / feedback 75 years liberation app",
-    "body": "Hi, I have some feedback or a question about the 75 years of liberation app"
+    "subject": "Question / feedback 75 years of freedom app",
+    "body": "Hi, I have some feedback or a question about the 75 years of freedom app"
   },
   "map": {
     "location": {
@@ -47,7 +47,8 @@
     "downloadAll": "Download all files & routes (not necessary, but convenient when you have limited or no mobile internet)",
     "refreshDownloadAll": "Refresh downloaded files & routes",
     "removeDownloadAll": "Remove downloaded files & routes",
-    "help": "Here you can toggle settings, and download routes to your phone."
+    "help": "Here you can toggle settings, and download routes to your phone.",
+    "screenon": "Keep the screen display on when using map."
   },
   "dialog":{
     "chooseAction": "Choose action",
@@ -55,7 +56,8 @@
   },
   "help": {
     "credits": "Credits",
-    "contact": "Contact info"
+    "contact": "Contact info",
+    "loadingTrouble": "There is a problem retrieving data, is wifi or mobile data enabled?"
   },
   "drawer": {
     "title": "75 year liberty - Ommen"

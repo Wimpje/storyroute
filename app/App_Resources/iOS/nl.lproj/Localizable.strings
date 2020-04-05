@@ -4,6 +4,7 @@
 "_dialog_chooseAction_epnuj" = "Kies een actie";
 "_help_contact_Z1BKgHm" = "Contact informatie";
 "_help_credits_Z1wbyuT" = "Mede mogelijk gemaakt door";
+"_config_screenon_GEHa0" = "Houd het scherm ingeschakeld als de kaart gebruikt wordt.";
 "_config_help_Z21MrJ" = "Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon.";
 "_config_removeDownloadAll_Z1su72v" = "Verwijder alle gedownloadede bestanden & routes";
 "_config_refreshDownloadAll_Zog54J" = "Ververs alle gedownloade bestanden en routes (om problemen te verhelpen & nieuwe routes op te halen)";
@@ -25,7 +26,7 @@
 "_btn_openmaps_ZtJpPn" = "ga hierheen met externe maps app";
 "_btn_startRoute_1aJsYp" = "start route";
 "_btn_goto_2qXYbv" = "navigeer hierheen";
-"_btn_backIos_Z4PUFc" = "ᐸ back";
+"_btn_backIos_Z4PUFc" = "ᐸ terug";
 "_btn_back_2qXgom" = "terug";
 "_btn_close_ZyLgre" = "sluiten";
 "_article_story_ZRvbqK" = "Verhalen";
@@ -36,7 +37,7 @@
 "_discover_category_planes_pszB1" = "vliegtuigen";
 "_discover_category_rest_1UckSI" = "rustpunten";
 "_discover_category_all_1mOFTd" = "alles";
-"_discover_footerText_zbFUq" = "Swipe terug lans alle punten";
+"_discover_footerText_zbFUq" = "Swipe terug";
 "_discover_headerText_1eppyI" = "Swipe langs alle punten";
 "_point_more_1rasN0" = "meer";
 "_point_info_1r9VpN" = "info";
@@ -58,4 +59,5 @@
 "_nav_route_Z15QoBP" = "Route";
 "_nav_routes_1BKuwv" = "Routes";
 "_app_name_1k3Sbz" = "75 jaar bevrijding - Ommen";
+"_help_loadingTrouble_Z24VYx4" = "help.loadingTrouble";
 "_75_jaar_bevrijding_Z2wmU9D" = "75 jaar bevrijding";

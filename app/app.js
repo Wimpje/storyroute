@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import store from './store/index.js'
 import Home from './pages/Home'
 import App from './pages/App'
-import { isIOS } from "tns-core-modules/platform"
+import { isIOS, screen } from "tns-core-modules/platform"
 import { Frame } from '@nativescript/core/ui/frame';
 import { localize } from "nativescript-localize";
 import { MapView } from "nativescript-google-maps-sdk";
@@ -61,8 +61,21 @@ application.on(application.suspendEvent, (args) => {
   Vue.prototype.$player.pause()
   Vue.prototype.$toast.cancel();
 });
+
+// quick & dirty setting of initial orientation
+const setCurrentOrientation = () => {
+  if(screen.mainScreen.widthDIPs > screen.mainScreen.heightDIPS) {
+    store.commit('setOrientation', 'landscape')
+  }
+  else {
+    store.commit('setOrientation', 'portrait')
+  }
+}
+setCurrentOrientation()
+
 application.on(application.orientationChangedEvent, (args) => {
  console.log('rotated!', args.newValue)
+ store.commit('setOrientation', args.newValue)
 });
 
 application.on(application.exitEvent, (args) => {

@@ -1,6 +1,15 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <StackLayout>
+      <ActivityIndicator :busy="showLoading"
+        verticalAlignment="middle"
+        horizontalAlignment="middle" />
+      <Label class="warning" verticalAlignment="middle" horizontalAlignment="middle" v-if="loadingTrouble">
+        <FormattedString>
+          <Span class="fas" text.decode="&#xf35d; "/>
+          <Span :text="'help.loadingTrouble' | L" class="title" />
+        </FormattedString>
+      </Label>
       <ListView
         height="100%"
         ref="routesListView"
@@ -32,18 +41,38 @@ export default {
   },
   data() {
     return {
-      cache: null
+      cache: null,
+      showLoading: false,
+      loadingTrouble: false
     };
   },
   created() {},
   computed: {
     ...mapGetters({
       routes: "getRoutes"
-    })
+    }),
+  },
+  watch: {
+    routes(oldVal, newVal) {
+      if(newVal && newVal.length > 0) {
+        this.loadingTrouble = false
+        this.showLoading = false
+      }
+    }
   },
   methods: {
     onLoaded() {
+      if(this.routes && this.routes.length === 0)
+        this.showLoading = true
+
       this.$store.commit('setCurrentPage',  { name: 'routes', instance: this })
+      // 
+      setTimeout(() => {
+        if(!this.routes || this.routes.length === 0) {
+          this.loadingTrouble = true
+          this.showLoading = false
+        }
+      }, 10000)
     },
     loadRoute(event) {
       console.log("should load", event.item.title);

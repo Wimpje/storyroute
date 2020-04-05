@@ -31,7 +31,7 @@
   },
   "discover": {
     "headerText": "Swipe langs alle punten",
-    "footerText": "Swipe terug lans alle punten",
+    "footerText": "Swipe terug",
     "category": {
       "all": "alles",
       "rest": "rustpunten",
@@ -48,7 +48,7 @@
   "btn": {
     "close": "sluiten",
     "back": "terug",
-    "backIos": "ᐸ back",
+    "backIos": "ᐸ terug",
     "goto": "navigeer hierheen",
     "startRoute": "start route",
     "openmaps": "ga hierheen met externe maps app",
@@ -79,7 +79,8 @@
     "downloadAll": "Download alle bestanden en routes. Niet nodig, maar handig als je geen of weinig mobiele data kunt gebruiken.",
     "refreshDownloadAll": "Ververs alle gedownloade bestanden en routes (om problemen te verhelpen & nieuwe routes op te halen)",
     "removeDownloadAll": "Verwijder alle gedownloadede bestanden & routes",
-    "help": "Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon."
+    "help": "Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon.",
+    "screenon": "Houd het scherm ingeschakeld als de kaart gebruikt wordt."
   },
   "help": {
     "credits": "Mede mogelijk gemaakt door",

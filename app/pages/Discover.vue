@@ -1,5 +1,5 @@
 <template>
-  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
+  <Page class="page" :class="screenOrientation" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="*">
       <GoogleMap
         ref="gMap"
@@ -12,7 +12,8 @@
 
       <ScrollView row="0" v-if="pageName === 'discover'"
           verticalAlignment="bottom"
-          marginBottom="120"
+          :marginBottom="marginBottomButtons"
+          :width="widthButtons"
           orientation="horizontal">
         <StackLayout orientation="horizontal">
             <Button v-for="category in categories" :key="category"
@@ -25,14 +26,18 @@
         </StackLayout>
       </ScrollView>
 
-      <StackLayout row="0" height="110" verticalAlignment="bottom">
+      <StackLayout row="0" 
+        :width="cardsContainerWidth"
+        :height="cardsContainerHeight"
+        :verticalAlignment="verticalAlignment"
+        :horizontalAlignment="horizontalAlignment">
         <RadListView for="(poi, index) in poisToDisplay"
           ref="listView"
-          orientation="horizontal"
-          layout="grid"
-          :itemWidth="width"
-          :gridSpanCount="1"
-          itemHeight="110"
+          :orientation="orientation"
+          layout="linear"
+          :ios.itemWidth="width"
+          :ios.itemHeight="110"
+          ios.dynamicItemSize="false"
           @scrollDragEnded="onScrolled"
           @itemTap="showPointInfoFromList">
           <v-template name="header">
@@ -122,12 +127,46 @@ export default {
   },
   computed: {
     ...mapGetters({
-      pois: "getPois"
+      pois: "getPois",
+      screenOrientation: "screenOrientation"
     }),
     padding() {
-      const bottomPadding = isIOS ? 170 : utilsModule.layout.toDevicePixels(170);
-      return [0, bottomPadding, 0, 0];
+      if(this.screenOrientation === 'landscape') {
+        // left = scroll
+        const rightPadding = isIOS ? 160 : utilsModule.layout.toDevicePixels(170);
+        // bottom = buttons
+        const bottomPadding = isIOS ? 30 : utilsModule.layout.toDevicePixels(30);
+
+        return [0, bottomPadding, 0, rightPadding];
+      }
+      else {
+        const bottomPadding = isIOS ? 170 : utilsModule.layout.toDevicePixels(170);
+        return [0, bottomPadding, 0, 0];
+      }
     },
+    verticalAlignment() {
+      return this.screenOrientation === 'landscape' ? 'top' : 'bottom'
+    },
+
+    horizontalAlignment() {
+      return this.screenOrientation === 'landscape' ? 'right' : 'middle'
+    },
+    marginBottomButtons() {
+      return this.screenOrientation === 'landscape' ? 0 : 120
+    },
+    widthButtons() {
+      return this.screenOrientation === 'landscape' ? '100%' : '100%'
+    },
+    cardsContainerHeight() {
+      return this.screenOrientation === 'landscape' ? '100%' : 120
+    },
+    cardsContainerWidth() {
+      return this.screenOrientation === 'landscape' ? 150 : '100%'
+    },
+    orientation() {
+      return this.screenOrientation === 'landscape' ? 'vertical' : 'horizontal'
+    },
+
     // depending on what is showing, return paths for routes
     paths() {
       if(this.route)
@@ -154,10 +193,14 @@ export default {
         return pois
       }
       else if (this.pois) {
-        // if we display points only, remove 'aanwijzing' points
+        
+        if (this.currentCategory === 'routes') {
+          return this.$store.getters.getRoutesStartPois
+        }
         const filtered = this.pois.filter(p => {
           if (p.tags && p.tags.length) {
             for (let ti = 0; ti < p.tags.length; ti++) {
+              // if we display points only, remove 'aanwijzing' points
               if (p.tags[ti].toLowerCase() === "aanwijzing") {
                 return false;
               }
@@ -294,17 +337,24 @@ export default {
       return d;
     },
     distanceFromOmmen(poi1, poi2) {
-      return this.distanceBetween(poi1, this.ommenCenter) - this.distanceBetween(poi2, this.ommenCenter)
+      return this.distanceBetween(poi2, this.ommenCenter) - this.distanceBetween(poi1, this.ommenCenter)
     },
   }
 };
 </script>
 
 <style scoped lang="scss">
+
+.landscape .cardStyle {
+  margin: 10 0 10 10;
+}
+.portrait .cardStyle {
+  margin: 0 10 0 0;
+}
 .cardStyle {
   background-color: #fff;
   color: rgb(43, 43, 43);
-  margin: 0 10 0 0;
+  
 }
 
 .cardContent {

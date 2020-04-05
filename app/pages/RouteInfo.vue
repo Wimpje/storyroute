@@ -1,9 +1,12 @@
 <template>
-  <Page class="page" @loaded="onLoaded"  actionBarHidden="true">
-    <GridLayout rows="200, *, auto" columns="*" iosOverflowSafeArea="true" >
-      <ImageCarousel height="200" row="0" :images="images"></ImageCarousel>
-      <ScrollView row="1">
-        <StackLayout class="container">
+  <Page class="page" @loaded="onLoaded" actionBarHidden="true">
+    <GridLayout rows="*" columns="*" iosOverflowSafeArea="true">
+      <ScrollView row="0">
+        <StackLayout row="1" class="container">
+          <ImageCarousel height="200" :images="images"></ImageCarousel>
+          <StackLayout class="actions">
+            <AudioPlayer :files="route.files" />
+          </StackLayout>
           <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
             <CenterLabel col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></CenterLabel>
             <CenterLabel col="1" row="0" :text="distance" class="h3 distance"></CenterLabel>
@@ -47,7 +50,7 @@
         </StackLayout>
       </ScrollView>
       <Button
-        row="1"
+        row="0"
         verticalAlignment="bottom"
         horizontalAlignment="right"
         class="-rounded-sm startRouteButton"
@@ -55,9 +58,6 @@
         @tap="startRoute()"
         textWrap="true"
       ></Button>
-      <StackLayout class="actions" row="2">
-        <AudioPlayer :files="route.files" />
-      </StackLayout>
     </GridLayout>
   </Page>
 </template>
@@ -127,11 +127,11 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit('setCurrentRoute', this.route)
+    this.$store.commit("setCurrentRoute", this.route);
   },
   beforeDestroy() {
-    console.log("DESTROY ROUTE")
-    this.$store.commit('setCurrentRoute', null)
+    console.log("DESTROY ROUTE");
+    this.$store.commit("setCurrentRoute", null);
   }
 };
 </script>
@@ -149,7 +149,7 @@ export default {
   font-size: 20;
   height: 100;
   width: 100;
-  border-radius:50;
+  border-radius: 50;
   border-width: 1;
   border-color: #999;
   text-align: center;
@@ -167,7 +167,7 @@ export default {
   padding-bottom: 100;
 }
 .routeInfo {
-  background-color:#ccc;
+  background-color: #ccc;
 }
 .routeDescription {
   vertical-align: top;

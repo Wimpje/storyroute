@@ -1,51 +1,53 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <GridLayout height="100%" rows="150, *" columns="*" iosOverflowSafeArea="true">
-      <CachedImage
-        width="100%"
-        class="image"
-        marginBottom="10"
-        stretch="aspectFill"
-        :source="image"
-        placeholder= "~/assets/images/placeholder.png"
-        row="0"
-      />
-      <ScrollView  row="1">
-        <GridLayout class="info" rows="auto, *, auto">
-          <Label row="0" :text="article.title" class="h1 name" textWrap="true"></Label>
-          <Label row="1" ref="text" class="text p-20" textWrap="true"></Label>
-          <UrlContents row="2" class="p-20" :addDivider="true" :urls="article.urls"></UrlContents>
-        </GridLayout>
+    <StackLayout height="100%" iosOverflowSafeArea="true">
+      <ScrollView>
+        <StackLayout>
+          <ImageCarousel height="200" :images="images"></ImageCarousel>
+
+          <GridLayout class="info" rows="auto, *, auto">
+            <Label row="0" :text="article.title" class="h1 name" textWrap="true"></Label>
+            <Label row="1" ref="text" class="text p-20" textWrap="true"></Label>
+            <UrlContents row="2" class="p-20" :addDivider="true" :urls="article.urls"></UrlContents>
+          </GridLayout>
+        </StackLayout>
       </ScrollView>
-    </GridLayout>
+    </StackLayout>
   </Page>
 </template>
 <script>
+import ImageCarousel from "~/components/ImageCarousel";
 
 import * as utils from "~/plugins/utils";
 import UrlContents from "~/components/UrlContents";
 
 export default {
-  components: { UrlContents },
- mounted() {
-    this.$store.commit('setCurrentArticle', this.article)
+  components: { UrlContents, ImageCarousel },
+  mounted() {
+    this.$store.commit("setCurrentArticle", this.article);
   },
   destroy() {
-    console.log("DESTROY poi")
-    this.$store.commit('setCurrentArticle', null)
+    console.log("DESTROY poi");
+    this.$store.commit("setCurrentArticle", null);
   },
   props: ["article"],
   methods: {
     onLoaded(args) {
-      this.$store.commit('setCurrentPage', {name: 'articleinfo', title: this.article.title, instance: this})
+      this.$store.commit("setCurrentPage", {
+        name: "articleinfo",
+        title: this.article.title,
+        instance: this
+      });
 
-      console.log('loading & formatting article')
-      this.$refs.text.nativeView.formattedText = utils.createFormattedString(this.article.text)
+      console.log("loading & formatting article");
+      this.$refs.text.nativeView.formattedText = utils.createFormattedString(
+        this.article.text
+      );
     },
     webViewLoaded(webView) {
       const height = webView.url.split("#")[1];
       if (height) {
-        console.log('setting height', height)
+        console.log("setting height", height);
         webView.object.height = Number(height);
       }
     },
@@ -54,19 +56,15 @@ export default {
     }
   },
   computed: {
-    image() {
-      if (this.point && this.point.files) {
-        const file = this.point.files.filter(file => file.type == 'image' && file.lead)
-        if (file.length)
-          return file[0].firebaseUrl;
+    images() {
+      if (this.point) {
+        return this.point.files.filter(file => file.type == "image");
       }
-      return ''
+      return [];
     }
   },
   data() {
-    return {
-
-    };
+    return {};
   }
 };
 </script>

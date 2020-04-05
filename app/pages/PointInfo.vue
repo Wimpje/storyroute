@@ -1,9 +1,9 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <GridLayout rows="250,auto,*" columns="*" iosOverflowSafeArea="true">
-      <ImageCarousel height="250" row="0" :images="images"></ImageCarousel>
-      <ScrollView row="2">
+    <GridLayout rows="auto, *" columns="*" iosOverflowSafeArea="true">
+      <ScrollView row="0">
         <StackLayout class="descriptions">
+          <ImageCarousel height="200" :images="images"></ImageCarousel>
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
           <StackLayout  v-if="point.routeDescription">

@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import auth from './modules/auth.js'
 import pois from './modules/pois.js'
 import navigation from './modules/navigation.js'
-import messages from './modules/messages'
+import config from './modules/config.js'
 import routes from './modules/routes'
 import articles from './modules/articles'
 
@@ -19,7 +19,7 @@ export default new Vuex.Store({
     routes,
     navigation,
     pois,
-    messages,
+    config,
     articles
   },
   strict: debug,
