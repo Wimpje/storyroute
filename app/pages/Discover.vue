@@ -9,9 +9,9 @@
         :padding="padding"
         @googleMapReady="onMapReady"
         @markerSelect="scrollToPoint"
-        @cameraChanged="onCameraChanged" />
+      />
 
-      <ScrollView row="0" v-if="mapReady && pageName === 'discover'"
+      <ScrollView row="0" v-if="pageName === 'discover'"
           verticalAlignment="bottom"
           :marginBottom="marginBottomButtons"
           :width="widthButtons"
@@ -28,7 +28,6 @@
       </ScrollView>
 
       <StackLayout row="0" 
-        v-if="mapReady"
         :width="cardsContainerWidth"
         :height="cardsContainerHeight"
         :verticalAlignment="verticalAlignment"
@@ -38,30 +37,41 @@
           @loaded="listViewLoaded"
           :orientation="orientation"
           layout="linear"
-          :ios.itemWidth="screenOrientation == 'portrait' ? 150 : 120"
-          :ios.itemHeight="screenOrientation == 'portrait' ? 120 : 150"
-          ios.dynamicItemSize="false"
+          selectionBehavior="Press"
+          :height="screenOrientation === 'landscape' ? '100%' : 150"
+          :width="screenOrientation === 'landscape' ? 150 : '100%'"
           @scrollDragEnded="onScrolled"
-          @itemTap="showPointInfoFromList">
+          multipleSelection="false"
+          @itemSelected="itemSelected"
+          @itemDeselecting="itemDeselecting"
+          @itemTap="showPointInfoFromList"
+          >
           
           <v-template>
-            <CardView class="cardStyle" radius="10" height="110" width="110">
-              <StackLayout padding="0">
-                <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
+            <GridLayout>
+            <CardView class="cardStyle" radius="10" height="110" width="130">
+              <GridLayout rows="auto, 60" cols="auto" padding="2">
+                <Label row="0" col="0" class="info" horizontalAlignment="center" verticalAlignment="top" textWrap="true">
                   <FormattedString>
                     <Span class="fas" text.decode="&#xf3c5; "/>
                     <Span :text="getPoiTitle(poi)" />
                   </FormattedString>
                 </Label>
-                <CachedImage
+                 <CachedImage
+                  verticalAlignment="bottom"
+                  row="1"
+                  col="0"
                   :source="getPoiImage(poi)" 
                   stretch="aspectFill"
-                  width="100"
-                  height="90"
+                  padding="3"
+                  :class="poi.selected ? 'image selected' : 'image'"
                   placeholder="~/assets/images/placeholder.png">
                 </CachedImage>
-              </StackLayout>
+                <Label row="1" v-if="poi.selected" :text="'discover.selectedPoiHint' | L"/>
+
+              </GridLayout>
             </CardView>
+            </GridLayout>
           </v-template>
           
         </RadListView>
@@ -80,7 +90,7 @@ import { ListViewItemSnapMode } from "nativescript-ui-listview";
 import debounce from 'lodash/debounce';
 import { getBoolean } from "tns-core-modules/application-settings";
 import * as utilsModule from "tns-core-modules/utils/utils";
-import { isIOS } from '@nativescript/core/ui/page/page';
+import { isIOS, isAndroid } from '@nativescript/core/ui/page/page';
 
 export default {
   components: {
@@ -117,14 +127,14 @@ export default {
     padding() {
       if(this.screenOrientation === 'landscape') {
         // left = scroll
-        const rightPadding = isIOS ? 160 : utilsModule.layout.toDevicePixels(170);
+        const rightPadding = isIOS ? 160 : utilsModule.layout.toDevicePixels(160);
         // bottom = buttons
         const bottomPadding = isIOS ? 30 : utilsModule.layout.toDevicePixels(30);
 
         return [0, bottomPadding, 0, rightPadding];
       }
       else {
-        const bottomPadding = isIOS ? 170 : utilsModule.layout.toDevicePixels(170);
+        const bottomPadding = isIOS ? 160 : utilsModule.layout.toDevicePixels(160);
         return [0, bottomPadding, 0, 0];
       }
     },
@@ -136,16 +146,16 @@ export default {
       return this.screenOrientation === 'landscape' ? 'right' : 'middle'
     },
     marginBottomButtons() {
-      return this.screenOrientation === 'landscape' ? 0 : 130
+      return this.screenOrientation === 'landscape' ? 5 : 140
     },
     widthButtons() {
       return this.screenOrientation === 'landscape' ? '100%' : '100%'
     },
     cardsContainerHeight() {
-      return this.screenOrientation === 'landscape' ? '100%' : 120
+      return this.screenOrientation === 'landscape' ? '100%' : 140
     },
     cardsContainerWidth() {
-      return this.screenOrientation === 'landscape' ? 150 : '100%'
+      return this.screenOrientation === 'landscape' ? 140 : '100%'
     },
     orientation() {
       return this.screenOrientation === 'landscape' ? 'vertical' : 'horizontal'
@@ -230,14 +240,27 @@ export default {
   },
   created() {},
   watch: {
+    poisToDisplay(newVal, oldVal) {
+      if (this.pageName === 'route') {
+        this.$refs.gMap.fitMapToPois(newVal)
+      }
+      else {
+        if (this.currentCategory === 'routes') {
+          let routePois = []
+          this.$store.getters.getRoutes.forEach(route => routePois = routePois.concat(route.pois))
+          this.$refs.gMap.fitMapToPois(routePois)
+        }
+        else {
+          this.$refs.gMap.fitMapToPois(newVal)
+        }
+      }
+    },
     screenOrientation(oldVal, newVal) {
       // refresh the list to re-render properly
       console.log('Discover: screenOrientation changed', newVal)
       this.$nextTick(() => {
         if (this.$refs.listView) {
           this.$refs.listView.refresh();
-          if(isIOS)
-            this.$refs.listView.nativeView.updateHeaderFooter();
         }
       });
     }
@@ -258,6 +281,7 @@ export default {
           console.log("Insomnia is active");
         });
       }
+    
     },
     listViewLoaded(args) {
       console.log('listview loaded event')
@@ -268,8 +292,6 @@ export default {
       this.$nextTick(() => {
         if (this.$refs.listView) {
           this.$refs.listView.refresh();
-          if(isIOS)
-            this.$refs.listView.nativeView.updateHeaderFooter();
         }
       });
     },
@@ -286,13 +308,12 @@ export default {
       }
     },
     showPointInfoFromList(event) {
-      console.log("should load", event.item.title);
+      if(!event.item.selected)
+        return
+      console.log("should load:", event.item.title);
       setTimeout(() => {
           this.showPointInfo(event.item)
-      }, 100)
-    },
-    onCameraChanged(args) {
-      console.log('Camera changed: ' + JSON.stringify(args.camera)); 
+      }, 100)      
     },
     scrollToPoint(marker) {
       if(!marker || !marker.userData || !marker.userData.id)
@@ -333,15 +354,43 @@ export default {
         }
       });
     },
+    itemDeselecting({index}) {
+      console.log('itemDeSelecting', index)
+      this.$refs.listView.items[index].selected = false
+      //this.$refs.listView.refresh() // to indicate to tap again
+    },
+    itemSelected({index}) {
+      console.log('itemSelected', index)
+      const activePoi = this.poisToDisplay[index]
+
+      this.$refs.listView.items[index].selected = true
+      //this.$refs.listView.refresh()
+      this.$refs.gMap.showTitleForPoint(activePoi)
+      this.$refs.gMap.animateToPoint(activePoi, 50, Math.min(12, this.$store.getters.mapZoom))
+    },
     zoomToMarkerByScroll(scrollOffset) {
-      const width =  this.screenOrientation === 'landscape' ? 150 : 120
-      const newScrollIndex = Math.round(this.scrollOffset / width)
-      console.log(`zoom, offset=${scrollOffset}, newIdx=${newScrollIndex}, width=${width}`)
+      let newScrollIndex = this.$refs.listView.nativeView.getFirstVisiblePosition()
+      if (newScrollIndex === 0) {
+        newScrollIndex = 0
+        // except if it is scrolled a bit further, then select 1
+        if(scrollOffset > 100 )
+          newScrollIndex = 1
+      }
+      else 
+        newScrollIndex++
+      
+      if(newScrollIndex === this.poisToDisplay.length - 1) {
+        newScrollIndex = this.poisToDisplay.length - 1  // overflow issue
+      }
       if (this.scrollIndex != newScrollIndex) {
         const activePoi = this.poisToDisplay[newScrollIndex]
+        if (!activePoi) {
+          console.error('could not determine active poi!')
+          return
+        }
         console.log(` > to ${activePoi.title}`)
         this.$refs.gMap.showTitleForPoint(activePoi)
-        this.$refs.gMap.animateToPoint(activePoi, 200, 13)
+        this.$refs.gMap.animateToPoint(activePoi, 50, Math.min(12, this.$store.getters.mapZoom))
       }
       this.scrollIndex = newScrollIndex
     },
@@ -349,7 +398,6 @@ export default {
       this.scrollOffset = scrollOffset
       const debounced = debounce(this.zoomToMarkerByScroll, 500)
       debounced(scrollOffset)
-
     },
     refreshPoints() {
       this.$store.dispatch("updatePois");
@@ -368,8 +416,11 @@ export default {
       return this.distanceBetween(poi2, this.ommenCenter) - this.distanceBetween(poi1, this.ommenCenter)
     },
     onMapReady() {
+      console.log('discover reports: mapready')
       this.mapReady = true
-    }
+      // on map load fit points
+      this.$refs.gMap.fitMapToPois(this.poisToDisplay)
+    }    
   }
 };
 </script>
@@ -394,5 +445,12 @@ export default {
   font-size: 14;
   height: 22;
   border-radius: 10;
+}
+.image {
+  border-radius: 0 0 10 10;
+  vertical-align: bottom;
+  &.selected {
+    opacity: 0.5;
+  }
 }
 </style>

@@ -13,6 +13,7 @@
       @mapReady="onMapReady"
       @markerSelect="onMarkerSelect"
       @markerInfoWindowTapped="onMarkerInfoWindowTapped"
+      @cameraChanged="onCameraChanged"
     ></MapView>
   </StackLayout>
 </template>
@@ -61,22 +62,16 @@ export default {
     }
   },
   watch: {
-    pois (oldVal, newVal) {
+    pois (newVal) {
       if (this.mapView) {
         console.log('google map, markers changed! updating...')
         this.addMapMarkers()
-        if (this.newVal) {
-          this.fitMapToPois(this.pois)
-        }
       }
     },
-    paths (oldVal, newVal) {
+    paths (newVal) {
       if (this.mapView) {
         console.log('google map, paths changed! updating...')
         this.addPaths()
-        if(newVal) {
-          this.fitMapToPois(this.pois)
-        }
       }
     }
   },
@@ -397,11 +392,19 @@ export default {
       }
     },
     addPaths() {
+      const colors = [
+        '#214a2c',
+        '#21384a',
+        '#1d1533',
+        '#3c4034',
+        '#40332c'
+      ]
+
       // create route line
       if (this.paths) {
 
         this.mapView.removeAllShapes();
-        
+        let idx = 0
         this.paths.forEach( path => {
           
           // draw the polyline
@@ -417,15 +420,17 @@ export default {
           polyline.visible = true;
           polyline.width = 5;
           polyline.geodesic = false;
-          polyline.color = new Color("#141f17");
+          polyline.color = new Color(colors[idx % 5]);
           this.mapView.addPolyline(polyline);
+          idx++
         })
       }
     },
     fitMapToPois(pois, padding) {
-      if(!this.mapView)
+      if(!this.mapView || !pois)
         return
 
+      console.log(`fitting map to ${pois.length} points...`)
       let bounds, builder;
       padding = padding || 40;
       if (isIOS) {
@@ -435,12 +440,12 @@ export default {
          builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
       }
       // iterate markers, and add position
-      this.pois.forEach((poi) => {
-        if (isAndroid)
-          builder.include(poi.position);
-        
+      pois.forEach((poi) => {
+        if (isAndroid) {
+          builder.include(new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude));
+        }
         if (isIOS) 
-          bounds = bounds.includingCoordinate(poi.position);
+          bounds = bounds.includingCoordinate(CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude));
       });
 
       if(isAndroid) {
@@ -460,6 +465,7 @@ export default {
           this.mapView.gMap.animateWithCameraUpdate(update);
         }, 100)
       }
+      
     },
     addMapMarkers() {
       console.log(
@@ -483,6 +489,11 @@ export default {
     },
     onMarkerInfoWindowTapped(t) {
       this.$emit("onMarkerInfoWindowTapped", t);
+    },
+    onCameraChanged(args) {
+      //console.log('Camera changed: ' + JSON.stringify(args.camera));
+      // set zoom to store
+      this.$store.commit('setMapZoom', args.camera.zoom)
     }
   }
 };

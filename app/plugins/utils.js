@@ -15,9 +15,11 @@ export const firebaseInitialized = () => {
 }
 
 export const initFirebase = () => {
-  if (fbIsInitialized)
+  if (fbIsInitialized) {
+    console.log('FB: utils firebase already initialized ')
     fbInit = Promise.resolve()
-
+  }
+  console.log('FB: utils starting init ')
   fbInit = firebase.init({
     iOSEmulatorFlush: true,
     analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled

@@ -4,6 +4,7 @@ import auth from './modules/auth.js'
 import pois from './modules/pois.js'
 import navigation from './modules/navigation.js'
 import config from './modules/config.js'
+import map from './modules/map.js'
 import routes from './modules/routes'
 import articles from './modules/articles'
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     routes,
     navigation,
     pois,
+    map,
     config,
     articles
   },

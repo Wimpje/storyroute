@@ -4,7 +4,7 @@ import store from './store/index.js'
 import Home from './pages/Home'
 import App from './pages/App'
 import { isIOS, screen } from "tns-core-modules/platform"
-import { Frame } from '@nativescript/core/ui/frame';
+import { Frame, isAndroid } from '@nativescript/core/ui/frame';
 import { localize } from "nativescript-localize";
 import { MapView } from "nativescript-google-maps-sdk";
 import VueDevtools from 'nativescript-vue-devtools'
@@ -65,14 +65,12 @@ application.on(application.suspendEvent, (args) => {
 // quick & dirty setting of initial orientation
 const setCurrentOrientation = () => {
   let orientation = 'portrait'
-  
-  if(screen.mainScreen.widthDIPs > screen.mainScreen.heightDIPS) {
-    orientation = 'landscape'  
-  }
+
+  // detection of orientation does not work well atm ... 
+
   store.commit('setOrientation', orientation)
-  console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPS}`)
+  console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPs}`)
 }
-setCurrentOrientation()
 
 application.on(application.orientationChangedEvent, (args) => {
  console.log('rotated!', args.newValue)
@@ -156,7 +154,9 @@ const vueApp = new Vue({
     )
   },
   created() {
-    
+    // can only be run after application start
+    setCurrentOrientation()
+
     // load the FB stuff when Vue is done creating itself (?needed)
     console.log('init FB from app.js, now loading data')
     utils.loadFirebaseData()

@@ -30,6 +30,7 @@
     "more": "meer"
   },
   "discover": {
+    "selectedPoiHint": "tik opnieuw voor meer info",
     "headerText": "Swipe langs alle punten",
     "footerText": "Swipe terug",
     "category": {

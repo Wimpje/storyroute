@@ -43,7 +43,7 @@ export default {
     }
   },
   watch: {
-    data (oldVal, newVal) {
+    data (newVal) {
       // cancel and check again
       this.reset()
       this.startChecking()

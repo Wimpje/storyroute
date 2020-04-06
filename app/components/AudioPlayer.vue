@@ -53,7 +53,7 @@ export default {
     }
   },
   watch: {
-    playing(oldVal, newVal) {
+    playing(newVal, oldVal) {
       if (typeof newVal !== 'undefined') {
        if (!newVal) {
          console.log('starting progress checker')
@@ -91,6 +91,7 @@ export default {
       console.log('finished playing', args)
     },
     playPause() {
+      console.log('playPaus clicked')
       if (this.$player.isLoading) {
         // ignore press, it's loading
         return

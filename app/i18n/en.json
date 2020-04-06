@@ -72,6 +72,7 @@
     "more": "more"
   },
   "discover": {
+    "selectedPoiHint": "tap again to show info",
     "headerText": "Swipe langs alle punten",
     "footerText": "",
     "category": {

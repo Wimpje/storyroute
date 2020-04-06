@@ -1,7 +1,7 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <StackLayout iosOverflowSafeArea="true">
-      <ScrollView>
+      <ScrollView height="100%">
         <StackLayout class="descriptions">
           <ImageCarousel height="200" :images="images"></ImageCarousel>
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
@@ -74,13 +74,13 @@ export default {
   },
   computed: {
     images() {
-      if (this.point) {
+      if (this.point && this.point.files) {
         return this.point.files.filter(file => file.type == "image");
       }
       return [];
     },
     video() {
-      if (this.point) {
+      if (this.point && this.point.files) {
         const videos =  this.point.files.filter(file => file.type == "video");
         if(videos && videos.length) {
           return videos[0].firebaseUrl
