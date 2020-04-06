@@ -46,34 +46,30 @@
           @itemDeselecting="itemDeselecting"
           @itemTap="showPointInfoFromList"
           >
-          
           <v-template>
             <GridLayout>
-            <CardView class="cardStyle" radius="10" height="110" width="130">
-              <GridLayout rows="auto, 60" cols="auto" padding="2">
-                <Label row="0" col="0" class="info" horizontalAlignment="center" verticalAlignment="top" textWrap="true">
-                  <FormattedString>
-                    <Span class="fas" text.decode="&#xf3c5; "/>
-                    <Span :text="getPoiTitle(poi)" />
-                  </FormattedString>
-                </Label>
-                 <CachedImage
-                  verticalAlignment="bottom"
-                  row="1"
-                  col="0"
-                  :source="getPoiImage(poi)" 
-                  stretch="aspectFill"
-                  padding="3"
-                  :class="poi.selected ? 'image selected' : 'image'"
-                  placeholder="~/assets/images/placeholder.png">
-                </CachedImage>
-                <Label row="1" v-if="poi.selected" :text="'discover.selectedPoiHint' | L"/>
-
-              </GridLayout>
-            </CardView>
+              <CardView class="cardStyle" radius="10" height="110" width="130">
+                <GridLayout rows="auto, 60" cols="auto" padding="2">
+                  <Label row="0" col="0" class="info" horizontalAlignment="center" verticalAlignment="bottom" textWrap="true">
+                    <FormattedString>
+                      <Span class="fas" text.decode="&#xf3c5; "/>
+                      <Span :text="getPoiTitle(poi)" />
+                    </FormattedString>
+                  </Label>
+                  <CachedImage
+                    verticalAlignment="bottom"
+                    row="1"
+                    col="0"
+                    :source="getPoiImage(poi)" 
+                    stretch="aspectFill"
+                    padding="3"
+                    class="image"
+                    placeholder="~/assets/images/placeholder.png">
+                  </CachedImage>
+                </GridLayout>
+              </CardView>
             </GridLayout>
           </v-template>
-          
         </RadListView>
       </StackLayout>
     </GridLayout>
@@ -88,7 +84,7 @@ import * as utils from "~/plugins/utils";
 import * as firebase from "nativescript-plugin-firebase";
 import { ListViewItemSnapMode } from "nativescript-ui-listview";
 import debounce from 'lodash/debounce';
-import { getBoolean } from "tns-core-modules/application-settings";
+import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
 import * as utilsModule from "tns-core-modules/utils/utils";
 import { isIOS, isAndroid } from '@nativescript/core/ui/page/page';
 
@@ -103,6 +99,8 @@ export default {
       scrollOffset: 0,
       width: 130,
       mapReady: false,
+      selectedItem: null,
+      dontResize: false,
       currentCategory: 'all',
       ommenCenter: {position: {latitude: 52.4958, longitude: 6.44117} },
       categories: ['all', 'stolpersteine', 'routes', 'planes', 'rest']
@@ -127,14 +125,14 @@ export default {
     padding() {
       if(this.screenOrientation === 'landscape') {
         // left = scroll
-        const rightPadding = isIOS ? 160 : utilsModule.layout.toDevicePixels(160);
+        const rightPadding = isIOS ? 150 : utilsModule.layout.toDevicePixels(160);
         // bottom = buttons
         const bottomPadding = isIOS ? 30 : utilsModule.layout.toDevicePixels(30);
 
         return [0, bottomPadding, 0, rightPadding];
       }
       else {
-        const bottomPadding = isIOS ? 160 : utilsModule.layout.toDevicePixels(160);
+        const bottomPadding = isIOS ? 170 : utilsModule.layout.toDevicePixels(170);
         return [0, bottomPadding, 0, 0];
       }
     },
@@ -243,6 +241,7 @@ export default {
     poisToDisplay(newVal, oldVal) {
       if (this.pageName === 'route') {
         this.$refs.gMap.fitMapToPois(newVal)
+        this.$refs.gMap.showTitleForPoint(newVal[0])
       }
       else {
         if (this.currentCategory === 'routes') {
@@ -262,12 +261,16 @@ export default {
         if (this.$refs.listView) {
           this.$refs.listView.refresh();
         }
+        if (this.$refs.gMap) {
+          this.$refs.gMap.resizeMapHack()
+        }
       });
     }
   },
   methods: {
     onLoaded() {
       this.mapReady = false
+      console.log("discover - onloaded")
       const curPage = { 
         name: this.pageName, 
         instance: this 
@@ -281,7 +284,6 @@ export default {
           console.log("Insomnia is active");
         });
       }
-    
     },
     listViewLoaded(args) {
       console.log('listview loaded event')
@@ -308,8 +310,16 @@ export default {
       }
     },
     showPointInfoFromList(event) {
-      if(!event.item.selected)
-        return
+      if(!event.item.selected) {
+        if (getBoolean('showDoubleClickHint')) {
+          this.$toast.show("message.tapAgainForInfo", {
+            shouldLocalize: true
+          });
+          setBoolean('showDoubleClickHint', false)
+        }
+       return
+      }
+      
       console.log("should load:", event.item.title);
       setTimeout(() => {
           this.showPointInfo(event.item)
@@ -352,23 +362,29 @@ export default {
           point: poi,
           source: this.pageName
         }
+      }).then(() => {
+        console.log(' back to map from point')
+        this.dontResize = true
       });
     },
     itemDeselecting({index}) {
       console.log('itemDeSelecting', index)
-      this.$refs.listView.items[index].selected = false
+      this.poisToDisplay[index].selected = false
+      this.selectedItem = null
       //this.$refs.listView.refresh() // to indicate to tap again
     },
     itemSelected({index}) {
       console.log('itemSelected', index)
       const activePoi = this.poisToDisplay[index]
-
-      this.$refs.listView.items[index].selected = true
+      this.selectedItem = index
+      this.poisToDisplay[index].selected = true
       //this.$refs.listView.refresh()
       this.$refs.gMap.showTitleForPoint(activePoi)
-      this.$refs.gMap.animateToPoint(activePoi, 50, Math.min(12, this.$store.getters.mapZoom))
+      this.$refs.gMap.animateToPoint(activePoi, 50, Math.max(13, this.$store.getters.mapZoom))
     },
     zoomToMarkerByScroll(scrollOffset) {
+      if (!this.$refs.listView) 
+        return
       let newScrollIndex = this.$refs.listView.nativeView.getFirstVisiblePosition()
       if (newScrollIndex === 0) {
         newScrollIndex = 0
@@ -390,7 +406,7 @@ export default {
         }
         console.log(` > to ${activePoi.title}`)
         this.$refs.gMap.showTitleForPoint(activePoi)
-        this.$refs.gMap.animateToPoint(activePoi, 50, Math.min(12, this.$store.getters.mapZoom))
+        this.$refs.gMap.animateToPoint(activePoi, 50, Math.max(13, this.$store.getters.mapZoom))
       }
       this.scrollIndex = newScrollIndex
     },
@@ -418,8 +434,14 @@ export default {
     onMapReady() {
       console.log('discover reports: mapready')
       this.mapReady = true
-      // on map load fit points
-      this.$refs.gMap.fitMapToPois(this.poisToDisplay)
+      if(!this.dontResize) {
+        console.log('resizing map')
+        this.$refs.gMap.fitMapToPois(this.poisToDisplay)
+      }
+      else {
+        console.log('no resizing, coming from point')
+        this.dontResize = false
+      }
     }    
   }
 };
@@ -449,8 +471,5 @@ export default {
 .image {
   border-radius: 0 0 10 10;
   vertical-align: bottom;
-  &.selected {
-    opacity: 0.5;
-  }
 }
 </style>

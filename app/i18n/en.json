@@ -92,9 +92,10 @@
     "englishNotYetSupportedTitle": "Language not (fully) supported",
     "englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
     "englishNotYetSupportedButton": "OK",
-    "loadingTroubleInitial": "There is a problem retrieving data, mayber the connection is slow, please wait...",
+    "loadingTroubleInitial": "There is a problem retrieving data, maybe the connection is slow, please wait...",
     "loadingTrouble": "There is a problem retrieving data, is wifi or mobile data enabled?",
-    "loadingTroubleFinal": "There is a problem retrieving data, our apologies. Maybe completely closing the app and restarting will help."
+    "loadingTroubleFinal": "There is a problem retrieving data, our apologies. Maybe completely closing the app and restarting will help.",
+    "tapAgainForInfo": "Tap card again for more info"
   },
   "ios.info.plist": {
     "NSLocationUsageDescription": "Find your current location to see interesting points nearby.",

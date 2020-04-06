@@ -45,6 +45,8 @@ const setupConfigString = (key, value) => {
 setupConfigBool('googleAnalytics', true)
 setupConfigBool('googleCrashlytics', true)
 setupConfigBool('screenOnWithMap', true)
+setupConfigBool('showDoubleClickHint', true)
+
 setupConfigString('theme', 'default')
 
 Vue.prototype.$player = new AudioService()

@@ -76,7 +76,8 @@
     "englishNotYetSupportedButton": "OK",
     "loadingTroubleInitial": "Het duurt even om de data te laden, wellicht een trage internetverbinding, aub nog even geduld...",
     "loadingTrouble": "Er is een probleem met het ophalen van de gegevens, is er internet?",
-    "loadingTroubleFinal": "Er is een probleem opgetreden, ik kan het helaas niet verhelpen. Probeer het later nog eens."
+    "loadingTroubleFinal": "Er is een probleem opgetreden, ik kan het helaas niet verhelpen. Probeer het later nog eens.",
+    "tapAgainForInfo": "Tik hier nog eens voor meer info"
   },
   "config": {
     "crashInfo": "Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!",

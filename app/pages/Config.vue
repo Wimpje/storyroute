@@ -20,7 +20,7 @@
           <Switch v-model="toggleScreenOn"  />
           <Label class="m-y-auto" :text="'config.screenon' | L" textWrap="true"></Label>
         </StackLayout>
-        <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
+        <!-- <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
           <Button class="-primary -rounded-sm" text="download" @tap="downloadAll" />
           <Label class="m-y-auto" :text="'config.downloadAll' | L" textWrap="true"></Label>
         </StackLayout>
@@ -30,7 +30,7 @@
         </StackLayout>
         <StackLayout v-if="isDebug" class="setting" orientation="horizontal">
           <Button class="danger -rounded-sm" text="crash!" @tap="crash" ></Button>
-        </StackLayout>
+        </StackLayout> -->
       </StackLayout>
     </GridLayout>
   </Page>

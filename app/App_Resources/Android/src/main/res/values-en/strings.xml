@@ -2,9 +2,10 @@
 <resources>
   <string name="_ios_info_plist_NSLocationWhenInUseUsageDescription_ZpKiIF">"Find your current location to see interesting points nearby."</string>
   <string name="_ios_info_plist_NSLocationUsageDescription_1bdb1b">"Find your current location to see interesting points nearby."</string>
+  <string name="_message_tapAgainForInfo_2w13gF">"Tap card again for more info"</string>
   <string name="_message_loadingTroubleFinal_1UHsFT">"There is a problem retrieving data, our apologies. Maybe completely closing the app and restarting will help."</string>
   <string name="_message_loadingTrouble_1XLkBq">"There is a problem retrieving data, is wifi or mobile data enabled?"</string>
-  <string name="_message_loadingTroubleInitial_1Ev4FF">"There is a problem retrieving data, mayber the connection is slow, please wait..."</string>
+  <string name="_message_loadingTroubleInitial_1Ev4FF">"There is a problem retrieving data, maybe the connection is slow, please wait..."</string>
   <string name="_message_englishNotYetSupportedButton_ZWxmtg">"OK"</string>
   <string name="_message_englishNotYetSupportedMessage_1ALc4X">"Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you\'d like a translation in a different language."</string>
   <string name="_message_englishNotYetSupportedTitle_NjpfQ">"Language not (fully) supported"</string>

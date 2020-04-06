@@ -1,15 +1,12 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <StackLayout iosOverflowSafeArea="true">
-      <ScrollView height="100%">
+    <GridLayout rows="*" columns="*" iosOverflowSafeArea="true">
+      <ScrollView row="0">
         <StackLayout class="descriptions">
           <ImageCarousel height="200" :images="images"></ImageCarousel>
+          <AudioPlayer :files="point.files" />
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
-          <StackLayout class="actions">
-            <AudioPlayer :files="point.files" />
-          </StackLayout>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
-      
           <StackLayout v-if="point.routeDescription">
             <StackLayout class="hr m-10"></StackLayout>
             <StackLayout orientation="horizontal">
@@ -33,7 +30,7 @@
           </StackLayout>
         </StackLayout>
       </ScrollView>
-    </StackLayout>
+    </GridLayout>
   </Page>
 </template>
 <script>

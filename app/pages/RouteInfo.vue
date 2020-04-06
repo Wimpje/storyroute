@@ -69,6 +69,7 @@ export default {
     getLanguage() {
       return device.language.split("-")[0];
     },
+    // TODO ON NAVIGATE BACK SET CURRENT PAGE NOT WORKING
     onLoaded() {
       this.$store.commit("setCurrentPage", {
         name: "routeinfo",

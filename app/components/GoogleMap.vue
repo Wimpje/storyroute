@@ -80,6 +80,7 @@ export default {
     this.onLoaded();
   },
   beforeDestroy() {
+    console.log("Google map destroyed")
     if (application.android) {
       application.android.off(
         application.AndroidApplication.activityResumedEvent,
@@ -263,7 +264,6 @@ export default {
         else if (Array.isArray(poi.tags)) {
           for (let tagIndex = 0; tagIndex < poi.tags.length; tagIndex++) {
             const tag = poi.tags[tagIndex].toLowerCase().trim();
-            console.log("tag", tag);
             if (tag && iconMap[tag]) {
               icon = iconMap[tag];
               break;
@@ -310,12 +310,11 @@ export default {
 
       return poiMarker;
     },
-   
-    // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
-    onMapReady(args) {
-      this.mapView = args.object;
-      console.log("what is zoom?", this.mapView.zoom);
-      // workaround for sizing the map correctly, at least on iOS
+    resizeMapHack() {
+      if(!this.mapView) 
+        return
+      
+      console.log('google map: doing resize')
       setTimeout(
         () =>
           (this.mapView.height = {
@@ -324,6 +323,13 @@ export default {
           }),
         1
       );
+    },
+    // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
+    onMapReady(args) {
+      this.mapView = args.object;
+      console.log("what is zoom?", this.mapView.zoom);
+      // workaround for sizing the map correctly, at least on iOS
+      this.resizeMapHack()
 
       this.initMapSettings()
 
@@ -491,7 +497,7 @@ export default {
       this.$emit("onMarkerInfoWindowTapped", t);
     },
     onCameraChanged(args) {
-      //console.log('Camera changed: ' + JSON.stringify(args.camera));
+      console.log('Camera changed: ' + JSON.stringify(args.camera));
       // set zoom to store
       this.$store.commit('setMapZoom', args.camera.zoom)
     }

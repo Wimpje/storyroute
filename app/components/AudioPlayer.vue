@@ -1,7 +1,7 @@
 <template>
-  <GridLayout v-if="audioFile" height="50" columns="50,*" @loaded="loaded" class="container" >
+  <GridLayout v-if="audioFile" height="50" columns="50,*" @loaded="loaded" @tap="playPause" class="container" >
     <CenterLabel
-      @tap="playPause"
+      
       col="0"
       :centerMethod="17"
       :text="icon"     
@@ -55,7 +55,7 @@ export default {
   watch: {
     playing(newVal, oldVal) {
       if (typeof newVal !== 'undefined') {
-       if (!newVal) {
+       if (newVal) {
          console.log('starting progress checker')
          this.progressInterval = this.createProgressChecker()
        }
@@ -82,7 +82,7 @@ export default {
       return String.fromCharCode(code);
     },
     loaded(args) {
-
+      console.log('loaded player for', this.audioFile)
     },
     infoCallback(args) {
       console.log('INFO CALLBACK', args)

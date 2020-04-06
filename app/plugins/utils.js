@@ -183,51 +183,59 @@ Vue.prototype.$navigateBackFromButton = function() {
 }
 
 Vue.prototype.$myNavigateTo = function(to, props) {
-  const topFrame = Frame.topmost();
-  console.log(`navigation! topframe = ${topFrame.id}, going to ${to}`)
-  const pagesInfo = store.getters.pagesInfo
-  const toPage = pagesInfo[to];
-  let bottomNav = findNav(topFrame)
-  const tabIndex = store.getters.bottomNavigationIndex
-  if (!bottomNav) {
-    console.error('bottom nav not found!')
-    // hack:
-    bottomNav = { selectedIndex: 0}
-  } else {
-    console.log(`Navigating! current bottomNav idx = ${bottomNav.selectedIndex} in store = ${tabIndex}`)
-  }
-  const currentPage = store.getters.currentPage
-
-  if (toPage.isTabView) {
-    console.log('... tabview, open in bottom nav: index=', toPage.tabIndex)
-    bottomNav.selectedIndex = toPage.tabIndex
-  }
-  else if (toPage.isModal) {
-    console.log('... modal, open in modal')
-    const that = this
-    Vue.showMyModal(toPage.page, {
-      ...props, 
-      ...toPage.props
-    }).then(res => {
-      console.log('closing modal', props)
-      console.log('... and setting currentPage back to where we came from', currentPage.name)
-      store.commit("setCurrentPage", { name: currentPage.name, instance: that });
-    })
-  }
-  else {
-    // determine which frame to go to
-    // mainContent hack, use existing frame to not break navigation
-    const frame = 'frameTab' + tabIndex
-    const p = { ...props, frame: frame }
-    if(toPage.mainContent) {
-      bottomNav.tabStrip.visibility = 'collapse'
+  return new Promise((resolve, reject) => {
+    const topFrame = Frame.topmost();
+    console.log(`navigation! topframe = ${topFrame.id}, going to ${to}`)
+    const pagesInfo = store.getters.pagesInfo
+    const toPage = pagesInfo[to];
+    let bottomNav = findNav(topFrame)
+    const tabIndex = store.getters.bottomNavigationIndex
+    if (!bottomNav) {
+      console.error('bottom nav not found!')
+      // hack:
+      bottomNav = { selectedIndex: 0}
+    } else {
+      console.log(`Navigating! current bottomNav idx = ${bottomNav.selectedIndex} in store = ${tabIndex}`)
     }
-    console.log('... navigating in frame='+frame+' to page ', toPage.name, p)
+    const currentPage = store.getters.currentPage
 
-    this.$navigateTo(toPage.page, p).then(res => {
-      console.log('yeah! i navigated from the utils.js thingy to ' + to)
-    }).catch(err => console.error('error navigating', err))
-  }
+    if (toPage.isTabView) {
+      console.log('... tabview, open in bottom nav: index=', toPage.tabIndex)
+      bottomNav.selectedIndex = toPage.tabIndex
+      resolve()
+    }
+    else if (toPage.isModal) {
+      console.log('... modal, open in modal')
+      const that = this
+      Vue.showMyModal(toPage.page, {
+        ...props, 
+        ...toPage.props
+      }).then(res => {
+        console.log('closing modal', props)
+        console.log('... and setting currentPage back to where we came from', currentPage.name)
+        store.commit("setCurrentPage", { name: currentPage.name, instance: that });
+        resolve()
+      }).catch(err => reject(err))
+    }
+    else {
+      // determine which frame to go to
+      // mainContent hack, use existing frame to not break navigation
+      const frame = 'frameTab' + tabIndex
+      const p = { ...props, frame: frame }
+      if(toPage.mainContent) {
+        bottomNav.tabStrip.visibility = 'collapse'
+      }
+      console.log('... navigating in frame='+frame+' to page ', toPage.name)
+
+      this.$navigateTo(toPage.page, p).then(res => {
+        console.log('yeah! i navigated from the utils.js thingy to ' + to)
+        resolve(res)
+      }).catch(err => {
+        console.error('error navigating', err)
+        reject(err)
+      })
+    }
+  })
 }
 
 export const filterObject = (obj, predicate) =>

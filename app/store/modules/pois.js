@@ -42,7 +42,6 @@ export const mutations = {
     state.currentPoi = null
   },
   setCurrentPoi(state, poi) {
-    console.log('setcurrent', poi)
     state.currentPoi = poi
   },
   setPois(state, pois) {
