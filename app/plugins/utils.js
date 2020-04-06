@@ -9,15 +9,16 @@ import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/appl
 const firebase = require("nativescript-plugin-firebase");
 
 let fbIsInitialized = false
+let fbInit = null
 export const firebaseInitialized = () => {
   return fbIsInitialized
 }
 
 export const initFirebase = () => {
   if (fbIsInitialized)
-    return Promise.resolve()
+    fbInit = Promise.resolve()
 
-  return firebase.init({
+  fbInit = firebase.init({
     iOSEmulatorFlush: true,
     analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled
     crashlyticsCollectionEnabled: getBoolean('googleCrashlytics'), // enabled
@@ -30,18 +31,16 @@ export const initFirebase = () => {
     console.log("FB: initialized, you can load data and log in and stuff")
   })
   .catch((err) => {
+    fbIsInitialized = false
     console.error("FB: error initializing data", err)
   })
-  
+  return fbInit
 }
 
 export const loadFirebaseData = () => {
-  let fbInit = null
   if (!fbIsInitialized)
-    fbInit = initFirebase()
-  else 
-    fbInit = Promise.resolve()
-
+    initFirebase()
+  
   return fbInit.then((resp) => {
     firebase.login(
       {

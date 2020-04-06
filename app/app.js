@@ -64,12 +64,13 @@ application.on(application.suspendEvent, (args) => {
 
 // quick & dirty setting of initial orientation
 const setCurrentOrientation = () => {
+  let orientation = 'portrait'
+  
   if(screen.mainScreen.widthDIPs > screen.mainScreen.heightDIPS) {
-    store.commit('setOrientation', 'landscape')
+    orientation = 'landscape'  
   }
-  else {
-    store.commit('setOrientation', 'portrait')
-  }
+  store.commit('setOrientation', orientation)
+  console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPS}`)
 }
 setCurrentOrientation()
 
@@ -132,8 +133,6 @@ Vue.component('AppActionBar', AppActionBar)
 Vue.component('CenterLabel', CenterLabel)
 Vue.component('CachedImage', CachedImage)
 
-console.log("App start - will load firebase stuff now!")
-
 if (isIOS) {
   GMSServices.provideAPIKey("<keyhere>");
 }
@@ -141,6 +140,9 @@ if (isIOS) {
 Vue.filter("L", localize);
 
 Vue.use(Vuex);
+
+
+utils.initFirebase()
 
 const vueApp = new Vue({
   store,
@@ -154,11 +156,11 @@ const vueApp = new Vue({
     )
   },
   created() {
-    utils.initFirebase().then(() => {
-      // load the FB stuff when Vue is done creating itself (?needed)
-      console.log('init FB from app.js, now loading data')
-      utils.loadFirebaseData()
-    })
+    
+    // load the FB stuff when Vue is done creating itself (?needed)
+    console.log('init FB from app.js, now loading data')
+    utils.loadFirebaseData()
+    
   }
 })
 

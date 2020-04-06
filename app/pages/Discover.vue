@@ -7,10 +7,11 @@
         :pois="poisToDisplay"
         :paths="paths"
         :padding="padding"
+        @googleMapReady="onMapReady"
         @markerSelect="scrollToPoint"
         @cameraChanged="onCameraChanged" />
 
-      <ScrollView row="0" v-if="pageName === 'discover'"
+      <ScrollView row="0" v-if="mapReady && pageName === 'discover'"
           verticalAlignment="bottom"
           :marginBottom="marginBottomButtons"
           :width="widthButtons"
@@ -27,6 +28,7 @@
       </ScrollView>
 
       <StackLayout row="0" 
+        v-if="mapReady"
         :width="cardsContainerWidth"
         :height="cardsContainerHeight"
         :verticalAlignment="verticalAlignment"
@@ -41,21 +43,10 @@
           ios.dynamicItemSize="false"
           @scrollDragEnded="onScrolled"
           @itemTap="showPointInfoFromList">
-          <v-template name="header">
-            <CardView class="cardStyle" radius="10" height="110" width="130">
-              <StackLayout>
-                <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
-                  <FormattedString>
-                    <Span class="fas" text.decode="&#xf3c5; "/>
-                    <Span :text="'discover.headerText' | L" />
-                  </FormattedString>
-                </Label>
-              </StackLayout>
-            </CardView>
-          </v-template>
+          
           <v-template>
-            <CardView class="cardStyle" radius="10" height="110" width="130">
-              <StackLayout>
+            <CardView class="cardStyle" radius="10" height="110" width="110">
+              <StackLayout padding="0">
                 <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
                   <FormattedString>
                     <Span class="fas" text.decode="&#xf3c5; "/>
@@ -64,7 +55,7 @@
                 </Label>
                 <CachedImage
                   :source="getPoiImage(poi)" 
-                  stretch="aspectFit"
+                  stretch="aspectFill"
                   width="100"
                   height="90"
                   placeholder="~/assets/images/placeholder.png">
@@ -72,18 +63,7 @@
               </StackLayout>
             </CardView>
           </v-template>
-          <v-template name="footer">
-            <CardView class="cardStyle" radius="10" height="110" width="130">
-              <StackLayout>
-                <Label class="info" horizontalAlignment="center" verticalAlignment="center" textWrap="true">
-                  <FormattedString>
-                    <Span class="fas" text.decode="&#xf3c5; "/>
-                    <Span :text="'discover.footerText' | L" />
-                  </FormattedString>
-                </Label>
-              </StackLayout>
-            </CardView>
-          </v-template>
+          
         </RadListView>
       </StackLayout>
     </GridLayout>
@@ -112,6 +92,7 @@ export default {
       scrollIndex: 0,
       scrollOffset: 0,
       width: 130,
+      mapReady: false,
       currentCategory: 'all',
       ommenCenter: {position: {latitude: 52.4958, longitude: 6.44117} },
       categories: ['all', 'stolpersteine', 'routes', 'planes', 'rest']
@@ -197,7 +178,6 @@ export default {
         return pois
       }
       else if (this.pois) {
-        
         if (this.currentCategory === 'routes') {
           return this.$store.getters.getRoutesStartPois
         }
@@ -252,6 +232,7 @@ export default {
   watch: {
     screenOrientation(oldVal, newVal) {
       // refresh the list to re-render properly
+      console.log('Discover: screenOrientation changed', newVal)
       this.$nextTick(() => {
         if (this.$refs.listView) {
           this.$refs.listView.refresh();
@@ -263,6 +244,7 @@ export default {
   },
   methods: {
     onLoaded() {
+      this.mapReady = false
       const curPage = { 
         name: this.pageName, 
         instance: this 
@@ -319,7 +301,7 @@ export default {
       const idx = this.poisToDisplay.findIndex(p => marker.userData.id === p.id);
       console.log(`scrolling to pois[${idx}]: ${marker.userData.title}`)
       this.$nextTick(() => {
-        this.$refs.listView.scrollToIndex(idx, false, ListViewItemSnapMode.Start); 
+        this.$refs.listView.scrollToIndex(idx, false, ListViewItemSnapMode.Center); 
       })
     },
     showPointInfo(poi) {
@@ -352,10 +334,12 @@ export default {
       });
     },
     zoomToMarkerByScroll(scrollOffset) {
-      console.log('zoom', scrollOffset)
-      const newScrollIndex = Math.round(this.scrollOffset / this.width)
+      const width =  this.screenOrientation === 'landscape' ? 150 : 120
+      const newScrollIndex = Math.round(this.scrollOffset / width)
+      console.log(`zoom, offset=${scrollOffset}, newIdx=${newScrollIndex}, width=${width}`)
       if (this.scrollIndex != newScrollIndex) {
         const activePoi = this.poisToDisplay[newScrollIndex]
+        console.log(` > to ${activePoi.title}`)
         this.$refs.gMap.showTitleForPoint(activePoi)
         this.$refs.gMap.animateToPoint(activePoi, 200, 13)
       }
@@ -383,6 +367,9 @@ export default {
     distanceFromOmmen(poi1, poi2) {
       return this.distanceBetween(poi2, this.ommenCenter) - this.distanceBetween(poi1, this.ommenCenter)
     },
+    onMapReady() {
+      this.mapReady = true
+    }
   }
 };
 </script>

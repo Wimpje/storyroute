@@ -62,12 +62,22 @@ export default {
   },
   watch: {
     pois (oldVal, newVal) {
-      console.log('google map, markers changed! updating...')
-      this.addMapMarkers()
+      if (this.mapView) {
+        console.log('google map, markers changed! updating...')
+        this.addMapMarkers()
+        if (this.newVal) {
+          this.fitMapToPois(this.pois)
+        }
+      }
     },
     paths (oldVal, newVal) {
-      console.log('google map, paths changed! updating...')
-      this.addPaths()
+      if (this.mapView) {
+        console.log('google map, paths changed! updating...')
+        this.addPaths()
+        if(newVal) {
+          this.fitMapToPois(this.pois)
+        }
+      }
     }
   },
   mounted() {
@@ -229,7 +239,9 @@ export default {
           m.showInfoWindow()
         }
         else {
-          m.hideInfoWindow()
+          // hideinfowindow works differntly in ios (it just removes all markers)
+          if(isAndroid)
+            m.hideInfoWindow()
         }
       })
       
@@ -324,7 +336,7 @@ export default {
 
       this.addPaths()
 
-      this.$emit("mapReady");
+      this.$emit("googleMapReady", true);
     },
     // https://cloud.google.com/blog/products/maps-platform/how-calculate-distances-map-maps-javascript-api
     distanceBetween(poi1, poi2) {
@@ -410,16 +422,49 @@ export default {
         })
       }
     },
+    fitMapToPois(pois, padding) {
+      if(!this.mapView)
+        return
+
+      let bounds, builder;
+      padding = padding || 40;
+      if (isIOS) {
+        bounds = GMSCoordinateBounds.alloc().init();
+      }
+      if (isAndroid) {
+         builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
+      }
+      // iterate markers, and add position
+      this.pois.forEach((poi) => {
+        if (isAndroid)
+          builder.include(poi.position);
+        
+        if (isIOS) 
+          bounds = bounds.includingCoordinate(poi.position);
+      });
+
+      if(isAndroid) {
+        bounds = builder.build();
+        const cu = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(
+          bounds,
+          padding
+        );
+        console.log("ANDROID moving map to bounds of all points on map");
+        this.mapView.gMap.animateCamera(cu);
+      }
+      if (isIOS) {
+        var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
+        console.log("IOS moving map to bounds of all points on map");
+        // setting timeout... https://github.com/dapriett/nativescript-google-maps-sdk/issues/106
+        setTimeout(() => {
+          this.mapView.gMap.animateWithCameraUpdate(update);
+        }, 100)
+      }
+    },
     addMapMarkers() {
       console.log(
         " ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
       );
-      let bounds;
-      let padding = 40;
-      if (isIOS) {
-        bounds = GMSCoordinateBounds.alloc().init();
-      }
-
       this.mapView.removeAllMarkers();
 
       if (this.pois && this.pois.length) {
@@ -428,36 +473,10 @@ export default {
         this.pois.forEach(poi => {
           const marker = this.addMarkerFromPoi(poi, poiIndex);
           this.markers.push(marker)
-          if (isIOS) bounds = bounds.includingCoordinate(marker.position);
           this.addMarkerIcon(marker, poi);
           poiIndex++
         });
-
-        // This positions the camera on a box around the points
-        if (isAndroid) {
-          const builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
-          this.mapView.findMarker(function(marker) {
-            builder.include(marker.android.getPosition());
-          });
-          bounds = builder.build();
-          const cu = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(
-            bounds,
-            padding
-          );
-          console.log("ANDROID moving map to bounds of all points on map");
-          this.mapView.gMap.animateCamera(cu);
-        }
-        if (isIOS) {
-          var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
-          console.log("IOS moving map to bounds of all points on map");
-          // setting timeout... https://github.com/dapriett/nativescript-google-maps-sdk/issues/106
-          setTimeout(() => {
-            this.mapView.gMap.animateWithCameraUpdate(update);
-          }, 100)
-        }
       }
-
-      // END map positioning
     },
     onMarkerSelect(m) {
       this.$emit("markerSelect", m.marker);
