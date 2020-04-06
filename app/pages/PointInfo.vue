@@ -1,12 +1,16 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
-    <GridLayout rows="auto, *" columns="*" iosOverflowSafeArea="true">
-      <ScrollView row="0">
+    <StackLayout iosOverflowSafeArea="true">
+      <ScrollView>
         <StackLayout class="descriptions">
           <ImageCarousel height="200" :images="images"></ImageCarousel>
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
+          <StackLayout class="actions">
+            <AudioPlayer :files="point.files" />
+          </StackLayout>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
-          <StackLayout  v-if="point.routeDescription">
+      
+          <StackLayout v-if="point.routeDescription">
             <StackLayout class="hr m-10"></StackLayout>
             <StackLayout orientation="horizontal">
               <Label
@@ -29,10 +33,7 @@
           </StackLayout>
         </StackLayout>
       </ScrollView>
-      <StackLayout class="actions" row="1">
-        <AudioPlayer :files="point.files" />
-      </StackLayout>
-    </GridLayout>
+    </StackLayout>
   </Page>
 </template>
 <script>
@@ -111,6 +112,7 @@ export default {
   font-size: 16;
 }
 .name {
+  margin-top: 10;
   padding: 5 20 5 20;
 }
 </style>

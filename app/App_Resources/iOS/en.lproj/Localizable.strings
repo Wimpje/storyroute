@@ -1,5 +1,6 @@
 "_ios_info_plist_NSLocationWhenInUseUsageDescription_ZpKiIF" = "Find your current location to see interesting points nearby.";
 "_ios_info_plist_NSLocationUsageDescription_1bdb1b" = "Find your current location to see interesting points nearby.";
+"_message_loadingTroubleFinal_1UHsFT" = "There is a problem retrieving data, our apologies. Maybe completely closing the app and restarting will help.";
 "_message_loadingTrouble_1XLkBq" = "There is a problem retrieving data, is wifi or mobile data enabled?";
 "_message_loadingTroubleInitial_1Ev4FF" = "There is a problem retrieving data, mayber the connection is slow, please wait...";
 "_message_englishNotYetSupportedButton_ZWxmtg" = "OK";

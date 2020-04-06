@@ -8,7 +8,7 @@
         ref="routesListView"
         @itemTap="loadRoute"
         for="route in routes"
-        rowHeight="265"
+        rowHeight="280"
       >
         <v-template>
           <RouteListItem :route="route"></RouteListItem>

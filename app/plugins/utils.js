@@ -14,6 +14,9 @@ export const firebaseInitialized = () => {
 }
 
 export const initFirebase = () => {
+  if (fbIsInitialized)
+    return Promise.resolve()
+
   return firebase.init({
     iOSEmulatorFlush: true,
     analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled

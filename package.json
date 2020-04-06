@@ -1,11 +1,11 @@
 {
   "name": "storyroute",
   "version": "1.0.0",
-  "description": "Tell stories with geolocation",
+  "description": "Celebrating 75 years of freedom in the small town of Ommen",
   "author": "nosmallthing.nl",
   "license": "MIT",
   "nativescript": {
-    "id": "nl.nosmallthing.storyroute",
+    "id": "nl.nosmallthing.ommen75jaarbevrijding",
     "templateVersion": "v2",
     "tns-ios": {
       "version": "6.5.0"

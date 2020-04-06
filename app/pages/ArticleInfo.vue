@@ -57,8 +57,8 @@ export default {
   },
   computed: {
     images() {
-      if (this.point) {
-        return this.point.files.filter(file => file.type == "image");
+      if (this.article) {
+        return this.article.files.filter(file => file.type == "image");
       }
       return [];
     }
@@ -72,7 +72,9 @@ export default {
 .image {
   margin-bottom: 10;
 }
-
+.info {
+  margin-top:10;
+}
 .text {
   vertical-align: top;
   font-size: 18;

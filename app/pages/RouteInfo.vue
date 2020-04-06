@@ -7,18 +7,13 @@
           <StackLayout class="actions">
             <AudioPlayer :files="route.files" />
           </StackLayout>
-          <GridLayout class="routeInfo" columns="auto, auto, *" rows="auto, *">
-            <CenterLabel col="0" row="0" :text="travelModeIcon" class="h2 travelMode fas"></CenterLabel>
-            <CenterLabel col="1" row="0" :text="distance" class="h3 distance"></CenterLabel>
-            <Label
-              col="2"
-              row="0"
-              :centerMethod="17"
-              :text="route.title"
-              class="h2 text-left m-y-auto routeName"
-              textWrap="true"
-            ></Label>
-          </GridLayout>
+          <Label class="routeInfo" textWrap="true">
+            <FormattedString>
+              <Span class="fas travelModeIcon" :text="travelModeIcon" />
+              <Span :text="'  ' + distance + '   -   '" class="distance" />
+              <Span :text="route.title" class="routeName" />
+            </FormattedString>
+          </Label>
           <StackLayout>
             <Label :text="route.description" class="body p-20 routeDescription" textWrap="true"></Label>
             <StackLayout class="hr m-10"></StackLayout>
@@ -157,23 +152,26 @@ export default {
 .routeImage {
   margin-bottom: 10;
 }
-.travelMode {
-  margin: 15 10 10 20;
+.travelModeIcon {
+  font-size: 18;
 }
 .distance {
   margin: 15;
+  font-size: 18;
 }
 .container {
   padding-bottom: 100;
 }
 .routeInfo {
-  
+  margin: 20 20 5 20;
 }
 .routeDescription {
   vertical-align: top;
   font-size: 16;
 }
 .routeName {
-  padding: 5 20 5 20;
+  margin: 10;
+  font-weight: bold;
+  font-size: 20;
 }
 </style>
