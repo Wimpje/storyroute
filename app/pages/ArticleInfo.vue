@@ -23,16 +23,13 @@ import UrlContents from "~/components/UrlContents";
 
 export default {
   components: { UrlContents, ImageCarousel },
-  mounted() {
-    this.$store.commit("setCurrentArticle", this.article);
-  },
   beforeDestroy() {
-    console.log("DESTROY poi");
     this.$store.commit("setCurrentArticle", null);
   },
   props: ["article"],
   methods: {
     onLoaded(args) {
+      this.$store.commit("setCurrentArticle", this.article);
       this.$store.commit("setCurrentPage", {
         name: "articleinfo",
         title: this.article.title,

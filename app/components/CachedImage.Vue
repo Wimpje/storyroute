@@ -2,7 +2,7 @@
   <NSImg
     ref="image"
     :src="image"
-    :failureImageUri="placeholder"
+    :failureImageUri="noimageName"
     :placeholderImageUri="placeholder"
     @loaded="imageLoaded">
   </NSImg>
@@ -13,7 +13,7 @@
 import { Cache } from "tns-core-modules/ui/image-cache";
 
 export default {
-  props: ["placeholder", "source"],
+  props: ["placeholder", "source", "noimage"],
   data() {
     return {
       imageLoading: true,
@@ -30,7 +30,15 @@ export default {
         return this.source
       } 
       else {
-        return this.placeholder
+        return this.noimageName
+      }
+    },
+    noimageName() {
+      if (this.noimage) {
+        return this.noimage
+      } 
+      else {
+        return "~/assets/images/noimage.png"
       }
     }
   },

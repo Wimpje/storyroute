@@ -5,6 +5,15 @@
         <StackLayout class="descriptions">
           <ImageCarousel height="200" :images="images"></ImageCarousel>
           <AudioPlayer :files="point.files" />
+          <VideoPlayer v-if="video"
+                :src="video"
+                autoplay="false"
+                controls="true"
+                height="250"
+                loop="false"
+                muted="false"
+                ref="video"
+                ></VideoPlayer>
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
           <StackLayout v-if="point.routeDescription">
@@ -15,14 +24,6 @@
                 class="fas t-24 p-l-20 p-y-20"
                 horizontalAlignment="center"
               ></Label>
-              <VideoPlayer v-if="video"
-                :src="video"
-                autoplay="false"
-                height="250"
-                loop="false"
-                muted="false"
-                ref="video"
-                ></VideoPlayer>
               <Label :text="'route.directions' | L" class="h1 p-20 m-x-auto"></Label>
             </StackLayout>
             <Label :text="point.routeDescription" class="body description" textWrap="true"></Label>

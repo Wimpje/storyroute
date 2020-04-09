@@ -62,12 +62,6 @@ export default {
     }
   },
   watch: {
-    pois (newVal) {
-      if (this.mapView) {
-        console.log('google map, markers changed! updating...')
-        this.addMapMarkers()
-      }
-    },
     paths (newVal) {
       if (this.mapView) {
         console.log('google map, paths changed! updating...')
@@ -125,6 +119,12 @@ export default {
               .then(
                 () => {
                   that.isMounted = true;
+                  if (isAndroid && that.mapView) {
+                    let uiSettings = that.mapView.gMap.getUiSettings();
+                    uiSettings.setMyLocationButtonEnabled(true);
+                    that.mapView.gMap.setMyLocationEnabled(true);
+                  }
+
                   geolocation
                     .getCurrentLocation({
                       timeout: 20000
@@ -333,8 +333,6 @@ export default {
 
       this.initMapSettings()
 
-      this.addMapMarkers()
-
       this.addPaths()
 
       this.$emit("googleMapReady", true);
@@ -407,7 +405,7 @@ export default {
       ]
 
       // create route line
-      if (this.paths) {
+      if (this.paths && this.mapView) {
 
         this.mapView.removeAllShapes();
         let idx = 0
@@ -437,8 +435,11 @@ export default {
         return
 
       console.log(`fitting map to ${pois.length} points...`)
+      if(pois.length == 0)
+        return
+      
       let bounds, builder;
-      padding = padding || 40;
+      padding = padding || 80;
       if (isIOS) {
         bounds = GMSCoordinateBounds.alloc().init();
       }

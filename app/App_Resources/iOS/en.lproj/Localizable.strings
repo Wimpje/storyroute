@@ -1,8 +1,9 @@
 "_ios_info_plist_NSLocationWhenInUseUsageDescription_ZpKiIF" = "Find your current location to see interesting points nearby.";
 "_ios_info_plist_NSLocationUsageDescription_1bdb1b" = "Find your current location to see interesting points nearby.";
+"_message_tapAgainForInfo_2w13gF" = "Tap card again for more info";
 "_message_loadingTroubleFinal_1UHsFT" = "There is a problem retrieving data, our apologies. Maybe completely closing the app and restarting will help.";
 "_message_loadingTrouble_1XLkBq" = "There is a problem retrieving data, is wifi or mobile data enabled?";
-"_message_loadingTroubleInitial_1Ev4FF" = "There is a problem retrieving data, mayber the connection is slow, please wait...";
+"_message_loadingTroubleInitial_1Ev4FF" = "There is a problem retrieving data, maybe the connection is slow, please wait...";
 "_message_englishNotYetSupportedButton_ZWxmtg" = "OK";
 "_message_englishNotYetSupportedMessage_1ALc4X" = "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.";
 "_message_englishNotYetSupportedTitle_NjpfQ" = "Language not (fully) supported";
@@ -35,6 +36,7 @@
 "_config_analyticsInfo_1vPaqx" = "Enable collecting analytics (no personal info is stored)";
 "_config_crashInfo_Z1GWQFB" = "Enable collecting crash information (helps us fix bugs!)";
 "_share_how_Z1RkSqN" = "How do you want to share this?";
+"_share_article_2ldjKC" = "I found an interesting article with this app!";
 "_share_route_Z1aYL5b" = "I found an interesting route with this app!";
 "_share_point_Z1b7WBp" = "I found an interesting point with this app!";
 "_map_noappfound_XuPyK" = "No maps app found to plan route with";

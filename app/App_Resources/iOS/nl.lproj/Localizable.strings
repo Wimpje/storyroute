@@ -11,6 +11,7 @@
 "_config_downloadAll_29yUK2" = "Download alle bestanden en routes. Niet nodig, maar handig als je geen of weinig mobiele data kunt gebruiken.";
 "_config_analyticsInfo_1vPaqx" = "Toestemming gebruiksinformatie te verzamelen (geen persoonlijke informatie). Dat helpt ons de app te verbeteren!";
 "_config_crashInfo_Z1GWQFB" = "Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!";
+"_message_tapAgainForInfo_2w13gF" = "Tik hier nog eens voor meer info";
 "_message_loadingTroubleFinal_1UHsFT" = "Er is een probleem opgetreden, ik kan het helaas niet verhelpen. Probeer het later nog eens.";
 "_message_loadingTrouble_1XLkBq" = "Er is een probleem met het ophalen van de gegevens, is er internet?";
 "_message_loadingTroubleInitial_1Ev4FF" = "Het duurt even om de data te laden, wellicht een trage internetverbinding, aub nog even geduld...";
@@ -18,6 +19,7 @@
 "_message_englishNotYetSupportedMessage_1ALc4X" = "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.";
 "_message_englishNotYetSupportedTitle_NjpfQ" = "Language not (fully) supported";
 "_share_how_Z1RkSqN" = "Hoe wil je dit delen?";
+"_share_article_2ldjKC" = "Ik heb een interessant artikel gevonden met deze app!";
 "_share_route_Z1aYL5b" = "Ik heb een leuke route gevonden met deze app!";
 "_share_point_Z1b7WBp" = "Ik heb een interessante plek gevonden met deze app!";
 "_map_noappfound_XuPyK" = "Geen maps app gevonden om een route mee te plannen";

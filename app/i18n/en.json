@@ -40,6 +40,7 @@
   "share": {
     "point": "I found an interesting point with this app!",
     "route": "I found an interesting route with this app!",
+    "article": "I found an interesting article with this app!",
     "how":"How do you want to share this?"
   },
   "config": {

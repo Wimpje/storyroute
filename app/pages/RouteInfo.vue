@@ -32,7 +32,7 @@
               :key="poi.id"
             >
               <Label row="0" col="0" class="h2 p-y-20 p-l-20" :text="(i + 1) + '. '"></Label>
-              <Label row="0" col="1" class="h2 p-y-20" :text="poi.title"></Label>
+              <Label row="0" col="1" class="h2 p-y-20" :text="poi.title" textWrap="true"></Label>
               <Label
                 row="1"
                 colSpan="2"
@@ -42,6 +42,7 @@
               ></Label>
             </GridLayout>
           </StackLayout>
+          <UrlContents class="p-20 m-t-10" :addDivider="true" :urls="route.urls"></UrlContents>
         </StackLayout>
       </ScrollView>
       <Button
@@ -58,12 +59,14 @@
 </template>
 <script>
 import ImageCarousel from "~/components/ImageCarousel";
+import UrlContents from "~/components/UrlContents";
+
 import * as utils from "~/plugins/utils";
 import AudioPlayer from "~/components/AudioPlayer";
 import { device } from "@nativescript/core/platform";
 
 export default {
-  components: { AudioPlayer, ImageCarousel },
+  components: { AudioPlayer, ImageCarousel,UrlContents },
   props: ["route"],
   methods: {
     getLanguage() {
