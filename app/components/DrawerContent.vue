@@ -9,17 +9,20 @@
       />
       <Label :text="'drawer.title' | L" class="nt-drawer__header-brand"></Label>
     </StackLayout>
-    <ListView for="item in pages" height="100%" rowHeight="60" ref="list">
+    <ListView for="item in pages" height="100%" rowHeight="70" ref="list">
       <v-template>
-        <GridLayout
-          columns="auto, *"
-          rows="*"
+        <StackLayout
           :class="'nt-drawer__list-item' + (currentPage.name === item.name ? ' -selected': '')"
           @tap="goToPage(item.name)"
         >
-          <Label row="0" col="0" :text="iconFromCode(item.icon)" class="nt-icon fas m-y-auto"></Label>
-          <Label row="0" col="1" :text="item.text | L" class="p-r-10 m-y-auto"></Label>
-        </GridLayout>
+        <Label class="menuItem" width="100%">
+          <FormattedString>
+            <Span class="fas" :text="iconFromCode(item.icon)" />
+            <Span text="   " />
+            <Span :text="item.text | L"  />
+          </FormattedString>
+        </Label>
+        </StackLayout>
       </v-template>
     </ListView>
   </StackLayout>
@@ -77,10 +80,6 @@ export default {
 <style scoped lang="scss">
 //@import "~@nativescript/theme/scss/variables/grey";
 
-.nt-drawer__header-brand {
-}
-.nt-icon {
-}
 .-selected {
   background-color:pink;
 }

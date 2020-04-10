@@ -5,15 +5,24 @@
         <StackLayout class="descriptions">
           <ImageCarousel height="200" :images="images"></ImageCarousel>
           <AudioPlayer :files="point.files" />
-          <VideoPlayer v-if="video"
-                :src="video"
-                autoplay="false"
-                controls="true"
-                height="250"
-                loop="false"
-                muted="false"
-                ref="video"
-                ></VideoPlayer>
+          <GridLayout rows="auto" v-if="video" @tap="play" >
+          
+            <VideoPlayer 
+              row="0"
+              :src="video"
+              @loaded="videoPlayerLoaded"
+              autoplay="false"
+              controls="true"
+              height="250"
+              loop="false"
+        
+              muted="false"
+              ref="video"></VideoPlayer>
+              <android>
+                <CenterLabel v-if="!playing" text.decode="&#xf04b;" row="0" height="250" width="100%" class="fas play" verticalAlignment="middle" horizontalAlignment="middle" />
+              </android>
+          </GridLayout>
+
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
           <StackLayout v-if="point.routeDescription">
@@ -40,6 +49,7 @@ import ImageCarousel from "~/components/ImageCarousel";
 import AudioPlayer from "~/components/AudioPlayer";
 import * as firebase from "nativescript-plugin-firebase";
 import UrlContents from "~/components/UrlContents";
+import { isAndroid } from "tns-core-modules/platform";
 
 export default {
   components: {
@@ -65,7 +75,19 @@ export default {
         instance: this
       });
     },
-   
+    videoPlayerLoaded(args) {
+      if(this.video) {
+        // workaround to show thumbnail on load
+       // if(isAndroid)
+         // this.$refs.video.nativeView.seekToTime(5)
+      }
+    },
+    play() {
+      if (isAndroid) {
+        this.$refs.video.nativeView.play()
+        this.playing = true
+      }
+    },
     close() {
       this.$modal.close();
     }
@@ -88,7 +110,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      playing: false
+    };
   }
 };
 </script>
@@ -112,5 +136,13 @@ export default {
 .name {
   margin-top: 10;
   padding: 5 20 5 20;
+}
+.play {
+  opacity: 0.5;
+  color: white;
+  font-size: 50;
+  text-align: center;
+  vertical-align: middle;
+  background-color: black;
 }
 </style>

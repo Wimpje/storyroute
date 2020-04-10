@@ -22,12 +22,6 @@
         @tap="androidMenuTap"></NavigationButton> 
       <ActionItem
         android.position="popup"
-        v-show="shouldShowMaps"
-        :text="'btn.openmaps' | L"
-        @tap="maps">
-      </ActionItem>
-      <ActionItem
-        android.position="popup"
         android.systemIcon="ic_menu_share"
         :text="'btn.share' | L"
         v-show="shouldShowShare"
@@ -107,33 +101,10 @@ export default {
       this.openNavigationTo()
     },
     share() {
-      if(isIOS) {
-        // open dialog with 'open in maps' or 'share'
-        const actions = []
-        if (this.shouldShowMaps) {
-          actions.push(localize('btn.openmaps'))
-        }
-        if (this.shouldShowShare) {
-          actions.push(localize('btn.share'))
-        }
-        dialogs.action({
-          message: localize("dialog.chooseAction"),
-          cancelButtonText: localize("dialog.cancelAction"),
-          actions: actions
-       }).then(result => {
-          console.log("Dialog result: " + result);
-          if (result == localize('btn.share')){
-            this.shareAction()
-          } else if(result == localize('btn.openmaps')){
-            this.openNavigationTo()
-          }
-      });
-      }
-      if(isAndroid) {
-        console.log('share')
-        // open share dialog
-        this.shareAction()
-      }
+      console.log('share')
+      // open share dialog
+      this.shareAction()
+ 
     },
     shareAction() {
       const actionObj = this.createActionObject()
@@ -248,5 +219,8 @@ export default {
 <style lang="scss" scoped>
 .shareIcon {
   font-size: 12;
+}
+.action-bar-title {
+  
 }
 </style>

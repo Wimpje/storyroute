@@ -135,12 +135,8 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.fabButton {
-  margin-right: 20;
-  color: white;
-  margin-bottom: 20;
-  background-color: black;
-  border-radius: 100;
+.ns-ios .startRouteButton { 
+  border-width: 1;
 }
 .startRouteButton {
   margin-bottom: 20;
@@ -149,9 +145,8 @@ export default {
   height: 100;
   width: 100;
   border-radius: 50;
-  border-width: 1;
-  border-color: #999;
   text-align: center;
+  android-elevation:5;
 }
 .routeImage {
   margin-bottom: 10;

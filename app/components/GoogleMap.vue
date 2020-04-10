@@ -94,6 +94,18 @@ export default {
         this.mapView.nativeView.onResume();
       }
     },
+    enableMyLocationButton(value) {
+      if (isAndroid) {
+          let uiSettings = this.mapView.gMap.getUiSettings();
+          uiSettings.setMyLocationButtonEnabled(value);
+          /* enable my location button on android */
+          this.mapView.gMap.setMyLocationEnabled(value);
+      } else {
+          /* enable my location button on iOS */
+          this.mapView.gMap.myLocationEnabled = value;
+          this.mapView.gMap.settings.myLocationButton = value;
+      }
+    },
     onLoaded() {
       console.log("MAP: ONLOADED");
       if (application.android) {
@@ -110,21 +122,10 @@ export default {
       geolocation.isEnabled().then(
         function(isEnabled) {
           if (!isEnabled) {
-            // only enable if geolocation is enabled
-            this.mapView.myLocationEnabled = that.enableMyLocation;
-            this.mapView.settings.myLocationButtonEnabled = that.enableMyLocationButton;
-
             geolocation
               .enableLocationRequest(true, true)
               .then(
                 () => {
-                  that.isMounted = true;
-                  if (isAndroid && that.mapView) {
-                    let uiSettings = that.mapView.gMap.getUiSettings();
-                    uiSettings.setMyLocationButtonEnabled(true);
-                    that.mapView.gMap.setMyLocationEnabled(true);
-                  }
-
                   geolocation
                     .getCurrentLocation({
                       timeout: 20000
@@ -160,7 +161,6 @@ export default {
                 });
               });
           } else {
-            that.isMounted = true;
             geolocation
               .getCurrentLocation({
                 timeout: 20000
@@ -197,7 +197,7 @@ export default {
       // this.mapview.infoWindowTemplate = ''
       this.mapView.setStyle(mapStyles.retro);
 
-      if (isAndroid && this.isMounted && geolocation.isEnabled()) {
+      if (isAndroid && geolocation.isEnabled()) {
         let uiSettings = gMap.getUiSettings();
         uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setTiltGesturesEnabled(true);
@@ -410,7 +410,7 @@ export default {
         this.mapView.removeAllShapes();
         let idx = 0
         this.paths.forEach( path => {
-          
+          idx++
           // draw the polyline
           const polyline = new Polyline();
           console.log("creating a line...", path.length);
@@ -426,7 +426,6 @@ export default {
           polyline.geodesic = false;
           polyline.color = new Color(colors[idx % 5]);
           this.mapView.addPolyline(polyline);
-          idx++
         })
       }
     },

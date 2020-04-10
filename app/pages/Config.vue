@@ -1,7 +1,7 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="auto, auto, auto, *" class="container">
-      <Label row="1" :text="'config.help' | L" class="helptext" textWrap="true"></Label>
+      <Label row="1" :text="'config.help' | L" class="helptext" textWrap="true" @tap="enableSpecialMode"></Label>
       <StackLayout row="2" class="hr m-20"></StackLayout>
       <StackLayout row="3" class="settings">
         <!-- <StackLayout class="setting" orientation="horizontal">
@@ -19,6 +19,10 @@
         <StackLayout class="setting" orientation="horizontal">
           <Switch v-model="toggleScreenOn"  />
           <Label class="m-y-auto" :text="'config.screenon' | L" textWrap="true"></Label>
+        </StackLayout>
+        <StackLayout class="setting" orientation="horizontal" v-if="specialMode">
+          <Button class="-primary -rounded-sm" text="refresh data" @tap="refreshData" />
+          <Label class="m-y-auto" text="Tik om data te verversen" textWrap="true"></Label>
         </StackLayout>
         <!-- <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
           <Button class="-primary -rounded-sm" text="download" @tap="downloadAll" />
@@ -50,11 +54,12 @@ export default {
   data() {
     return {
       loading: false,
-      allDownloaded: false
+      allDownloaded: false,
+      specialMode: false,
+      enableSpecialModeCnt: 0
     }
   },
   computed: {
-
     toggleScreenOn: {
       get() {
         return getBoolean('screenOnWithMap')
@@ -92,6 +97,12 @@ export default {
   methods: {
     close() {
       this.$modal.close();
+    },
+    enableSpecialMode() {
+      this.enableSpecialModeCnt++
+      if (this.enableSpecialModeCnt > 2) {
+        this.specialMode = true
+      }
     },
     onLoaded() {
       this.$store.commit("setCurrentPage", { name: "config", instance: this });
