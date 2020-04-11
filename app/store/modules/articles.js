@@ -1,10 +1,12 @@
 import { ArticlesService } from "~/services/articlesService"
+import * as myUtils from "~/plugins/utils";
 
 
 export const state = () => {
   return {
     articles: [],
     currentArticle: null,
+    lastUpdate: new Date(1945, 3, 11),
     categories: ['news', 'event', 'story']
   }
 }
@@ -18,35 +20,38 @@ export const getters = {
   getArticles(state) {
     return state.articles
   },
-  getNews (state) {
+  getNews(state) {
     return state.articles.filter(a => a.category === 'news')
   },
-  getCredits (state) {
+  getCredits(state) {
     const ret = state.articles.filter(a => a.category === 'credits')
     if (ret && ret.length > 0) {
       return ret[0]
     }
     return ''
   },
-  getHelp (state) {
+  getHelp(state) {
     const ret = state.articles.filter(a => a.category === 'help')
     if (ret && ret.length > 0) {
       return ret[0]
     }
     return ''
   },
-  getContact (state) {
+  getContact(state) {
     const ret = state.articles.filter(a => a.category === 'contact')
     if (ret && ret.length > 0) {
       return ret[0]
     }
     return ''
   },
-  getEvents (state) {
+  getEvents(state) {
     return state.articles.filter(a => a.category === 'event')
   },
-  getStories (state) {
+  getStories(state) {
     return state.articles.filter(a => a.category === 'story')
+  },
+  articlesLastUpdate(state) {
+    return state.lastUpdate
   }
 }
 
@@ -70,6 +75,12 @@ export const mutations = {
   },
   setArticles(state, articles) {
     state.articles = articles
+    state.articles.forEach(doc => {
+      if(!doc.updatedDate) return 0
+      if(doc.updatedDate > state.lastUpdate) {
+        state.lastUpdate = doc.updatedDate
+      }
+    })
   }
 }
 

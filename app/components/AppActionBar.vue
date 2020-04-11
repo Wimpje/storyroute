@@ -21,7 +21,7 @@
         :icon="menuIcon"
         @tap="androidMenuTap"></NavigationButton> 
       <ActionItem
-        android.position="popup"
+        android.position="actionBar"
         android.systemIcon="ic_menu_share"
         :text="'btn.share' | L"
         v-show="shouldShowShare"

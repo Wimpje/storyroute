@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       enableMyLocation: true,
-      enableMyLocationButton: true,
       enableCompass: true,
       enableTilt: true,
       latitude: 52.4958,

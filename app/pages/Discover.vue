@@ -13,7 +13,7 @@
 
       <ScrollView
         row="0"
-        v-if="pageName === 'discover' && listviewLoaded"
+        v-if="showCategories"
         verticalAlignment="bottom"
         :marginBottom="marginBottomButtons"
         :width="widthButtons"
@@ -23,11 +23,13 @@
           <Button
             v-for="category in categories"
             :key="category"
+            
             :text="`discover.category.${category}` | L"
             @tap="filterCategory(category)"
             horizontalAlignment="center"
             verticalAlignment="middle"
             class="categoryButton m-x-4"
+            :class="category == currentCategory ? 'selected' : ''"
           ></Button>
         </StackLayout>
       </ScrollView>
@@ -201,6 +203,9 @@ export default {
         else return [];
       }
     },
+    showCategories() {
+      return this.pageName === 'discover' && this.listPois.length > 0
+    },
     pageName() {
       return this.route ? "route" : "discover";
     },
@@ -217,6 +222,7 @@ export default {
       } else if (this.pois) {
         // get all points without tag == 'aanwijzing'
         return this.pois.filter(p => {
+          p.selected = false
           if (p.tags && p.tags.length) {
             for (let ti = 0; ti < p.tags.length; ti++) {
               // if we display points only, remove 'aanwijzing' points
@@ -354,7 +360,6 @@ export default {
           curPointIndex = idx;
         }
       }
-      this.$refs.listView.nativeView.selectItemAt(curPointIndex)
       console.log(
         `scrolling to pois[${curPointIndex}]: ${marker.userData.title}`
       );
@@ -364,6 +369,8 @@ export default {
           false,
           ListViewItemSnapMode.Center
         );
+        this.$refs.listView.nativeView.selectItemAt(curPointIndex)
+
       });
     },
     showPointInfo(poi) {
@@ -514,10 +521,11 @@ export default {
     },
     onMapReady() {
       console.log("discover reports: mapready");
-      this.mapReady = true;
       this.listPois.push(this.getPoisForView);
       this.$refs.listView.refresh();
       this.$refs.gMap.addMapMarkers();
+      this.mapReady = true;
+
       if (!this.dontResize) {
         console.log("resizing map");
         this.$refs.gMap.fitMapToPois(this.listPois);
@@ -549,6 +557,9 @@ export default {
   font-size: 14;
   height: 22;
   border-radius: 10;
+  &.selected {
+    background-color: #ccc;
+  }
 }
 .overlayLabel {
   color: black;

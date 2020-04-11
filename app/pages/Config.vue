@@ -1,7 +1,13 @@
 <template>
   <Page class="page" @loaded="onLoaded" actionBarHidden="true">
     <GridLayout rows="auto, auto, auto, *" class="container">
-      <Label row="1" :text="'config.help' | L" class="helptext" textWrap="true" @tap="enableSpecialMode"></Label>
+      <Label
+        row="1"
+        :text="'config.help' | L"
+        class="helptext"
+        textWrap="true"
+        @tap="enableSpecialMode"
+      ></Label>
       <StackLayout row="2" class="hr m-20"></StackLayout>
       <StackLayout row="3" class="settings">
         <!-- <StackLayout class="setting" orientation="horizontal">
@@ -9,20 +15,26 @@
           <Label :text="'Dark mode' | L"></Label>
         </StackLayout>-->
         <StackLayout class="setting" orientation="horizontal">
-          <Switch v-model="toggleAnalytics"/>
+          <Switch v-model="toggleAnalytics" />
           <Label class="m-y-auto" :text="'config.analyticsInfo' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal">
-          <Switch v-model="toggleCrashInfo"  />
+          <Switch v-model="toggleCrashInfo" />
           <Label class="m-y-auto" :text="'config.crashInfo' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal">
-          <Switch v-model="toggleScreenOn"  />
+          <Switch v-model="toggleScreenOn" />
           <Label class="m-y-auto" :text="'config.screenon' | L" textWrap="true"></Label>
         </StackLayout>
         <StackLayout class="setting" orientation="horizontal" v-if="specialMode">
           <Button class="-primary -rounded-sm" text="refresh data" @tap="refreshData" />
           <Label class="m-y-auto" text="Tik om data te verversen" textWrap="true"></Label>
+        </StackLayout>
+        <StackLayout v-if="specialMode">
+          <StackLayout row="2" class="hr m-20"></StackLayout>
+          <Label class="m-y-auto" :text="'Artikelen: ' + articlesLastUpdate" textWrap="true"></Label>
+          <Label class="m-y-auto" :text="'Punten: ' + poisLastUpdate" textWrap="true"></Label>
+          <Label class="m-y-auto" :text="'Routes: ' + routesLastUpdate" textWrap="true"></Label>
         </StackLayout>
         <!-- <StackLayout class="setting" orientation="horizontal" v-if="!allDownloaded">
           <Button class="-primary -rounded-sm" text="download" @tap="downloadAll" />
@@ -34,7 +46,7 @@
         </StackLayout>
         <StackLayout v-if="isDebug" class="setting" orientation="horizontal">
           <Button class="danger -rounded-sm" text="crash!" @tap="crash" ></Button>
-        </StackLayout> -->
+        </StackLayout>-->
       </StackLayout>
     </GridLayout>
   </Page>
@@ -46,10 +58,11 @@ import Theme from "@nativescript/theme";
 import * as firebase from "nativescript-plugin-firebase";
 import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
 import * as utils from "~/plugins/utils";
+import { mapGetters } from "vuex";
 
 export default {
   mounted() {
-    this.allDownloaded = getBoolean('allDownloaded', false)
+    this.allDownloaded = getBoolean("allDownloaded", false);
   },
   data() {
     return {
@@ -57,41 +70,42 @@ export default {
       allDownloaded: false,
       specialMode: false,
       enableSpecialModeCnt: 0
-    }
+    };
   },
   computed: {
+    ...mapGetters(["routesLastUpdate", "articlesLastUpdate", "poisLastUpdate"]),
+
     toggleScreenOn: {
       get() {
-        return getBoolean('screenOnWithMap')
+        return getBoolean("screenOnWithMap");
       },
       set(val) {
         console.log("screenOnWithMap", val);
-        setBoolean('screenOnWithMap', val)
+        setBoolean("screenOnWithMap", val);
       }
     },
     toggleCrashInfo: {
       get() {
-        return getBoolean('googleCrashlytics')
+        return getBoolean("googleCrashlytics");
       },
       set(val) {
         console.log("toggleCrashConfig", val);
-        setBoolean('googleCrashlytics', val)
+        setBoolean("googleCrashlytics", val);
         firebase.crashlytics.setCrashlyticsCollectionEnabled(val);
       }
     },
     isDebug() {
-      return TNS_ENV !== 'production'
+      return TNS_ENV !== "production";
     },
     toggleAnalytics: {
-      get () {
-        return getBoolean('googleAnalytics')
+      get() {
+        return getBoolean("googleAnalytics");
       },
-      set (val) {
+      set(val) {
         console.log("toggle analytics", val);
-        setBoolean('googleAnalytics', val)
+        setBoolean("googleAnalytics", val);
         firebase.analytics.setAnalyticsCollectionEnabled(val);
       }
-
     }
   },
   methods: {
@@ -99,26 +113,37 @@ export default {
       this.$modal.close();
     },
     enableSpecialMode() {
-      this.enableSpecialModeCnt++
+      this.enableSpecialModeCnt++;
       if (this.enableSpecialModeCnt > 2) {
-        this.specialMode = true
+        this.specialMode = true;
       }
     },
     onLoaded() {
       this.$store.commit("setCurrentPage", { name: "config", instance: this });
-  
+
       if (!this.credits) {
-        this.$store.dispatch("getArticles").then(() => {
-          this.loading = false
-          
-        }).catch(err => {
-          this.loading = false
-        })
+        this.$store
+          .dispatch("getArticles")
+          .then(() => {
+            this.loading = false;
+          })
+          .catch(err => {
+            this.loading = false;
+          });
       }
     },
-
+    refreshData() {
+      utils
+        .loadFirebaseData()
+        .then(() => {
+          this.$store.dispatch('updateArticles')
+        })
+        .catch(err => {
+          this.loadingTrouble = localize("message.loadingTroubleFinal");
+        });
+    },
     downloadAll() {
-      this.$toast.show('Sorry not supported yet')
+      this.$toast.show("Sorry not supported yet");
       // utils.downloadAllResources()
     },
     toggleDark() {
@@ -136,7 +161,7 @@ export default {
   margin: 20;
 }
 .helptext {
-  margin-bottom:20;
+  margin-bottom: 20;
 }
 .danger {
   background-color: #dd3d31;

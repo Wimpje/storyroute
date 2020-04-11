@@ -1,10 +1,12 @@
 import { PoiService } from "~/services/poiService"
+import * as myUtils from "~/plugins/utils";
 
 
 export const state = () => {
   return {
     pois: [],
     tags: [],
+    lastUpdate: new Date(1945, 3, 11),
     currentPoi: null
   }
 }
@@ -14,6 +16,9 @@ export const getters = {
   },
   getPois(state) {
     return state.pois
+  },
+  poisLastUpdate(state) {
+    return state.lastUpdate
   }
 }
 
@@ -46,6 +51,12 @@ export const mutations = {
   },
   setPois(state, pois) {
     state.pois = pois
+    state.pois.forEach(doc => {
+      if(!doc.updatedDate) return 0
+      if(doc.updatedDate > state.lastUpdate) {
+        state.lastUpdate = doc.updatedDate
+      }
+    })
   }
 }
 

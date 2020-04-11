@@ -81,9 +81,6 @@ export default {
   background-color: #ddd;
 }
 
-.ns-dark .routeSubTitle {
-  color: white;
-}
 .routeTitle {
   font-size: 18;
   font-weight: bold;

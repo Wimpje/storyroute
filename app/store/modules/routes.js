@@ -1,8 +1,10 @@
 import { RouteService } from "~/services/routeService"
+import * as myUtils from "~/plugins/utils";
 
 export const state = () => {
   return {
     routes: [],
+    lastUpdate: new Date(1945, 3, 11),
     currentRoute: null,
   }
 }
@@ -15,6 +17,9 @@ export const getters = {
   },
   getRoutesStartPois(state) {
     return state.routes.map(route => route.pois[0])
+  },
+  routesLastUpdate(state) {
+    return state.lastUpdate
   }
 }
 
@@ -34,6 +39,13 @@ export const mutations = {
   },
   setRoutes(state, routes) {
     state.routes = routes
+    
+    state.routes.forEach(doc => {
+      if(!doc.updatedDate) return 0
+      if(doc.updatedDate > state.lastUpdate) {
+        state.lastUpdate = doc.updatedDate
+      }
+    })
   },
   setCurrentRouteToNone(state) {
     state.currentRoute = null

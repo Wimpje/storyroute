@@ -14,7 +14,7 @@
 
         <TabContentItem v-for="(category, idx) in categories"  :key="category">
             <GridLayout class="m-10">
-              <RadListView row="1" for="item in articles[category]" height="100%" @itemTap="loadArticle">
+              <RadListView for="item in articles[category]" height="100%" @itemTap="loadArticle">
                 <v-template>
                   <GridLayout class="article" columns="80, *" rows="auto, auto, *">
                     <CachedImage
@@ -46,13 +46,8 @@
                       verticalAlignment="top"
                       textWrap="true"
                       :text="item.text ? item.text.replace(/#/i, '') : ''"
+                      @loaded="textLabelLoaded"
                     ></Label>
-                    <Label col="0"
-                      colSpan="2"
-                      row="2"
-                      height="80"
-                      class="overlay"
-                      ></Label>
                   </GridLayout>
                 </v-template>
               </RadListView>
@@ -172,10 +167,14 @@ export default {
     },
     textLabelLoaded(args) {
       if (isIOS) {
-        args.object.ios.numberOfLines = 2;
+        args.object.ios.numberOfLines = 4;
+        args.object.ios.adjustsFontSizeToFitWidth = false;
+        args.object.ios.lineBreakMode = NSLineBreakMode.ByTruncatingTail;
+
       }
       if (isAndroid) {
-        args.object.android.setMaxLines(2);
+        args.object.android.setMaxLines(4);
+        args.object.android.setEllipsize(android.text.TextUtils.TruncateAt.END);
       }
     },
     reloadData() {
@@ -195,14 +194,6 @@ export default {
   background-color: #ddd;
   
   color: black;
-}
-.overlay {
-  $color: rgba(255,255,255,1);
-  background: linear-gradient(0deg, $color 18%, rgba(255,255,255,0) 75%);
-}
-.ns-dark .overlay {
-  $color:rgba(255,255,255,0);
-  background: linear-gradient(0deg, $color 18%, rgba(255,255,255,0) 75%);
 }
 .tab {
   font-size: 20;

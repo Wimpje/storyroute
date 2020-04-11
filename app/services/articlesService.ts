@@ -14,6 +14,8 @@ export class ArticlesService {
       console.log('ArticlesService - from "cache"')
       return this.documents
     }
+    console.log('ArticlesService - retrieving from FB')
+
     const documents = []
     try {
       const snapShot = await this.collection.get()

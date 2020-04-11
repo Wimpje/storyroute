@@ -47,6 +47,8 @@
       </ScrollView>
       <Button
         row="0"
+        android:androidElevation="5"
+        ios:border="1"
         verticalAlignment="bottom"
         horizontalAlignment="right"
         class="-rounded-sm startRouteButton"
@@ -72,7 +74,6 @@ export default {
     getLanguage() {
       return device.language.split("-")[0];
     },
-    // TODO ON NAVIGATE BACK SET CURRENT PAGE NOT WORKING
     onLoaded() {
       this.$store.commit("setCurrentPage", {
         name: "routeinfo",
@@ -135,8 +136,9 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.ns-ios .startRouteButton { 
-  border-width: 1;
+.ns-ios .startRouteButton{
+  border-width: 2;
+  border-color: #bbb;
 }
 .startRouteButton {
   margin-bottom: 20;
@@ -146,7 +148,7 @@ export default {
   width: 100;
   border-radius: 50;
   text-align: center;
-  android-elevation:5;
+  color: black;
 }
 .routeImage {
   margin-bottom: 10;
