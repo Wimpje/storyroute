@@ -62,18 +62,17 @@
             <GridLayout>
               <CardView class="cardStyle" radius="10" height="110" width="130">
                 <GridLayout rows="auto, 60" cols="auto" padding="2">
+                  <CachedImage padding="3" verticalAlignment="top" horizontalAlignment="left" :source="getPoiIcon(poi)" row="0" col="0" height="20" width="20"></CachedImage>
                   <Label
                     row="0"
                     col="0"
                     class="info"
+                    paddingLeft="22"
                     horizontalAlignment="center"
                     verticalAlignment="bottom"
                     textWrap="true"
+                    :text="getPoiTitle(poi)"
                   >
-                    <FormattedString>
-                      <Span class="fas" text.decode="&#xf3c5; " />
-                      <Span :text="getPoiTitle(poi)" />
-                    </FormattedString>
                   </Label>
                   <CachedImage
                     verticalAlignment="bottom"
@@ -193,7 +192,7 @@ export default {
     orientation() {
       return this.screenOrientation === "landscape" ? "vertical" : "horizontal";
     },
-
+   
     // depending on what is showing, return paths for routes
     paths() {
       if (this.route) return [this.route.path];
@@ -347,7 +346,10 @@ export default {
         return imgs[0].firebaseUrl;
       }
     },
-
+    getPoiIcon(poi) {
+      const icon = utils.getPoiIcon(poi)
+      return `~/assets/images/markers/${icon}@1.5x.png`
+    },
     scrollToPoint(marker) {
       if (!marker || !marker.userData || !marker.userData.id) return;
 

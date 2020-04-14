@@ -140,6 +140,9 @@ export default {
   border-width: 2;
   border-color: #bbb;
 }
+.ns-dark .startRouteButton {
+  color: white;
+}
 .startRouteButton {
   margin-bottom: 20;
   padding: 10;

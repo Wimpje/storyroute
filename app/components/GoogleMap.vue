@@ -34,6 +34,7 @@ import mapStyles from "~/assets/mapStyles.js";
 import { Image } from "tns-core-modules/ui/image/image";
 import { ImageSource } from "tns-core-modules/image-source";
 import * as application from "tns-core-modules/application";
+import * as utils from "~/plugins/utils";
 
 export default {
   props: ["pois", "currentPoi", "padding", "paths"],
@@ -196,16 +197,25 @@ export default {
       // this.mapview.infoWindowTemplate = ''
       this.mapView.setStyle(mapStyles.retro);
 
-      if (isAndroid && geolocation.isEnabled()) {
+      if (isAndroid) {
         let uiSettings = gMap.getUiSettings();
-        uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setTiltGesturesEnabled(true);
         uiSettings.setRotateGesturesEnabled(true);
-        gMap.setMyLocationEnabled(true);
+
+        geolocation.isEnabled().then(enabled => {
+          if(enabled) {
+            uiSettings.setMyLocationButtonEnabled(true);
+            gMap.setMyLocationEnabled(true);
+          }
+        })
       }
       if (isIOS) {
-        gMap.myLocationEnabled = true;
-        gMap.settings.myLocationButton = true;
+        geolocation.isEnabled().then(enabled => {
+          if(enabled) {
+            gMap.myLocationEnabled = true;
+            gMap.settings.myLocationButton = true;
+          }
+        })
         gMap.settings.tiltGesturesEnabled = true;
         this.mapView.on("myLocationTapped", event => {
           console.log('IOS tapped on "my location" button');
@@ -239,59 +249,7 @@ export default {
             m.hideInfoWindow()
         }
       })
-      
     },
-    addMarkerIcon(marker, poi) {
-      //TODO icon map somewhere in settings
-      const iconMap = {
-        stolperstein: "starofdavid",
-        winkel: "shop",
-        vliegtuig: "plane",
-        start: "start",
-        cafe: "coffee",
-        restaurant: "restaurant"
-      };
-
-      if (poi.tags) {
-        let icon = "pin";
-        if (poi.start) {
-          icon = "start"
-        }
-        else if (poi.routePoint) {
-          // no special markers, but add index to image (?)
-        }
-        else if (Array.isArray(poi.tags)) {
-          for (let tagIndex = 0; tagIndex < poi.tags.length; tagIndex++) {
-            const tag = poi.tags[tagIndex].toLowerCase().trim();
-            if (tag && iconMap[tag]) {
-              icon = iconMap[tag];
-              break;
-            }
-          }
-        }
-        if (icon) {
-          // TODO cache?
-          const iconImg = new Image();
-
-          if (isIOS) {
-            //iconImg.imageSource = ImageSource.fromResourceSync(icon);
-            //console.log(`LOADING > ~/assets/images/markers/${icon}@0.75x.png`);
-            iconImg.imageSource = ImageSource.fromFileSync(
-              `~/assets/images/markers/${icon}@0.75x.png`
-            );
-          } else {
-            // in android the resources are too big, so just using two sizes...
-            //console.log(`LOADING > ~/assets/images/markers/${icon}@1.5x.png`);
-            iconImg.imageSource = ImageSource.fromFileSync(
-              `~/assets/images/markers/${icon}@1.5x.png`
-            );
-          }
-
-          marker.icon = iconImg;
-        }
-      }
-    },
-
     addMarkerFromPoi(poi, idx) {
       const poiMarker = new Marker();
       poiMarker.position = Position.positionFromLatLng(
@@ -390,7 +348,7 @@ export default {
           this.mapView.gMap.animateCamera(cameraUpdate);
         }
         else {
-          this.gMap.moveCamera(cameraUpdate);
+          this.mapView.gMap.moveCamera(cameraUpdate);
         }
       }
     },
@@ -484,7 +442,23 @@ export default {
         this.pois.forEach(poi => {
           const marker = this.addMarkerFromPoi(poi, poiIndex);
           this.markers.push(marker)
-          this.addMarkerIcon(marker, poi);
+          const icon = utils.getPoiIcon(poi);
+          if (icon) {
+            // TODO cache?
+            const iconImg = new Image();
+
+            if (isIOS) {
+              iconImg.imageSource = ImageSource.fromFileSync(
+                `~/assets/images/markers/${icon}@0.75x.png`
+              );
+            } else {
+              iconImg.imageSource = ImageSource.fromFileSync(
+                `~/assets/images/markers/${icon}@1.5x.png`
+              );
+            }
+
+            marker.icon = iconImg;
+          }
           poiIndex++
         });
       }

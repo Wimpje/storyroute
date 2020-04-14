@@ -9,6 +9,7 @@ import Articles from "~/pages/Articles.vue";
 import TestGeo from "~/pages/TestGeo.vue";
 import RouteInfo from "~/pages/RouteInfo.vue";
 import ArticleInfo from "~/pages/ArticleInfo.vue";
+import ImageInfo from "~/pages/ImageInfo.vue";
 import * as utils from "~/plugins/utils";
 import * as firebase from"nativescript-plugin-firebase";
 import { localize } from "nativescript-localize";
@@ -24,6 +25,7 @@ const pages = {
   help: Help,
   articles: Articles,
   testgeo: TestGeo,
+  imageinfo: ImageInfo,
   articleinfo: ArticleInfo
 };
 
@@ -37,6 +39,7 @@ const pagesInfo = {
   route: {      name: 'route', icon: "0xf4d7", text: "nav.route", page: pages.discover, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share'] },
   routeinfo: {  name: 'routeinfo', icon: "0xf4d7", text: "nav.routeinfo", page: pages.routeinfo, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share']},
   pointinfo: {  name: 'pointinfo', icon: "0xf3c5", text: "nav.pointinfo", page: pages.pointinfo, sideDrawer: false, isTabView: false, isModal: false, menuItems: ['maps','share'] },
+  imageinfo: {  name: 'imageinfo', icon: "0xf7a2", text: "nav.imageinfo", page: pages.imageinfo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
   testgeo: {    name: 'testgeo', icon: "0xf7a2", text: "nav.geotest", page: pages.testgeo, sideDrawer: false, isTabView: false, isModal: true, props: { fullscreen: true } },
   config: {     name: 'config', icon: "0xf013", text: "nav.config", page: pages.config, sideDrawer: true, isTabView: false, isModal: false, mainContent: true  },
   help: {       name: 'help', icon: "0xf059", text: "nav.help", page: pages.help, sideDrawer: true, isTabView: false, isModal: false, mainContent: true },

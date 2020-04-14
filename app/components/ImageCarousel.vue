@@ -13,10 +13,9 @@
       <CarouselItem
         v-for="(item, i) in allImages"
         :key="i"
-        @tap="imageTapped"
         verticalAlignment="bottom"
       >
-        <GridLayout rows="*, auto" height="100%">
+        <GridLayout rows="*, auto" height="100%" @tap="imageTapped(item)">
           <CachedImage
             row="0"
             width="100%"
@@ -41,9 +40,13 @@
 </template>
 
 <script>
+import * as utils from "~/plugins/utils"
+import ImageInfo from "~/pages/ImageInfo.vue"
+
 export default {
-  components: {},
-  props: ["images", "stretch"],
+  components: {
+  },
+  props: ["images", "stretch", "disableModal"],
   watch: {
     // hack, according to demo of nativesccript-carousel on github
     async images(to) {
@@ -73,6 +76,13 @@ export default {
     },
     imageTapped(i) {
       console.log("tapped image", i);
+      if(!this.disableModal) {
+        this.$myNavigateTo("imageinfo", {
+          props: {
+            image: i
+          }
+        })
+      }
     }
   }
 };

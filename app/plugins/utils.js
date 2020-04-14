@@ -238,6 +238,29 @@ Vue.prototype.$myNavigateTo = function(to, props) {
   })
 }
 
+export const getPoiIcon = (poi) => {
+  const iconMap = store.getters.iconMap
+  let icon = "pin";
+  if (poi.tags && Array.isArray(poi.tags)) {
+    if (poi.start) {
+      icon = "start"
+    }
+    else if (poi.routePoint) {
+      // no special markers, but add index to image (?)
+    }
+    else if (Array.isArray(poi.tags)) {
+      for (let tagIndex = 0; tagIndex < poi.tags.length; tagIndex++) {
+        const tag = poi.tags[tagIndex].toLowerCase().trim();
+        if (tag && iconMap[tag]) {
+          icon = iconMap[tag];
+          break;
+        }
+      }
+    }
+  }
+  return icon
+}
+
 export const filterObject = (obj, predicate) =>
   Object.fromEntries(Object.entries(obj).filter(predicate));
 

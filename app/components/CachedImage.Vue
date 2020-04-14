@@ -4,6 +4,7 @@
     :src="image"
     :failureImageUri="noimageName"
     :placeholderImageUri="placeholder"
+    :showProgressBar="showProgressBar"
     @loaded="imageLoaded">
   </NSImg>
 </template>
@@ -13,7 +14,7 @@
 import { Cache } from "tns-core-modules/ui/image-cache";
 
 export default {
-  props: ["placeholder", "source", "noimage"],
+  props: ["placeholder", "source", "noimage", "showProgressBar"],
   data() {
     return {
       imageLoading: true,
@@ -44,7 +45,7 @@ export default {
   },
   methods: {
     imageLoaded(args) {
-      console.log('image loaded!')
+      console.log('image loaded!', this.source)
       this.imageLoading = false;
       //this.$emit('image_loaded', args.object)
     }
