@@ -213,7 +213,11 @@ Vue.prototype.$myNavigateTo = function(to, props) {
       }).then(res => {
         console.log('closing modal', props)
         console.log('... and setting currentPage back to where we came from', currentPage.name)
-        store.commit("setCurrentPage", { name: currentPage.name, instance: that });
+        const pageObj = { name: currentPage.name, instance: that }
+        if ('title' in currentPage) 
+          pageObj.title = currentPage.title
+
+        store.commit("setCurrentPage", pageObj);
         resolve()
       }).catch(err => reject(err))
     }
@@ -222,7 +226,7 @@ Vue.prototype.$myNavigateTo = function(to, props) {
       // mainContent hack, use existing frame to not break navigation
       const frame = 'frameTab' + tabIndex
       const p = { ...props, frame: frame }
-      if(toPage.mainContent) {
+      if (toPage.mainContent) {
         bottomNav.tabStrip.visibility = 'collapse'
       }
       console.log('... navigating in frame='+frame+' to page ', toPage.name)

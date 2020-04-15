@@ -1,5 +1,6 @@
 "_ios_info_plist_NSLocationWhenInUseUsageDescription_ZpKiIF" = "Find your current location to see interesting points nearby.";
 "_ios_info_plist_NSLocationUsageDescription_1bdb1b" = "Find your current location to see interesting points nearby.";
+"_message_imageinfo_mbAps" = "You can use 'pinch' and 'drag' gestures to zoom and pan the image.";
 "_message_tapAgainForInfo_2w13gF" = "Tap card again for more info";
 "_message_loadingTroubleFinal_1UHsFT" = "There is a problem retrieving data, our apologies. Maybe completely closing the app and restarting will help.";
 "_message_loadingTrouble_1XLkBq" = "There is a problem retrieving data, is wifi or mobile data enabled?";
@@ -57,6 +58,7 @@
 "_btn_close_ZyLgre" = "close";
 "_nav_doubletap_Z1jXp0x" = "Push back twice to exit app";
 "_nav_help_2pTWu6" = "Help";
+"_nav_imageinfo_Z1p7XCE" = "Image";
 "_nav_config_16IyMY" = "Configuration";
 "_nav_routeinfo_ZaAsTv" = "Route info";
 "_nav_pointinfo_1thFNC" = "Location info";

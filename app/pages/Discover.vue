@@ -61,15 +61,14 @@
           <v-template>
             <GridLayout>
               <CardView class="cardStyle" radius="10" height="110" width="130">
-                <GridLayout rows="auto, 60" cols="auto" padding="2">
-                  <CachedImage padding="3" verticalAlignment="top" horizontalAlignment="left" :source="getPoiIcon(poi)" row="0" col="0" height="20" width="20"></CachedImage>
+                <GridLayout rows="auto, *" cols="auto" padding="2">
                   <Label
                     row="0"
                     col="0"
                     class="info"
-                    paddingLeft="22"
                     horizontalAlignment="center"
-                    verticalAlignment="bottom"
+                    verticalAlignment="top"
+                    marginLeft="21"
                     textWrap="true"
                     :text="getPoiTitle(poi)"
                   >
@@ -84,6 +83,7 @@
                     :class="poi.selected ? 'image selected' : 'image'"
                     placeholder="~/assets/images/placeholder.png"
                   ></CachedImage>
+                  <CachedImage margin="3" verticalAlignment="top" horizontalAlignment="left" :source="getPoiIcon(poi)" row="0" col="0" height="20" width="20"></CachedImage>
                   <Label
                     v-if="poi.selected"
                     :text="'message.tapAgainForInfo' | L"

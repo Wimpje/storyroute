@@ -97,7 +97,8 @@
     "loadingTroubleInitial": "There is a problem retrieving data, maybe the connection is slow, please wait...",
     "loadingTrouble": "There is a problem retrieving data, is wifi or mobile data enabled?",
     "loadingTroubleFinal": "There is a problem retrieving data, our apologies. Maybe completely closing the app and restarting will help.",
-    "tapAgainForInfo": "Tap card again for more info"
+    "tapAgainForInfo": "Tap card again for more info",
+    "imageinfo": "You can use 'pinch' and 'drag' gestures to zoom and pan the image."
   },
   "ios.info.plist": {
     "NSLocationUsageDescription": "Find your current location to see interesting points nearby.",
