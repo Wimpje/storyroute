@@ -19,7 +19,7 @@
     "@nativescript/theme": "2.3.3",
     "@nstudio/nativescript-cardview": "^1.0.0",
     "@vue/devtools": "5.3.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "nativescript-audio": "^5.0.5",
     "nativescript-carousel": "^6.1.1",
