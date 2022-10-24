@@ -45,3 +45,5 @@ typings/
 .env.*.local
 app/App_Resources/Android/src/main/res/values/nativescript_google_maps_api.xml
 app/App_Resources/Android/values/nativescript_google_maps_api.xml
+/keys/
+/builds

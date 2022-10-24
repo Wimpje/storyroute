@@ -25,6 +25,8 @@
 
           <Label :text="point.title" class="h2 name" textWrap="true"></Label>
           <Label :text="point.description" class="body description" textWrap="true"></Label>
+          <UrlContents class="p-20 m-t-10" :addDivider="true" :urls="point.urls"></UrlContents>
+
           <StackLayout v-if="point.routeDescription">
             <StackLayout class="hr m-10"></StackLayout>
             <StackLayout orientation="horizontal">
@@ -36,8 +38,8 @@
               <Label :text="'route.directions' | L" class="h1 p-20 m-x-auto"></Label>
             </StackLayout>
             <Label :text="point.routeDescription" class="body description" textWrap="true"></Label>
-            <UrlContents row="2" class="p-20 m-t-10" :addDivider="true" :urls="point.urls"></UrlContents>
           </StackLayout>
+
         </StackLayout>
       </ScrollView>
     </GridLayout>
