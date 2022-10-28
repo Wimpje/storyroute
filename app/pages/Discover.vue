@@ -108,7 +108,7 @@
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters } from "vuex";
-import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
+import { keepAwake, allowSleepAgain } from "@nativescript-community/insomnia";
 import * as utils from "~/plugins/utils";
 import { firebase } from "@nativescript/firebase"
 import { ListViewItemSnapMode } from "nativescript-ui-listview";

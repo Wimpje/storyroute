@@ -18,7 +18,7 @@ import { android } from '@nativescript/core/application';
 
 import { AudioService } from "~/services/audioService"
 import { ToastService } from '~/services/toastService'
-import { allowSleepAgain } from "nativescript-insomnia";
+import { allowSleepAgain } from "@nativescript-community/insomnia";
 import * as utils from "~/plugins/utils";
 
 // UI-material components imports
@@ -27,7 +27,7 @@ Vue.use(BottomNavigation);
 import TabsPlugin from '@nativescript-community/ui-material-tabs/vue';
 Vue.use(TabsPlugin);
 import ImageModule from '@nativescript-community/ui-image/vue';
-import { initialize, shutDown } from '@nativescript-community/ui-image';
+import * as imageModule from '@nativescript-community/ui-image';
 Vue.use(ImageModule);
 
 
@@ -63,7 +63,7 @@ Vue.prototype.$toast = new ToastService()
 
 Application.on(Application.launchEvent, (args) => {
     // init settings or something?
-    initialize({ isDownsampleEnabled: true })
+    imageModule.initialize({ isDownsampleEnabled: true })
 });
 
 Application.on(Application.suspendEvent, (args) => {
@@ -93,7 +93,7 @@ Application.on(Application.exitEvent, (args) => {
   allowSleepAgain().then(function () {
     console.log("exitEvent: insomnia is inactive, good  night!");
   })
-  shutDown()
+  imageModule.shutDown()
 });
 
 let lastPress
