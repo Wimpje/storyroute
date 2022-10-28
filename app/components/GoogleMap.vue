@@ -441,7 +441,6 @@ export default {
         let poiIndex = 0
         this.markers = []
         this.pois.forEach(poi => {
-          console.log(JSON.stringify(poi, null, 2))
           const marker = this.addMarkerFromPoi(poi, poiIndex);
           this.markers.push(marker)
           const icon = utils.getPoiIcon(poi);
@@ -472,7 +471,7 @@ export default {
       this.$emit("onMarkerInfoWindowTapped", t);
     },
     onCameraChanged(args) {
-      console.log('Camera changed: ' + JSON.stringify(args.camera));
+      if(__DEV__) console.log('Camera changed: ' + JSON.stringify(args.camera));
       // set zoom to store
       this.$store.commit('setMapZoom', args.camera.zoom)
     }
