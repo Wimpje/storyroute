@@ -115,7 +115,6 @@ import { ListViewItemSnapMode } from "nativescript-ui-listview";
 import debounce from "lodash/debounce";
 import { ApplicationSettings, Utils } from "@nativescript/core";
 import { isIOS, isAndroid } from "@nativescript/core";
-import { ObservableArray } from "@nativescript/core/data/observable-array"
 
 export default {
   components: {
@@ -130,7 +129,7 @@ export default {
       mapReady: false,
       selectedItem: null,
       dontResize: false,
-      listPois: new ObservableArray(),
+      listPois: [],
       currentCategory: "all",
       ommenCenter: { position: { latitude: 52.4958, longitude: 6.44117 } },
       categories: ["all", "stolpersteine", "routes", "planes", "rest"],
@@ -268,7 +267,7 @@ export default {
     filterCategory(category) {
       console.log("filtering to category", category);
       this.currentCategory = category;
-      // TODO filter functino for listPois
+      // TODO filter function for listPois
 
       // idea: go over getPointsForView, check if they should be included in listPois, if so, check if they are there already
       // if not, push it in, otherwise leave as is.
@@ -355,7 +354,7 @@ export default {
       const l = this.listPois.length;
       let curPointIndex = 0;
       for (let idx = 0; idx < l; idx++) {
-        const poi = this.listPois.getItem(idx);
+        const poi = this.listPois[idx];
         poi.selected = false;
         if (poi.id === marker.userData.id) {
           curPointIndex = idx;
@@ -412,17 +411,15 @@ export default {
       if (isAndroid) return;
       console.log("itemDeselecting", index);
       this.selectedItem = null;
-      const item = this.listPois.getItem(index);
+      const item = this.listPois[index];
       item.selected = false;
-      this.listPois.setItem(index, item);
     },
     onItemDeselected({ index }) {
       if (isIOS) return;
       console.log("itemDeselected", index);
       this.selectedItem = null;
-      const item = this.listPois.getItem(index);
+      const item = this.listPois[index];
       item.selected = false;
-      this.listPois.setItem(index, item);
     },
     onItemSelected({ index }) {
       console.log("itemSelected", index);
@@ -430,9 +427,8 @@ export default {
 
       if (isIOS) this.listPois.forEach(poi => (poi.selected = false));
 
-      const item = this.listPois.getItem(index);
+      const item = this.listPois[index];
       item.selected = true;
-      this.listPois.setItem(index, item);
       this.$refs.gMap.showTitleForPoint(item);
       this.$refs.gMap.animateToPoint(
         item,
@@ -448,7 +444,7 @@ export default {
           this.selectedItem = null;
           if (isIOS) {
             setTimeout(() => {
-              this.listPois.getItem(event.index).selected = false;
+              this.listPois[event.index].selected = false;
             }, 100);
           }
           console.log("should load:", event.item.title);
@@ -469,7 +465,7 @@ export default {
         newScrollIndex = this.listPois.length - 1; // overflow issue
       }
       if (this.scrollIndex != newScrollIndex) {
-        const activePoi = this.listPois.getItem(newScrollIndex);
+        const activePoi = this.listPois[newScrollIndex];
         if (!activePoi) {
           console.error("could not determine active poi!");
           return;
@@ -522,7 +518,8 @@ export default {
     },
     onMapReady() {
       console.log("discover reports: mapready");
-      this.listPois.push(this.getPoisForView);
+      this.listPois = this.getPoisForView;
+      console.log(this.listPois.length)
       this.$refs.listView.refresh();
       this.$refs.gMap.addMapMarkers();
       this.mapReady = true;
