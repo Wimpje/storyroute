@@ -11,10 +11,6 @@
 
 <script>
 // TODO - store in filesystem for subsequent app loads ... 
-// import { Cache } from "@nativescript/core/ui/image-cache";
-
-import { ImageSource } from '@nativescript/core';
-
 
 export default {
   props: ["placeholder", "source", "noimage", "showProgressBar"],
@@ -31,10 +27,10 @@ export default {
   computed: {
     image() {
       if (this.source) {
-        return  ImageSource.fromFileSync(this.source)
+        return this.source
       } 
       else {
-        return  ImageSource.fromFileSync(this.noimageName)
+        return this.noimageName
       }
     },
     noimageName() {
@@ -48,7 +44,7 @@ export default {
   },
   methods: {
     imageLoaded(args) {
-      console.log('image loaded!', this.source)
+      console.log('image loaded!', args, this.source)
       this.imageLoading = false;
       //this.$emit('image_loaded', args.object)
     }
