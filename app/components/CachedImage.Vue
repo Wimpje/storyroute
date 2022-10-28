@@ -5,13 +5,16 @@
     :failureImageUri="noimageName"
     :placeholderImageUri="placeholder"
     :showProgressBar="showProgressBar"
-    @loaded="imageLoaded">
+    @finalImageSet="imageLoaded">
   </NSImg>
 </template>
 
 <script>
 // TODO - store in filesystem for subsequent app loads ... 
-import { Cache } from "tns-core-modules/ui/image-cache";
+// import { Cache } from "@nativescript/core/ui/image-cache";
+
+import { ImageSource } from '@nativescript/core';
+
 
 export default {
   props: ["placeholder", "source", "noimage", "showProgressBar"],
@@ -28,10 +31,10 @@ export default {
   computed: {
     image() {
       if (this.source) {
-        return this.source
+        return  ImageSource.fromFileSync(this.source)
       } 
       else {
-        return this.noimageName
+        return  ImageSource.fromFileSync(this.noimageName)
       }
     },
     noimageName() {

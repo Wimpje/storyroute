@@ -110,13 +110,12 @@ import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters } from "vuex";
 import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
 import * as utils from "~/plugins/utils";
-import * as firebase from "nativescript-plugin-firebase";
+import { firebase } from "@nativescript/firebase"
 import { ListViewItemSnapMode } from "nativescript-ui-listview";
 import debounce from "lodash/debounce";
-import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
-import * as utilsModule from "tns-core-modules/utils/utils";
-import { isIOS, isAndroid } from "@nativescript/core/ui/page/page";
-import { ObservableArray } from "tns-core-modules/data/observable-array";
+import { ApplicationSettings, Utils } from "@nativescript/core";
+import { isIOS, isAndroid } from "@nativescript/core";
+import { ObservableArray } from "@nativescript/core/data/observable-array"
 
 export default {
   components: {
@@ -140,7 +139,7 @@ export default {
   },
   beforeDestroy() {
     console.log("DESTROY");
-    if (getBoolean("screenOnWithMap")) {
+    if (ApplicationSettings.getBoolean("screenOnWithMap")) {
       allowSleepAgain().then(function() {
         console.log("go to sleep little baby");
       });
@@ -156,17 +155,17 @@ export default {
         // left = scroll
         const rightPadding = isIOS
           ? 150
-          : utilsModule.layout.toDevicePixels(160);
+          : Utils.layout.toDevicePixels(160);
         // bottom = buttons
         const bottomPadding = isIOS
           ? 30
-          : utilsModule.layout.toDevicePixels(30);
+          : Utils.layout.toDevicePixels(30);
 
         return [0, bottomPadding, 0, rightPadding];
       } else {
         const bottomPadding = isIOS
           ? 170
-          : utilsModule.layout.toDevicePixels(170);
+          : Utils.layout.toDevicePixels(170);
         return [0, bottomPadding, 0, 0];
       }
     },
@@ -260,7 +259,7 @@ export default {
       if (this.pageName === "route") curPage.title = this.route.title;
       this.$store.commit("setCurrentPage", curPage);
 
-      if (getBoolean("screenOnWithMap")) {
+      if (ApplicationSettings.getBoolean("screenOnWithMap")) {
         keepAwake().then(function() {
           console.log("Insomnia is active");
         });

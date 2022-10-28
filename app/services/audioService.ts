@@ -10,7 +10,7 @@ export class AudioService {
 
   constructor() {
     this._player = new TNSPlayer();
-    this._player.debug = TNS_ENV !== 'production'
+    this._player.debug = __DEV__
     this._fileInitialized = false
     this._currentFile = null
     this._loading = false

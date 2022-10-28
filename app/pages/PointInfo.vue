@@ -46,12 +46,10 @@
   </Page>
 </template>
 <script>
-import * as utils from "~/plugins/utils";
 import ImageCarousel from "~/components/ImageCarousel";
 import AudioPlayer from "~/components/AudioPlayer";
-import * as firebase from "nativescript-plugin-firebase";
 import UrlContents from "~/components/UrlContents";
-import { isAndroid } from "tns-core-modules/platform";
+import { isAndroid } from "@nativescript/core";
 
 export default {
   components: {

@@ -11,9 +11,9 @@
 
 <script>
 import { SlideInOnTopTransition } from "nativescript-ui-sidedrawer";
-import * as dialogs from "tns-core-modules/ui/dialogs";
-import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
-import { localize } from "nativescript-localize";
+import { dialogs } from "@nativescript/core/ui";
+import { ApplicationSettings } from "@nativescript/core";
+import { localize } from "@nativescript/localize";
 import { device } from "@nativescript/core/platform";
 
 export default {
@@ -32,7 +32,7 @@ export default {
     showLanguageWarningPopup() {
       const lang = device.language.split("-")[0];
       console.log("User language = ", lang);
-      if (lang !== "nl" && !getBoolean("englishMessageDisplayed", false)) {
+      if (lang !== "nl" && !ApplicationSettings.getBoolean("englishMessageDisplayed", false)) {
         console.log("will show english dialog");
         dialogs
           .alert({
@@ -42,7 +42,7 @@ export default {
           })
           .then(() => {
             console.log("English message dialog closed!");
-            setBoolean("englishMessageDisplayed", true);
+            ApplicationSettings.setBoolean("englishMessageDisplayed", true);
           });
       }
     }
@@ -51,5 +51,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-//@import "~@nativescript/theme/scss/variables/grey";
+//@import "@nativescript/theme/scss/variables/grey";
 </style>

@@ -41,9 +41,7 @@
 </template>
 
 <script>
-import * as utils from "utils/utils";
-import { layout } from 'utils/utils';
-import { isIOS, isAndroid } from "@nativescript/core/ui/page/page";
+import { Utils } from '@nativescript/core';
 
 // gesture support thanks to https://github.com/vakrilov/native-script-pan-scale-demo/
 export default {
@@ -65,7 +63,7 @@ export default {
     onLoaded() {
       this.$store.commit("setCurrentPage", { name: "imageinfo", instance: this });
       this.item = this.$refs.image.nativeView
-      this.density = utils.layout.getDisplayDensity()
+      this.density = Utils.layout.getDisplayDensity()
       this.item.translateX = 0;
       this.item.translateY = 0;
       this.item.scaleX = 1;
@@ -93,14 +91,14 @@ export default {
           const newOriginX = args.getFocusX() - this.item.translateX;
           const newOriginY = args.getFocusY() - this.item.translateY;
 
-          const oldOriginX = this.item.originX * layout.toDeviceIndependentPixels(this.item.getMeasuredWidth());
-          const oldOriginY = this.item.originY * layout.toDeviceIndependentPixels(this.item.getMeasuredHeight());
+          const oldOriginX = this.item.originX * Utils.layout.toDeviceIndependentPixels(this.item.getMeasuredWidth());
+          const oldOriginY = this.item.originY * Utils.layout.toDeviceIndependentPixels(this.item.getMeasuredHeight());
 
           this.item.translateX += (oldOriginX - newOriginX) * (1 - this.item.scaleX);
           this.item.translateY += (oldOriginY - newOriginY) * (1 - this.item.scaleY);
 
-          this.item.originX = newOriginX / layout.toDeviceIndependentPixels(this.item.getMeasuredWidth());
-          this.item.originY = newOriginY / layout.toDeviceIndependentPixels(this.item.getMeasuredHeight());
+          this.item.originX = newOriginX / Utils.layout.toDeviceIndependentPixels(this.item.getMeasuredWidth());
+          this.item.originY = newOriginY / Utils.layout.toDeviceIndependentPixels(this.item.getMeasuredHeight());
 
           this.startScale = this.item.scaleX;
       }

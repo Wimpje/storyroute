@@ -1,4 +1,6 @@
-import * as firebase from "nativescript-plugin-firebase";
+import { firestore } from "@nativescript/firebase";
+import { crashlytics } from "@nativescript/firebase/crashlytics";
+
 
 // can probably be abstracted even more (since the name of the collection is all that is different from routes / news / whatever colelction)
 export class RouteService {
@@ -6,7 +8,7 @@ export class RouteService {
   documents: Array<any>;
 
   constructor() {
-    this.collection = firebase.firestore.collection('routes')
+    this.collection = firestore.collection('routes')
   }
 
   public async getRoute(route) {
@@ -34,7 +36,7 @@ export class RouteService {
       })
     }
     catch (e) {
-      firebase.crashlytics.log(e)
+      crashlytics.log(e)
       console.error(e);
     }
     return this.documents = documents

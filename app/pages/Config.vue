@@ -53,16 +53,17 @@
 </template>
 
 <script>
-import * as application from "tns-core-modules/application";
 import Theme from "@nativescript/theme";
-import * as firebase from "nativescript-plugin-firebase";
-import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
+import { firebase, analytics } from "@nativescript/firebase"
+import { crashlytics } from "@nativescript/firebase/crashlytics";
+
+import { ApplicationSettings } from "@nativescript/core";
 import * as utils from "~/plugins/utils";
 import { mapGetters } from "vuex";
 
 export default {
   mounted() {
-    this.allDownloaded = getBoolean("allDownloaded", false);
+    this.allDownloaded = ApplicationSettings.getBoolean("allDownloaded", false);
   },
   data() {
     return {
@@ -77,34 +78,34 @@ export default {
 
     toggleScreenOn: {
       get() {
-        return getBoolean("screenOnWithMap");
+        return ApplicationSettings.getBoolean("screenOnWithMap");
       },
       set(val) {
         console.log("screenOnWithMap", val);
-        setBoolean("screenOnWithMap", val);
+        ApplicationSettings.setBoolean("screenOnWithMap", val);
       }
     },
     toggleCrashInfo: {
       get() {
-        return getBoolean("googleCrashlytics");
+        return ApplicationSettings.getBoolean("googleCrashlytics");
       },
       set(val) {
         console.log("toggleCrashConfig", val);
-        setBoolean("googleCrashlytics", val);
-        firebase.crashlytics.setCrashlyticsCollectionEnabled(val);
+        ApplicationSettings.setBoolean("googleCrashlytics", val);
+        crashlytics.setCrashlyticsCollectionEnabled(val);
       }
     },
     isDebug() {
-      return TNS_ENV !== "production";
+      return __DEV__;
     },
     toggleAnalytics: {
       get() {
-        return getBoolean("googleAnalytics");
+        return ApplicationSettings.getBoolean("googleAnalytics");
       },
       set(val) {
         console.log("toggle analytics", val);
-        setBoolean("googleAnalytics", val);
-        firebase.analytics.setAnalyticsCollectionEnabled(val);
+        ApplicationSettings.setBoolean("googleAnalytics", val);
+        analytics.setAnalyticsCollectionEnabled(val);
       }
     }
   },
@@ -150,7 +151,7 @@ export default {
       Theme.toggleMode(); // to toggle between the modes
     },
     crash() {
-      firebase.crashlytics.crash();
+      crashlytics.crash();
     }
   }
 };

@@ -3,46 +3,52 @@ import Vuex from 'vuex'
 import store from './store/index.js'
 import Home from './pages/Home'
 import App from './pages/App'
-import { isIOS, screen } from "tns-core-modules/platform"
+import { isIOS, screen } from "@nativescript/core/platform"
 import { Frame, isAndroid } from '@nativescript/core/ui/frame';
-import { localize } from "nativescript-localize";
+import { localize } from "@nativescript/localize";
 import { MapView } from "nativescript-google-maps-sdk";
-import VueDevtools from 'nativescript-vue-devtools'
 import DrawerContent from "./components/DrawerContent";
 import AppActionBar from "./components/AppActionBar";
 import CachedImage from '~/components/CachedImage'
 import CenterLabel from '~/components/CenterLabel'
 import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 import RadListView from 'nativescript-ui-listview/vue';
-import { android, AndroidApplication } from "tns-core-modules/application";
+import {ApplicationSettings, Application, AndroidApplication } from '@nativescript/core';
+import { android } from '@nativescript/core/application';
+
 import { AudioService } from "~/services/audioService"
-import * as application from "tns-core-modules/application";
 import { ToastService } from '~/services/toastService'
 import { allowSleepAgain } from "nativescript-insomnia";
-import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
-import * as imageModule from 'nativescript-image';
-import ImagePlugin from 'nativescript-image/vue';
 import * as utils from "~/plugins/utils";
+
+// UI-material components imports
+import BottomNavigation from '@nativescript-community/ui-material-bottom-navigation/vue';
+Vue.use(BottomNavigation);
+import TabsPlugin from '@nativescript-community/ui-material-tabs/vue';
+Vue.use(TabsPlugin);
+import ImageModule from '@nativescript-community/ui-image/vue';
+Vue.use(ImageModule);
+
 
 Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
 
 // Set up config if not there:
 
 const setupConfigBool = (key, value) => {
-  if (!hasKey(key)) {
+  if (!ApplicationSettings.hasKey(key)) {
     console.log(`Config: creating key ${key}, and setting  it to ${value}`)
-    setBoolean(key, value)
+    ApplicationSettings.setBoolean(key, value)
   }
 }
 
 const setupConfigString = (key, value) => {
-  if (!hasKey(key)) {
+  if (!ApplicationSettings.hasKey(key)) {
     console.log(`Config: creating key ${key}, and setting it to ${value}`)
-    setString(key, value)
+    ApplicationSettings.setString(key, value)
   }
 }
 
-setupConfigBool('googleAnalytics', true)
+//setupConfigBool('googleAnalytics', true)
 setupConfigBool('googleCrashlytics', true)
 setupConfigBool('screenOnWithMap', true)
 setupConfigBool('showDoubleClickHint', true)
@@ -54,12 +60,12 @@ Vue.prototype.$store = store
 Vue.prototype.$toast = new ToastService()
 
 
-application.on(application.launchEvent, (args) => {
+Application.on(Application.launchEvent, (args) => {
     // init settings or something?
-    imageModule.initialize({ isDownsampleEnabled: true })
+    ImageModule.initialize({ isDownsampleEnabled: true })
 });
 
-application.on(application.suspendEvent, (args) => {
+Application.on(Application.suspendEvent, (args) => {
   Vue.prototype.$player.pause()
   Vue.prototype.$toast.cancel();
 });
@@ -74,19 +80,19 @@ const setCurrentOrientation = () => {
   console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPs}`)
 }
 
-application.on(application.orientationChangedEvent, (args) => {
+Application.on(Application.orientationChangedEvent, (args) => {
  console.log('rotated!', args.newValue)
  store.commit('setOrientation', args.newValue)
 });
 
-application.on(application.exitEvent, (args) => {
+Application.on(Application.exitEvent, (args) => {
   Vue.prototype.$player.pause();
   Vue.prototype.$player.dispose();
   Vue.prototype.$toast.cancel();
   allowSleepAgain().then(function () {
     console.log("exitEvent: insomnia is inactive, good  night!");
   })
-  imageModule.shutDown()
+  ImageModule.shutDown()
 });
 
 let lastPress
@@ -115,11 +121,11 @@ Vue.registerElement(
   () => require('@nstudio/nativescript-cardview').CardView
 );
 
-if (TNS_ENV !== 'production') {
-  Vue.use(VueDevtools)
+if (__DEV__) {
+ // Vue.use(VueDevtools)
 }
 // Prints Vue logs when --env.production is *NOT* set while building
-Vue.config.silent = (TNS_ENV === 'production')
+Vue.config.silent = !(__DEV__)
 
 Vue.use(RadListView);
 Vue.use(RadSideDrawer);

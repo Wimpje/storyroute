@@ -19,22 +19,23 @@
 </template>
 
 <script>
-import * as geolocation from "nativescript-geolocation";
+import * as geolocation from '@nativescript/geolocation';
 import {
   MapView,
   Marker,
   Position,
   Polyline
 } from "nativescript-google-maps-sdk";
-import { isAndroid, isIOS } from "tns-core-modules/platform";
+import { isAndroid, isIOS } from "@nativescript/core/platform";
 import { mapGetters } from "vuex";
-import { Color } from "tns-core-modules/color";
+import { Color } from "@nativescript/core/color";
 import mapStyles from "~/assets/mapStyles.js";
 
-import { Image } from "tns-core-modules/ui/image/image";
-import { ImageSource } from "tns-core-modules/image-source";
-import * as application from "tns-core-modules/application";
+import { Image } from "@nativescript/core/ui/image";
+import { ImageSource } from "@nativescript/core/image-source";
+import * as application from "@nativescript/core/application";
 import * as utils from "~/plugins/utils";
+import { crashlytics } from "@nativescript/firebase/crashlytics";
 
 export default {
   props: ["pois", "currentPoi", "padding", "paths"],
@@ -150,12 +151,12 @@ export default {
                 },
                 e => {
                   console.log("Error: " + (e.message || e));
-                  firebase.crashlytics.log("Unable to Enable Location" + (e.message || e));
+                  crashlytics.log("Unable to Enable Location" + (e.message || e));
                 }
               )
               .catch(ex => {
                 console.log("Unable to Enable Location", ex);
-                firebase.crashlytics.log("Unable to Enable Location" + ex);
+                crashlytics.log("Unable to Enable Location" + ex);
                 this.$toast.show("map.location.enableerror", {
                   shouldLocalize: true
                 });
