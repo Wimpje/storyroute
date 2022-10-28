@@ -27,6 +27,7 @@ Vue.use(BottomNavigation);
 import TabsPlugin from '@nativescript-community/ui-material-tabs/vue';
 Vue.use(TabsPlugin);
 import ImageModule from '@nativescript-community/ui-image/vue';
+import { initialize, shutDown } from '@nativescript-community/ui-image';
 Vue.use(ImageModule);
 
 
@@ -62,7 +63,7 @@ Vue.prototype.$toast = new ToastService()
 
 Application.on(Application.launchEvent, (args) => {
     // init settings or something?
-    ImageModule.initialize({ isDownsampleEnabled: true })
+    initialize({ isDownsampleEnabled: true })
 });
 
 Application.on(Application.suspendEvent, (args) => {
@@ -92,7 +93,7 @@ Application.on(Application.exitEvent, (args) => {
   allowSleepAgain().then(function () {
     console.log("exitEvent: insomnia is inactive, good  night!");
   })
-  ImageModule.shutDown()
+  shutDown()
 });
 
 let lastPress
@@ -129,8 +130,6 @@ Vue.config.silent = !(__DEV__)
 
 Vue.use(RadListView);
 Vue.use(RadSideDrawer);
-Vue.use(ImagePlugin);
-
 
 Vue.registerElement('MapView', () => MapView)
 

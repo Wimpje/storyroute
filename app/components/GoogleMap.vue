@@ -441,6 +441,7 @@ export default {
         let poiIndex = 0
         this.markers = []
         this.pois.forEach(poi => {
+          console.log(JSON.stringify(poi, null, 2))
           const marker = this.addMarkerFromPoi(poi, poiIndex);
           this.markers.push(marker)
           const icon = utils.getPoiIcon(poi);
