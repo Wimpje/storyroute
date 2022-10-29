@@ -1,3 +1,4 @@
+// import VueDevtools from 'nativescript-vue-devtools'
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex'
 
@@ -33,7 +34,6 @@ Vue.use(ImageModule);
 
 
 Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
-import VueDevtools from 'nativescript-vue-devtools'
 
 // Set up config if not there:
 
@@ -124,9 +124,7 @@ Vue.registerElement(
   () => require('@nstudio/nativescript-cardview').CardView
 );
 
-if (__DEV__) {
-  Vue.use(VueDevtools)
-}
+
 // Prints Vue logs when --env.production is *NOT* set while building
 Vue.config.silent = !(__DEV__)
 
@@ -150,7 +148,9 @@ Vue.use(Vuex);
 
 
 utils.initFirebase()
-
+if (__DEV__) {
+  //Vue.use(VueDevtools)
+}
 const vueApp = new Vue({
   store,
   render(h) {
