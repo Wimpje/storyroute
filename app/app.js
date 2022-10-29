@@ -1,12 +1,14 @@
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex'
+import VueDevtools from 'nativescript-vue-devtools'
+
 import store from './store/index.js'
 import Home from './pages/Home'
 import App from './pages/App'
 import { isIOS, screen } from "@nativescript/core/platform"
 import { Frame, isAndroid } from '@nativescript/core/ui/frame';
 import { localize } from "@nativescript/localize";
-import { MapView } from "nativescript-google-maps-sdk";
+import { GoogleMaps } from "@kefah/nativescript-google-maps";
 import DrawerContent from "./components/DrawerContent";
 import AppActionBar from "./components/AppActionBar";
 import CachedImage from '~/components/CachedImage'
@@ -123,7 +125,7 @@ Vue.registerElement(
 );
 
 if (__DEV__) {
- // Vue.use(VueDevtools)
+  Vue.use(VueDevtools)
 }
 // Prints Vue logs when --env.production is *NOT* set while building
 Vue.config.silent = !(__DEV__)
@@ -131,7 +133,7 @@ Vue.config.silent = !(__DEV__)
 Vue.use(RadListView);
 Vue.use(RadSideDrawer);
 
-Vue.registerElement('MapView', () => MapView)
+Vue.registerElement('MapView', () => GoogleMaps)
 
 // some of our own custom components
 Vue.component('AppActionBar', AppActionBar)

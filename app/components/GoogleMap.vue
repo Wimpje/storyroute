@@ -21,11 +21,10 @@
 <script>
 import * as geolocation from '@nativescript/geolocation';
 import {
-  MapView,
   Marker,
   Position,
   Polyline
-} from "nativescript-google-maps-sdk";
+} from "@kefah/nativescript-google-maps";
 import { isAndroid, isIOS } from "@nativescript/core/platform";
 import { mapGetters } from "vuex";
 import { Color } from "@nativescript/core/color";

@@ -24,7 +24,7 @@ tns build <platform> --env.production
 
 ## NS 8 upgrade notes
 - I had to modify some gradle / podfile stuff
-node_modules/@nativescript/firebase/platforms/ios/podfile > set ios to 12.0
+node_modules/@nativescript/firebase/platforms/ios/podfile > set ios to 13.0
 app_resources/platforms/android/before-plugins.gradle, set:
 ```
 ext {
