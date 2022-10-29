@@ -31,3 +31,4 @@ ext {
   googlePlayServicesVersion = "16.+"
 }
 ```
+Also do this: https://stackoverflow.com/questions/64886369/nativescript-ios-build-fails-xcode-error-command-ld-failed-with-a-nonzero-exi 
