@@ -11,7 +11,7 @@
 
 <script>
 import { SlideInOnTopTransition } from "nativescript-ui-sidedrawer";
-import { dialogs } from "@nativescript/core/ui";
+import { Dialogs } from "@nativescript/core/ui";
 import { ApplicationSettings } from "@nativescript/core";
 import { localize } from "@nativescript/localize";
 import { device } from "@nativescript/core/platform";
@@ -34,7 +34,7 @@ export default {
       console.log("User language = ", lang);
       if (lang !== "nl" && !ApplicationSettings.getBoolean("englishMessageDisplayed", false)) {
         console.log("will show english dialog");
-        dialogs
+        Dialogs
           .alert({
             title: localize("message.englishNotYetSupportedTitle"),
             message: localize("message.englishNotYetSupportedMessage"),

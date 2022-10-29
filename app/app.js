@@ -1,6 +1,5 @@
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex'
-import VueDevtools from 'nativescript-vue-devtools'
 
 import store from './store/index.js'
 import Home from './pages/Home'
@@ -34,6 +33,7 @@ Vue.use(ImageModule);
 
 
 Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
+import VueDevtools from 'nativescript-vue-devtools'
 
 // Set up config if not there:
 
