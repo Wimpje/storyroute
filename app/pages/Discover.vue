@@ -241,9 +241,6 @@ export default {
         if (this.$refs.listView) {
           this.$refs.listView.refresh();
         }
-        if (this.$refs.gMap) {
-          this.$refs.gMap.resizeMapHack();
-        }
       });
     }
   },
@@ -520,10 +517,12 @@ export default {
       console.log("discover reports: mapready");
       this.listPois = this.getPoisForView;
       console.log(this.listPois.length)
-      this.$refs.listView.refresh();
-      this.$refs.gMap.addMapMarkers();
-      this.mapReady = true;
+      this.$refs.listView.refresh()
+      setTimeout(() => {
+        this.$refs.gMap.addMapMarkers()
 
+        this.mapReady = true;
+      }, 200)
       if (!this.dontResize) {
         console.log("resizing map");
         this.$refs.gMap.fitMapToPois(this.listPois);

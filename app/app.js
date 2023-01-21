@@ -8,7 +8,7 @@ import App from './pages/App'
 import { isIOS, screen } from "@nativescript/core/platform"
 import { Frame, isAndroid } from '@nativescript/core/ui/frame';
 import { localize } from "@nativescript/localize";
-import { GoogleMaps } from "@kefah/nativescript-google-maps";
+import GoogleMaps from '@nativescript/google-maps/vue'
 import DrawerContent from "./components/DrawerContent";
 import AppActionBar from "./components/AppActionBar";
 import CachedImage from '~/components/CachedImage'
@@ -116,8 +116,8 @@ if (android) {
   });
 }
 
-Vue.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
-Vue.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
+Vue.registerElement('Carousel', () => require('@nstudio/nativescript-carousel').Carousel);
+Vue.registerElement('CarouselItem', () => require('@nstudio/nativescript-carousel').CarouselItem);
 
 Vue.registerElement(
   'CardView',
@@ -131,7 +131,7 @@ Vue.config.silent = !(__DEV__)
 Vue.use(RadListView);
 Vue.use(RadSideDrawer);
 
-Vue.registerElement('MapView', () => GoogleMaps)
+Vue.use(GoogleMaps)
 
 // some of our own custom components
 Vue.component('AppActionBar', AppActionBar)

@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     imageLoaded(args) {
-      console.log('image loaded!', args, this.source)
+      console.log('image loaded!')
       this.imageLoading = false;
       //this.$emit('image_loaded', args.object)
     }

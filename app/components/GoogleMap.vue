@@ -10,21 +10,22 @@
     
       height="100%"
       width="100%"
-      @mapReady="onMapReady"
-      @markerSelect="onMarkerSelect"
-      @markerInfoWindowTapped="onMarkerInfoWindowTapped"
-      @cameraChanged="onCameraChanged"
+      @ready="onMapReady"
+      @markerTap="onMarkerSelect"
+      @infoWindowTap="onMarkerInfoWindowTapped"
+      @cameraPosition="onCameraChanged"
     ></MapView>
   </StackLayout>
 </template>
 
 <script>
 import * as geolocation from '@nativescript/geolocation';
+import { CoreTypes } from '@nativescript/core'
 import {
   Marker,
-  Position,
-  Polyline
-} from "@kefah/nativescript-google-maps";
+  Polyline,
+  CameraUpdate
+} from "@nativescript/google-maps";
 import { isAndroid, isIOS } from "@nativescript/core/platform";
 import { mapGetters } from "vuex";
 import { Color } from "@nativescript/core/color";
@@ -50,7 +51,8 @@ export default {
       tilt: 0,
       markers: [],
       mapView: null,
-      ommenCenter: Position.positionFromLatLng(52.4958, 6.44117),
+      polyLines: [],
+      ommenCenter: { position: { latitude: 52.4958, longitude: 6.44117 } },
       mapAnimationsEnabled: true
     };
   },
@@ -75,49 +77,20 @@ export default {
   },
   beforeDestroy() {
     console.log("Google map destroyed")
-    if (application.android) {
-      application.android.off(
-        application.AndroidApplication.activityResumedEvent,
-        this.onAndroidActivityResume,
-        this
-      );
-    }
+
   },
   methods: {
-    onAndroidActivityResume(args) {
-      console.log("MAP: ON ANDROID RESUME");
-      if (
-        this.mapView &&
-        this.mapView.nativeView &&
-        this.mapView._context === args.activity
-      ) {
-        this.mapView.nativeView.onResume();
-      }
-    },
+  
     enableMyLocationButton(value) {
-      if (isAndroid) {
-          let uiSettings = this.mapView.gMap.getUiSettings();
-          uiSettings.setMyLocationButtonEnabled(value);
-          /* enable my location button on android */
-          this.mapView.gMap.setMyLocationEnabled(value);
-      } else {
-          /* enable my location button on iOS */
-          this.mapView.gMap.myLocationEnabled = value;
-          this.mapView.gMap.settings.myLocationButton = value;
+      if (this.mapView) {
+        console.log('enable my location:', value)
+        this.mapView.myLocationEnabled = value
       }
     },
     onLoaded() {
       console.log("MAP: ONLOADED");
-      if (application.android) {
-        application.android.on(
-          application.AndroidApplication.activityResumedEvent,
-          this.onAndroidActivityResume,
-          this
-        );
-      }
 
       let that = this;
-      
 
       geolocation.isEnabled().then(
         function(isEnabled) {
@@ -128,6 +101,7 @@ export default {
                 () => {
                   geolocation
                     .getCurrentLocation({
+                      desiredAccuracy: CoreTypes.Accuracy.high,
                       timeout: 20000
                     })
                     .then(location => {
@@ -149,8 +123,8 @@ export default {
                     });
                 },
                 e => {
-                  console.log("Error: " + (e.message || e));
-                  crashlytics.log("Unable to Enable Location" + (e.message || e));
+                  console.log("Error: ", (e.message || e));
+                  crashlytics.log("Unable to Enable Location", (e.message || e));
                 }
               )
               .catch(ex => {
@@ -163,7 +137,8 @@ export default {
           } else {
             geolocation
               .getCurrentLocation({
-                timeout: 20000
+                timeout: 20000,
+                desiredAccuracy: CoreTypes.Accuracy.high
               })
               .then(location => {
                 if (!location) {
@@ -192,20 +167,20 @@ export default {
     },
     initMapSettings() {
       
-      const gMap = this.mapView.gMap;
+      const gMap = this.mapView;
       // can be done to hide infowindow
       // this.mapview.infoWindowTemplate = ''
-      this.mapView.setStyle(mapStyles.retro);
+      this.mapView.mapStyle = mapStyles.retro;
 
       if (isAndroid) {
-        let uiSettings = gMap.getUiSettings();
-        uiSettings.setTiltGesturesEnabled(true);
-        uiSettings.setRotateGesturesEnabled(true);
+        
+        gMap.uiSettings.tiltGesturesEnabled = true;
+        gMap.uiSettings.rotateGesturesEnabled = true;
 
         geolocation.isEnabled().then(enabled => {
           if(enabled) {
-            uiSettings.setMyLocationButtonEnabled(true);
-            gMap.setMyLocationEnabled(true);
+            gMap.uiSettings.myLocationButtonEnabled = true;
+            gMap.myLocationEnabled = true;
           }
         })
       }
@@ -216,8 +191,8 @@ export default {
             gMap.settings.myLocationButton = true;
           }
         })
-        gMap.settings.tiltGesturesEnabled = true;
-        this.mapView.on("myLocationTapped", event => {
+        gMap.uiSettings.tiltGesturesEnabled = true;
+        this.mapView.on("myLocationButtonTap", event => {
           console.log('IOS tapped on "my location" button');
           geolocation.isEnabled().then(enabled => {
             if (enabled) {
@@ -228,7 +203,7 @@ export default {
                 })
                 .then(location => {
                   console.log("--moving to location", location);
-                  gMap.animateToLocation(location);
+                  gMap.cameraPosition.fromCoordinate(location);
                 });
             }
           });
@@ -251,11 +226,8 @@ export default {
       })
     },
     addMarkerFromPoi(poi, idx) {
-      const poiMarker = new Marker();
-      poiMarker.position = Position.positionFromLatLng(
-        poi.position.latitude,
-        poi.position.longitude
-      );
+      const poiMarker = {}
+      poiMarker.position = {lat: poi.position.latitude, lng: poi.position.longitude}
       if (poi.routePoint) {
         poiMarker.title = `${idx + 1}. ${poi.title}`;
       }
@@ -263,30 +235,14 @@ export default {
         poiMarker.title = poi.title;
       }
       poiMarker.userData = Object.assign({poiIndex: idx}, poi)
-      this.mapView.addMarker(poiMarker);
+      return this.mapView.addMarker(poiMarker);
+    },
 
-      return poiMarker;
-    },
-    resizeMapHack() {
-      if(!this.mapView) 
-        return
-      
-      console.log('google map: doing resize')
-      setTimeout(
-        () =>
-          (this.mapView.height = {
-            unit: "%",
-            value: 0.999
-          }),
-        1
-      );
-    },
     // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
     onMapReady(args) {
-      this.mapView = args.object;
-      console.log("what is zoom?", this.mapView.zoom);
+      this.mapView = args.map; 
+      console.log("what is zoom?", this.mapView.cameraPosition.zoom);
       // workaround for sizing the map correctly, at least on iOS
-      this.resizeMapHack()
 
       this.initMapSettings()
 
@@ -313,44 +269,14 @@ export default {
         pois.sort(distanceBetween)
       }
     },
-    pointWithinBounds(poi) {
-      let bounds = this.mapView.projection.visibleRegion.bounds
-      let pos = Position.positionFromLatLng(poi.position.latitude, poi.position.longitude)
-      if (isAndroid) {
-        return bounds.android.contains(pos)
-      }
-      else if (isIOS) {
-        return bounds.ios.containsCoordinate(pos)
-      }
-    },
     animateToPoint(poi, padding, zoomLevel) {
-      padding = padding || 40;
-      zoomLevel = zoomLevel || 11;
+      padding = padding || 40
+      zoomLevel = zoomLevel || 11
       if (!poi) 
         return
-
-      if (isIOS) {
-
-        let locationToSet = CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude);
-        let updateLocationCamera = GMSCameraUpdate.setTargetZoom(locationToSet, zoomLevel);
-
-        this.mapView.gMap.animateWithCameraUpdate(updateLocationCamera);
-      }
-      if (isAndroid) {
-
-        let cpBuilder = new com.google.android.gms.maps.model.CameraPosition.Builder();
-        cpBuilder.target(
-           new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude)
-        )
-        cpBuilder.zoom(zoomLevel);
-        let cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cpBuilder.build());
-        if (this.mapAnimationsEnabled) {
-          this.mapView.gMap.animateCamera(cameraUpdate);
-        }
-        else {
-          this.mapView.gMap.moveCamera(cameraUpdate);
-        }
-      }
+      
+      let locationToSet = {lat: poi.position.latitude, lng: poi.position.longitude}
+      this.mapView.animateCamera(CameraUpdate.fromCoordinate(locationToSet, zoomLevel))
     },
     addPaths() {
       const colors = [
@@ -364,24 +290,25 @@ export default {
       // create route line
       if (this.paths && this.mapView) {
 
-        this.mapView.removeAllShapes();
+        // first remove existing lines
+        this.polyLines.forEach(line => this.mapView.removePolyline(line))
+        this.polyLines = []
+
         let idx = 0
-        this.paths.forEach( path => {
+        this.paths.forEach(path => {
           idx++
           // draw the polyline
-          const polyline = new Polyline();
+          const polyline = {}
           console.log("creating a line...", path.length);
-          path.forEach(geoPoint => {
-            const pos = Position.positionFromLatLng(
-              geoPoint.latitude,
-              geoPoint.longitude
-            );
-            polyline.addPoint(pos);
+          polyline.points = path.map(geoPoint => {
+            return { lat: geoPoint.latitude, lng: geoPoint.longitude }
+            
           });
           polyline.visible = true;
           polyline.width = 5;
           polyline.geodesic = false;
           polyline.color = new Color(colors[idx % 5]);
+          this.polyLines.push(polyline)
           this.mapView.addPolyline(polyline);
         })
       }
@@ -394,51 +321,26 @@ export default {
       if(pois.length == 0)
         return
       
-      let bounds, builder;
       padding = padding || 80;
-      if (isIOS) {
-        bounds = GMSCoordinateBounds.alloc().init();
-      }
-      if (isAndroid) {
-         builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
-      }
-      // iterate markers, and add position
-      pois.forEach((poi) => {
-        if (isAndroid) {
-          builder.include(new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude));
-        }
-        if (isIOS) 
-          bounds = bounds.includingCoordinate(CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude));
-      });
-
-      if(isAndroid) {
-        bounds = builder.build();
-        const cu = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(
-          bounds,
-          padding
-        );
-        console.log("ANDROID moving map to bounds of all points on map");
-        this.mapView.gMap.animateCamera(cu);
-      }
-      if (isIOS) {
-        var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
-        console.log("IOS moving map to bounds of all points on map");
-        // setting timeout... https://github.com/dapriett/nativescript-google-maps-sdk/issues/106
-        setTimeout(() => {
-          this.mapView.gMap.animateWithCameraUpdate(update);
-        }, 100)
-      }
+      setTimeout(() => {
+        let coordinates = pois.map((poi) => { return { lat: poi.position.latitude, lng: poi.position.longitude }} )
+        this.mapView.animateCamera( CameraUpdate.fromCoordinates(coordinates, padding) )
+      }, 200)
       
     },
     addMapMarkers() {
       console.log(
         " ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
       );
-      this.mapView.removeAllMarkers();
+      
 
       if (this.pois && this.pois.length) {
         let poiIndex = 0
+        
+        // first remove existing markers
+        this.markers.forEach(marker => this.mapView.removeMarker(marker))
         this.markers = []
+
         this.pois.forEach(poi => {
           const marker = this.addMarkerFromPoi(poi, poiIndex);
           this.markers.push(marker)
@@ -470,9 +372,13 @@ export default {
       this.$emit("onMarkerInfoWindowTapped", t);
     },
     onCameraChanged(args) {
-      if(__DEV__) console.log('Camera changed: ' + JSON.stringify(args.camera));
+      if(!this.mapView) 
+      { 
+        console.log('mapview not ready yet, ignoring event')
+        return;
+      }
       // set zoom to store
-      this.$store.commit('setMapZoom', args.camera.zoom)
+      this.$store.commit('setMapZoom', this.mapView.cameraPosition.zoom)
     }
   }
 };
