@@ -11,6 +11,7 @@
       height="100%"
       width="100%"
       @ready="onMapReady"
+      @myLocationButtonTap="myLocationButtonTap"
       @markerTap="onMarkerSelect"
       @infoWindowTap="onMarkerInfoWindowTapped"
       @cameraPosition="onCameraChanged"
@@ -20,7 +21,7 @@
 
 <script>
 import * as geolocation from '@nativescript/geolocation';
-import { CoreTypes } from '@nativescript/core'
+import { Enums } from '@nativescript/core'
 import {
   Marker,
   Polyline,
@@ -71,9 +72,9 @@ export default {
       }
     }
   },
-  mounted() {
+  loaded() {
     // determine if we should use this hook or @loaded... timing sometimes is weird on iOS it seems
-    this.onLoaded();
+    this.onLoaded()
   },
   beforeDestroy() {
     console.log("Google map destroyed")
@@ -101,7 +102,7 @@ export default {
                 () => {
                   geolocation
                     .getCurrentLocation({
-                      desiredAccuracy: CoreTypes.Accuracy.high,
+                      desiredAccuracy: Enums.Accuracy.high,
                       timeout: 20000
                     })
                     .then(location => {
@@ -138,7 +139,7 @@ export default {
             geolocation
               .getCurrentLocation({
                 timeout: 20000,
-                desiredAccuracy: CoreTypes.Accuracy.high
+                desiredAccuracy: Enums.Accuracy.high
               })
               .then(location => {
                 if (!location) {
@@ -150,11 +151,6 @@ export default {
                   console.log(
                     "isEnabled - Got user location, not doing anything"
                   );
-                  //that.latitude = location.latitude;
-                  //that.longitude = location.longitude;
-                  //that.zoom = 10;
-                  //that.bearing = 0;
-                  //that.altitude = 0;
                 }
               });
           }
@@ -171,44 +167,14 @@ export default {
       // can be done to hide infowindow
       // this.mapview.infoWindowTemplate = ''
       this.mapView.mapStyle = mapStyles.retro;
+      
+      gMap.uiSettings.tiltGesturesEnabled = true;
+      gMap.uiSettings.rotateGesturesEnabled = true;
 
-      if (isAndroid) {
-        
-        gMap.uiSettings.tiltGesturesEnabled = true;
-        gMap.uiSettings.rotateGesturesEnabled = true;
-
-        geolocation.isEnabled().then(enabled => {
-          if(enabled) {
-            gMap.uiSettings.myLocationButtonEnabled = true;
-            gMap.myLocationEnabled = true;
-          }
-        })
-      }
-      if (isIOS) {
-        geolocation.isEnabled().then(enabled => {
-          if(enabled) {
-            gMap.myLocationEnabled = true;
-            gMap.settings.myLocationButton = true;
-          }
-        })
-        gMap.uiSettings.tiltGesturesEnabled = true;
-        this.mapView.on("myLocationButtonTap", event => {
-          console.log('IOS tapped on "my location" button');
-          geolocation.isEnabled().then(enabled => {
-            if (enabled) {
-              geolocation
-                .getCurrentLocation({
-                  maximumAge: 5000,
-                  timeout: 20000
-                })
-                .then(location => {
-                  console.log("--moving to location", location);
-                  gMap.cameraPosition.fromCoordinate(location);
-                });
-            }
-          });
-        });
-      }
+      geolocation.isEnabled().then(enabled => {
+        gMap.uiSettings.myLocationButtonEnabled = enabled
+        gMap.myLocationEnabled = enabled
+      })
     },
     showTitleForPoint(poi) {
       if (!poi || !poi.id) 
@@ -277,6 +243,22 @@ export default {
       
       let locationToSet = {lat: poi.position.latitude, lng: poi.position.longitude}
       this.mapView.animateCamera(CameraUpdate.fromCoordinate(locationToSet, zoomLevel))
+    },
+    myLocationButtonTap() {
+      geolocation.isEnabled().then(enabled => {
+        if (enabled) {
+          geolocation
+            .getCurrentLocation({
+              maximumAge: 5000,
+              timeout: 20000
+            })
+            .then(location => {
+              console.log("--moving to location", location);
+              gMap.cameraPosition.fromCoordinate(location);
+            });
+        }
+      });
+
     },
     addPaths() {
       const colors = [
