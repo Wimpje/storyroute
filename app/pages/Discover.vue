@@ -47,14 +47,11 @@
           for="(poi, index) in listPois"
           ref="listView"
           :orientation="orientation"
-          selectionBehavior="Press"
           @loaded="listviewLoaded = true"
           :height="screenOrientation === 'landscape' ? '100%' : 150"
           :width="screenOrientation === 'landscape' ? 150 : '100%'"
           @scrollDragEnded="onScrolled"
           multipleSelection="false"
-          @itemSelected="onItemSelected"
-          @itemDeselected="onItemDeselected"
           @itemTap="showPointInfoFromList"
         >
           <v-template>
@@ -348,6 +345,8 @@ export default {
         poi.selected = false;
         if (poi.id === marker.userData.id) {
           curPointIndex = idx;
+          poi.selected = true
+          this.selectedItem = idx
         }
       }
       console.log(
@@ -358,10 +357,8 @@ export default {
           curPointIndex,
           false,
           ListViewItemSnapMode.Center
-        );
-        this.$refs.listView.nativeView.selectItemAt(curPointIndex)
-
-      });
+        )
+      })
     },
     showPointInfo(poi) {
       console.log("should load", poi.title);
@@ -401,34 +398,39 @@ export default {
       console.log("itemDeselected", index);
       this.selectedItem = null;
       const item = this.listPois[index];
-      item.selected = false;
+      item.selected = false
+      this.$refs.listView.refresh()
     },
     onItemSelected({ index }) {
-      console.log("itemSelected", index);
-      this.selectedItem = index;
-      const item = this.listPois[index];
-      item.selected = true;
-      this.$refs.gMap.showTitleForPoint(item);
+      console.log("itemSelected", index)
+      this.selectedItem = index
+      const item = this.listPois[index]
+      this.$refs.gMap.showTitleForPoint(item)
       this.$refs.gMap.animateToPoint(
         item,
         50,
         Math.max(13, this.$store.getters.mapZoom)
-      );
+      )
+      item.selected = true
+      this.$refs.listView.refresh()
     },
     showPointInfoFromList(event) {
+      this.listPois.forEach((poi) => poi.selected = false)
       if (this.selectedItem !== null) {
-        if (this.selectedItem == event.index) {
-          if (isIOS) this.$refs.listView.nativeView.deselectAll();
-
+        if (this.selectedItem === event.index) {
+         
           this.selectedItem = null;
-          if (isIOS) {
-            setTimeout(() => {
-              this.listPois[event.index].selected = false;
-            }, 100);
-          }
+          
           console.log("should load:", event.item.title);
           this.showPointInfo(event.item);
+          this.onItemDeselected(event)
         }
+        else {
+          this.onItemSelected(event)
+        }
+      }
+      else {
+        this.onItemSelected(event)
       }
     },
     zoomToMarkerByScroll(scrollOffset) {
@@ -504,7 +506,7 @@ export default {
         this.$refs.gMap.addMapMarkers()
 
         this.mapReady = true;
-      }, 200)
+      }, 100)
       if (!this.dontResize) {
         console.log("resizing map");
         this.$refs.gMap.fitMapToPois(this.listPois);
