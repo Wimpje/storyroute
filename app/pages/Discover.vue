@@ -39,7 +39,7 @@
         :width="cardsContainerWidth"
         :height="cardsContainerHeight"
         :marginLeft="screenOrientation === 'landscape' ? 0 : 5"
-        :marginTop="screenOrientation === 'landscape' ? 5 : 0"
+        :marginBottom="marginBottomCards"
         :verticalAlignment="verticalAlignment"
         :horizontalAlignment="horizontalAlignment"
       >
@@ -93,7 +93,7 @@
                     textAlignment="center"
                     verticalAlignment="middle"
                     horizontalAlignment="middle"
-                  />
+                  ></Label>
                 </GridLayout>
               </CardView>
             </GridLayout>
@@ -163,6 +163,9 @@ export default {
     },
     marginBottomButtons() {
       return this.screenOrientation === "landscape" ? 5 : 140;
+    },
+    marginBottomCards() {
+      return this.screenOrientation === "landscape" ? 5 : 5;
     },
     widthButtons() {
       return this.screenOrientation === "landscape" ? "100%" : "100%";

@@ -83,16 +83,6 @@ export default {
       if(!this.mapView) 
         return
       
-      console.log('google map: NOT doing resize')
-      return
-      setTimeout(
-        () =>
-          (this.mapView.height = {
-            unit: "%",
-            value: 0.999
-          }),
-        1
-      );
     },
     enableMyLocationButton(value) {
       if (this.mapView) {

@@ -44,9 +44,7 @@ export default {
   },
   methods: {
     imageLoaded(args) {
-      console.log('image loaded!')
       this.imageLoading = false;
-      //this.$emit('image_loaded', args.object)
     }
   }
 }

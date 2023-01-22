@@ -1,7 +1,7 @@
 <template>
   <Page>
     <AppActionBar></AppActionBar>
-    <MDBottomNavigation id="bottomNavigation" class="bottomNavigation" @selectedIndexChanged="indexChanged">
+    <MDBottomNavigation id="bottomNavigation" class="bottomNavigation" @selectedIndexChanged="indexChanged" iosOverflowSafeArea="true">
       <MDTabStrip>
         <MDTabStripItem>
           <Label :text="'nav.routes' | L"></Label>
