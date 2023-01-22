@@ -1,5 +1,5 @@
 <template>
-  <StackLayout width="100%" height="100%">
+  <StackLayout>
     <MapView
       :latitude="latitude"
       :longitude="longitude"
@@ -7,9 +7,7 @@
       :bearing="bearing"
       :tilt="tilt"
       :padding="padding"
-    
-      height="100%"
-      width="100%"
+
       @ready="onMapReady"
       @myLocationButtonTap="myLocationButtonTap"
       @markerTap="onMarkerSelect"
@@ -73,7 +71,7 @@ export default {
     }
   },
   loaded() {
-    // determine if we should use this hook or @loaded... timing sometimes is weird on iOS it seems
+
     this.onLoaded()
   },
   beforeDestroy() {
@@ -81,7 +79,21 @@ export default {
 
   },
   methods: {
-  
+    resizeMapHack() {
+      if(!this.mapView) 
+        return
+      
+      console.log('google map: NOT doing resize')
+      return
+      setTimeout(
+        () =>
+          (this.mapView.height = {
+            unit: "%",
+            value: 0.999
+          }),
+        1
+      );
+    },
     enableMyLocationButton(value) {
       if (this.mapView) {
         console.log('enable my location:', value)
@@ -191,7 +203,7 @@ export default {
         }
       })
     },
-    addMarkerFromPoi(poi, idx) {
+    createMarkerFromPoi(poi, idx) {
       const poiMarker = {}
       poiMarker.position = {lat: poi.position.latitude, lng: poi.position.longitude}
       if (poi.routePoint) {
@@ -201,7 +213,7 @@ export default {
         poiMarker.title = poi.title;
       }
       poiMarker.userData = Object.assign({poiIndex: idx}, poi)
-      return this.mapView.addMarker(poiMarker);
+      return poiMarker;
     },
 
     // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
@@ -209,7 +221,7 @@ export default {
       this.mapView = args.map; 
       console.log("what is zoom?", this.mapView.cameraPosition.zoom);
       // workaround for sizing the map correctly, at least on iOS
-
+      this.resizeMapHack()
       this.initMapSettings()
 
       this.addPaths()
@@ -273,6 +285,7 @@ export default {
       if (this.paths && this.mapView) {
 
         // first remove existing lines
+        console.log(this.polyLines)
         this.polyLines.forEach(line => this.mapView.removePolyline(line))
         this.polyLines = []
 
@@ -290,8 +303,8 @@ export default {
           polyline.width = 5;
           polyline.geodesic = false;
           polyline.color = new Color(colors[idx % 5]);
-          this.polyLines.push(polyline)
-          this.mapView.addPolyline(polyline);
+          const polyReference = this.mapView.addPolyline(polyline)
+          this.polyLines.push(polyReference)
         })
       }
     },
@@ -324,8 +337,8 @@ export default {
         this.markers = []
 
         this.pois.forEach(poi => {
-          const marker = this.addMarkerFromPoi(poi, poiIndex);
-          this.markers.push(marker)
+          const marker = this.createMarkerFromPoi(poi, poiIndex);
+          
           const icon = utils.getPoiIcon(poi);
           if (icon) {
             // TODO cache?
@@ -344,6 +357,8 @@ export default {
             marker.icon = iconImg;
           }
           poiIndex++
+          const markerReference = this.mapView.addMarker(marker)
+          this.markers.push(markerReference)
         });
       }
     },

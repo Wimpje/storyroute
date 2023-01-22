@@ -6,7 +6,7 @@ import store from './store/index.js'
 import Home from './pages/Home'
 import App from './pages/App'
 import { isIOS, screen } from "@nativescript/core/platform"
-import { Frame, isAndroid } from '@nativescript/core/ui/frame';
+import { Frame } from '@nativescript/core/ui/frame';
 import { localize } from "@nativescript/localize";
 import GoogleMaps from '@nativescript/google-maps/vue'
 import DrawerContent from "./components/DrawerContent";
@@ -32,11 +32,9 @@ import ImageModule from '@nativescript-community/ui-image/vue';
 import * as imageModule from '@nativescript-community/ui-image';
 Vue.use(ImageModule);
 
-
 Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
 
 // Set up config if not there:
-
 const setupConfigBool = (key, value) => {
   if (!ApplicationSettings.hasKey(key)) {
     console.log(`Config: creating key ${key}, and setting  it to ${value}`)
@@ -137,10 +135,6 @@ Vue.use(GoogleMaps)
 Vue.component('AppActionBar', AppActionBar)
 Vue.component('CenterLabel', CenterLabel)
 Vue.component('CachedImage', CachedImage)
-
-if (isIOS) {
-  GMSServices.provideAPIKey("<keyhere>");
-}
 
 Vue.filter("L", localize);
 

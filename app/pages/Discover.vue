@@ -55,7 +55,6 @@
           multipleSelection="false"
           @itemSelected="onItemSelected"
           @itemDeselected="onItemDeselected"
-          @itemDeselecting="onItemDeselecting"
           @itemTap="showPointInfoFromList"
         >
           <v-template>
@@ -151,27 +150,14 @@ export default {
     }),
     padding() {
       if (this.screenOrientation === "landscape") {
-        // left = scroll
-        const rightPadding = isIOS
-          ? 150
-          : Utils.layout.toDevicePixels(160);
-        // bottom = buttons
-        const bottomPadding = isIOS
-          ? 30
-          : Utils.layout.toDevicePixels(30);
-
-        return [0, bottomPadding, 0, rightPadding];
+        return [0, Utils.layout.toDevicePixels(30), 0, Utils.layout.toDevicePixels(160)];
       } else {
-        const bottomPadding = isIOS
-          ? 170
-          : Utils.layout.toDevicePixels(170);
-        return [0, bottomPadding, 0, 0];
+        return [0, Utils.layout.toDevicePixels(170), 0, 0];
       }
     },
     verticalAlignment() {
       return this.screenOrientation === "landscape" ? "top" : "bottom";
     },
-
     horizontalAlignment() {
       return this.screenOrientation === "landscape" ? "right" : "middle";
     },
@@ -195,8 +181,9 @@ export default {
     paths() {
       if (this.route) return [this.route.path];
       else {
-        if (this.currentCategory === "all" || this.currentCategory === "routes")
+        if (this.currentCategory === "all" || this.currentCategory === "routes") {
           return this.$store.getters.getRoutes.map(route => route.path);
+        }
         else return [];
       }
     },
@@ -206,9 +193,24 @@ export default {
     pageName() {
       return this.route ? "route" : "discover";
     },
+   
+  },
+  watch: {
+    screenOrientation(oldVal, newVal) {
+      // refresh the list to re-render properly
+      console.log("Discover: screenOrientation changed", newVal);
+      this.$nextTick(() => {
+        if (this.$refs.listView) {
+          this.$refs.listView.refresh();
+        }
+      });
+    }
+  },
+  methods: {
     getPoisForView() {
       if (this.route && this.route.pois) {
         let idx = 1;
+        console.log("DAARRRR")
         const pois = this.route.pois.map(poi => {
           // copy it (not sure if necessary?) and mark as route point, not regular point
           return Object.assign({ routePoint: true, routeIndex: idx++ }, poi);
@@ -231,20 +233,7 @@ export default {
           return true;
         });
       }
-    }
-  },
-  watch: {
-    screenOrientation(oldVal, newVal) {
-      // refresh the list to re-render properly
-      console.log("Discover: screenOrientation changed", newVal);
-      this.$nextTick(() => {
-        if (this.$refs.listView) {
-          this.$refs.listView.refresh();
-        }
-      });
-    }
-  },
-  methods: {
+    },
     onLoaded() {
       this.mapReady = false;
       console.log("discover - onloaded");
@@ -270,7 +259,7 @@ export default {
       // if not, push it in, otherwise leave as is.
       // then check rest of listPois array for items that should not be in there.
 
-      this.getPoisForView.forEach(poi => {
+      this.getPoisForView().forEach(poi => {
         const shouldKeep = this.filterCategoryFn(poi);
         const idx = this.listPois.indexOf(poi);
 
@@ -404,15 +393,7 @@ export default {
         this.dontResize = true;
       });
     },
-    onItemDeselecting({ index }) {
-      if (isAndroid) return;
-      console.log("itemDeselecting", index);
-      this.selectedItem = null;
-      const item = this.listPois[index];
-      item.selected = false;
-    },
     onItemDeselected({ index }) {
-      if (isIOS) return;
       console.log("itemDeselected", index);
       this.selectedItem = null;
       const item = this.listPois[index];
@@ -421,9 +402,6 @@ export default {
     onItemSelected({ index }) {
       console.log("itemSelected", index);
       this.selectedItem = index;
-
-      if (isIOS) this.listPois.forEach(poi => (poi.selected = false));
-
       const item = this.listPois[index];
       item.selected = true;
       this.$refs.gMap.showTitleForPoint(item);
@@ -515,8 +493,8 @@ export default {
     },
     onMapReady() {
       console.log("discover reports: mapready");
-      this.listPois = this.getPoisForView;
-      console.log(this.listPois.length)
+      this.listPois = this.getPoisForView();
+
       this.$refs.listView.refresh()
       setTimeout(() => {
         this.$refs.gMap.addMapMarkers()
