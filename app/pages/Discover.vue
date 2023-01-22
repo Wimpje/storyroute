@@ -73,12 +73,13 @@
                   >
                   </Label>
                   <CachedImage
-                    verticalAlignment="bottom"
+                    verticalAlignment="top"
                     row="1"
                     col="0"
                     :source="getPoiImage(poi)"
-                    stretch="aspectFill"
+                    stretch="focusCrop"
                     padding="3"
+                    height="80"
                     :class="poi.selected ? 'image selected' : 'image'"
                     placeholder="~/assets/images/placeholder.png"
                   ></CachedImage>
@@ -88,6 +89,7 @@
                     :text="'message.tapAgainForInfo' | L"
                     row="1"
                     col="0"
+                    height="80"
                     class="overlayLabel"
                     textWrap="true"
                     textAlignment="center"
@@ -165,7 +167,7 @@ export default {
       return this.screenOrientation === "landscape" ? 5 : 140;
     },
     marginBottomCards() {
-      return this.screenOrientation === "landscape" ? 5 : 5;
+      return Utils.layout.toDevicePixels(5);
     },
     widthButtons() {
       return this.screenOrientation === "landscape" ? "100%" : "100%";
@@ -213,7 +215,6 @@ export default {
     getPoisForView() {
       if (this.route && this.route.pois) {
         let idx = 1;
-        console.log("DAARRRR")
         const pois = this.route.pois.map(poi => {
           // copy it (not sure if necessary?) and mark as route point, not regular point
           return Object.assign({ routePoint: true, routeIndex: idx++ }, poi);
