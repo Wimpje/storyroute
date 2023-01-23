@@ -51,7 +51,7 @@
         ios:border="1"
         verticalAlignment="bottom"
         horizontalAlignment="right"
-        class="-rounded-sm startRouteButton"
+        class="startRouteButton"
         :text="'btn.startRoute' | L"
         @tap="startRoute()"
         textWrap="true"
@@ -136,22 +136,21 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.ns-ios .startRouteButton{
-  border-width: 2;
-  border-color: #bbb;
-}
+
 .ns-dark .startRouteButton {
-  color: white;
+  background-color: white;
+  color: #184195;
 }
+
 .startRouteButton {
   margin-bottom: 20;
-  padding: 10;
-  font-size: 20;
-  height: 100;
-  width: 100;
-  border-radius: 50;
+  padding: 5;
+  font-weight: bold;
+  font-size: 22;
+  background-color: #184195;
+  color: white;
+  border-radius: 5;
   text-align: center;
-  color: black;
 }
 .routeImage {
   margin-bottom: 10;

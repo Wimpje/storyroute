@@ -1,19 +1,19 @@
 <template>
   <Page>
     <AppActionBar></AppActionBar>
-    <MDBottomNavigation id="bottomNavigation" class="bottomNavigation" @selectedIndexChanged="indexChanged" iosOverflowSafeArea="true">
-      <MDTabStrip>
-        <MDTabStripItem>
+    <MDBottomNavigation id="bottomNavigation" @selectedIndexChanged="indexChanged" iosOverflowSafeArea="true">
+      <MDTabStrip class="bottomNavigation">
+        <MDTabStripItem class="tab">
           <Label :text="'nav.routes' | L"></Label>
-          <Image src.decode="font://&#xf4d7;" class="fas t-24"></Image>
+          <Image src.decode="font://&#xf4d7;" class="fas t-24 nav-icon"></Image>
         </MDTabStripItem>
-        <MDTabStripItem>
+        <MDTabStripItem class="tab">
           <Label :text="'nav.discover' | L"></Label>
-          <Image src.decode="font://&#xf06e;" stretch="none" class="fas t-24"></Image>
+          <Image src.decode="font://&#xf06e;" stretch="none" class="fas t-24 nav-icon"></Image>
         </MDTabStripItem>
-        <MDTabStripItem>
+        <MDTabStripItem class="tab">
           <Label :text="'nav.articles' | L"></Label>
-          <Image src.decode="font://&#xf1ea;" stretch="none" class="far t-24"></Image>
+          <Image src.decode="font://&#xf1ea;" stretch="none" class="far t-24 nav-icon"></Image>
         </MDTabStripItem>
       </MDTabStrip>
       <MDTabContentItem>
@@ -73,5 +73,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.ns-light {
+  .bottomNavigation {
+    background-color: #fff;
+  }
+  .nav-icon {
+    color: #000;
+  }
+}
+.ns-dark {
+  #bottomNavigation, .tab {
+    background-color: #222;
+  }
+  .nav-icon { color: #fff; }
+}
 
 </style>
