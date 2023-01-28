@@ -148,8 +148,10 @@ export default {
   font-size: 22;
   background-color: #184195;
   color: white;
-  border-radius: 10;
+  border-radius: 5;
   text-align: center;
+  width: 150;
+
 }
 .routeImage {
   margin-bottom: 10;

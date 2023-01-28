@@ -58,13 +58,21 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      screenOrientation: "screenOrientation"
+    }),
     selectedMarker() {
       if (this.currentPoi) {
         return this.currentPoi;
       } else return null;
     },
     myLocBtnLeftPosition() {
-      return screen.mainScreen.widthDIPs - 60;
+      if(this.screenOrientation == 'portrait') {
+        return screen.mainScreen.widthDIPs - 60;
+      }
+      else {
+        return screen.mainScreen.heightDIPs + 150
+      }
     },
   },
   watch: {
@@ -170,10 +178,12 @@ export default {
       const gMap = this.mapView;
       // can be done to hide infowindow
       // this.mapview.infoWindowTemplate = ''
-      this.mapView.mapStyle = mapStyles.retro;
+      this.mapView.mapStyle = mapStyles.retro
       
-      gMap.uiSettings.tiltGesturesEnabled = true;
-      gMap.uiSettings.rotateGesturesEnabled = true;
+      gMap.uiSettings.tiltGesturesEnabled = true
+      gMap.uiSettings.rotateGesturesEnabled = true
+      gMap.uiSettings.myLocationButtonEnabled = false
+      gMap.uiSettings.mapToolbarEnabled = false
 
       geolocation.isEnabled().then(enabled => {
         gMap.myLocationEnabled = enabled

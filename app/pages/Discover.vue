@@ -512,18 +512,21 @@ export default {
       this.listPois = this.getPoisForView();
 
       this.$refs.listView.refresh()
+      // timeouts suck
       setTimeout(() => {
         this.$refs.gMap.addMapMarkers()
 
         this.mapReady = true;
+        if (!this.dontResize) {
+          console.log("resizing map");
+          this.$refs.gMap.fitMapToPois(this.listPois);
+        } else {
+          console.log("no resizing, coming from point");
+          this.dontResize = false;
+        }
+
       }, 100)
-      if (!this.dontResize) {
-        console.log("resizing map");
-        this.$refs.gMap.fitMapToPois(this.listPois);
-      } else {
-        console.log("no resizing, coming from point");
-        this.dontResize = false;
-      }
+   
     }
   }
 };
