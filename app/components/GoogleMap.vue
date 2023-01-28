@@ -71,7 +71,7 @@ export default {
         return screen.mainScreen.widthDIPs - 60;
       }
       else {
-        return screen.mainScreen.heightDIPs + 150
+        return 20
       }
     },
   },
@@ -92,12 +92,6 @@ export default {
       if(!this.mapView) 
         return
       
-    },
-    enableMyLocation(value) {
-      if (this.mapView) {
-        console.log('enable my location:', value)
-        this.mapView.myLocationEnabled = value
-      }
     },
     getLocation() {
       console.log("MAP: getLocation");
@@ -184,7 +178,7 @@ export default {
       gMap.uiSettings.rotateGesturesEnabled = true
       gMap.uiSettings.myLocationButtonEnabled = false
       gMap.uiSettings.mapToolbarEnabled = false
-
+      gMap.myLocationEnabled = true;
       geolocation.isEnabled().then(enabled => {
         gMap.myLocationEnabled = enabled
       })

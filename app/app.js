@@ -73,8 +73,6 @@ Application.on(Application.suspendEvent, (args) => {
 
 // quick & dirty setting of initial orientation
 const setCurrentOrientation = () => {
-  
-  
   setTimeout(() => {
     let orientation = 'portrait'
     try {

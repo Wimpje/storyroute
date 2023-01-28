@@ -6,7 +6,6 @@
         row="0"
         :pois="listPois"
         :paths="paths"
-        :padding="padding"
         @googleMapReady="onMapReady"
         @markerSelect="scrollToPoint"
       />
@@ -48,8 +47,8 @@
           ref="listView"
           :orientation="orientation"
           @loaded="listviewLoaded = true"
-          :height="screenOrientation === 'landscape' ? '100%' : 150"
-          :width="screenOrientation === 'landscape' ? 150 : '100%'"
+          :height="imageHeight"
+          :width="imageWidth"
           @scrollDragEnded="onScrolled"
           multipleSelection="false"
           @itemTap="showPointInfoFromList"
@@ -147,12 +146,11 @@ export default {
       pois: "getPois",
       screenOrientation: "screenOrientation"
     }),
-    padding() {
-      if (this.screenOrientation === "landscape") {
-        return [0, Utils.layout.toDevicePixels(30), 0, Utils.layout.toDevicePixels(160)];
-      } else {
-        return [0, Utils.layout.toDevicePixels(170), 0, 0];
-      }
+    imageHeight() {
+      return this.screenOrientation === 'landscape' ? '100%' : 150
+    },
+    imageWidth() {
+      return this.screenOrientation === 'landscape' ? 150 : '100%'
     },
     verticalAlignment() {
       return this.screenOrientation === "landscape" ? "top" : "bottom";
@@ -173,7 +171,7 @@ export default {
         return Utils.layout.toDevicePixels(5);
       }
       else {
-        return Utils.layout.toDevicePixels(5);
+        return 5;
       }
     },
     widthButtons() {
