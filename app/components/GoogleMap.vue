@@ -1,20 +1,23 @@
 <template>
-  <StackLayout>
+  <AbsoluteLayout>
     <MapView
       :latitude="latitude"
       :longitude="longitude"
       :zoom="zoom"
       :bearing="bearing"
       :tilt="tilt"
-      :padding="padding"
+      width="100%"
+      height="100%"
 
       @ready="onMapReady"
-      @myLocationButtonTap="myLocationButtonTap"
       @markerTap="onMarkerSelect"
       @infoWindowTap="onMarkerInfoWindowTapped"
       @cameraPosition="onCameraChanged"
     ></MapView>
-  </StackLayout>
+    <FlexboxLayout class="btn-img" top="20" justifyContent="space-around" :left="myLocBtnLeftPosition" width="35" height="35" @tap="myLocationButtonTap" >
+      <Image class="myLocation" alignSelf="center" stretch="aspectFill" src="~/assets/images/location_current.png" ></Image>
+    </FlexboxLayout>
+  </AbsoluteLayout>
 </template>
 
 <script>
@@ -25,7 +28,7 @@ import {
   Polyline,
   CameraUpdate
 } from "@nativescript/google-maps";
-import { isAndroid, isIOS } from "@nativescript/core/platform";
+import { isAndroid, isIOS, screen } from "@nativescript/core/platform";
 import { mapGetters } from "vuex";
 import { Color } from "@nativescript/core/color";
 import mapStyles from "~/assets/mapStyles.js";
@@ -40,7 +43,6 @@ export default {
   props: ["pois", "currentPoi", "padding", "paths"],
   data() {
     return {
-      enableMyLocation: true,
       enableCompass: true,
       enableTilt: true,
       latitude: 52.4958,
@@ -60,7 +62,10 @@ export default {
       if (this.currentPoi) {
         return this.currentPoi;
       } else return null;
-    }
+    },
+    myLocBtnLeftPosition() {
+      return screen.mainScreen.widthDIPs - 60;
+    },
   },
   watch: {
     paths (newVal) {
@@ -69,10 +74,6 @@ export default {
         this.addPaths()
       }
     }
-  },
-  loaded() {
-
-    this.onLoaded()
   },
   beforeDestroy() {
     console.log("Google map destroyed")
@@ -84,22 +85,21 @@ export default {
         return
       
     },
-    enableMyLocationButton(value) {
+    enableMyLocation(value) {
       if (this.mapView) {
         console.log('enable my location:', value)
         this.mapView.myLocationEnabled = value
       }
     },
-    onLoaded() {
-      console.log("MAP: ONLOADED");
+    getLocation() {
+      console.log("MAP: getLocation");
 
       let that = this;
-
-      geolocation.isEnabled().then(
+      return geolocation.isEnabled().then(
         function(isEnabled) {
           if (!isEnabled) {
             geolocation
-              .enableLocationRequest(true, true)
+              .enableLocationRequest(false, true)
               .then(
                 () => {
                   geolocation
@@ -117,8 +117,8 @@ export default {
                         console.log(
                           "!isEnabled - got user location, not doing anything..."
                         );
-                        //that.latitude = location.latitude;
-                        //that.longitude = location.longitude;
+                        that.latitude = location.latitude;
+                        that.longitude = location.longitude;
                         //that.zoom = 10;
                         //that.bearing = 0;
                         //that.altitude = 0;
@@ -150,6 +150,8 @@ export default {
                     shouldLocalize: true
                   });
                 } else {
+                  that.latitude = location.latitude;
+                  that.longitude = location.longitude;
                   console.log(
                     "isEnabled - Got user location, not doing anything"
                   );
@@ -174,7 +176,6 @@ export default {
       gMap.uiSettings.rotateGesturesEnabled = true;
 
       geolocation.isEnabled().then(enabled => {
-        gMap.uiSettings.myLocationButtonEnabled = enabled
         gMap.myLocationEnabled = enabled
       })
     },
@@ -212,8 +213,11 @@ export default {
       console.log("what is zoom?", this.mapView.cameraPosition.zoom);
       // workaround for sizing the map correctly, at least on iOS
       this.resizeMapHack()
-      this.initMapSettings()
-
+      
+      this.getLocation().then(() => {
+        this.initMapSettings()
+      })
+      
       this.addPaths()
 
       this.$emit("googleMapReady", true);
@@ -247,6 +251,8 @@ export default {
       this.mapView.animateCamera(CameraUpdate.fromCoordinate(locationToSet, zoomLevel))
     },
     myLocationButtonTap() {
+      let that = this
+      
       geolocation.isEnabled().then(enabled => {
         if (enabled) {
           geolocation
@@ -255,8 +261,11 @@ export default {
               timeout: 20000
             })
             .then(location => {
-              console.log("--moving to location", location);
-              gMap.cameraPosition.fromCoordinate(location);
+              console.log("--moving to location", location)
+              const zoom = this.mapView.cameraPosition.zoom
+              let zoomLevel = 12 // zoom < 12 ? zoom : 12
+              const locationToSet = {lat: location.latitude, lng: location.longitude }
+              that.mapView.animateCamera(CameraUpdate.fromCoordinate(locationToSet, zoomLevel));
             });
         }
       });
@@ -372,7 +381,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-GoogleMap {
-  padding-bottom:100;
+
+.btn-img {
+  border-radius: 20;
+  background-color: white;
+}
+.myLocation {
+  width: 50%;
+  height: 50%;
+  vertical-align: middle;
 }
 </style>

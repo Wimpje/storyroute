@@ -144,12 +144,11 @@ export default {
 
 .startRouteButton {
   margin-bottom: 20;
-  padding: 5;
   font-weight: bold;
   font-size: 22;
   background-color: #184195;
   color: white;
-  border-radius: 5;
+  border-radius: 10;
   text-align: center;
 }
 .routeImage {

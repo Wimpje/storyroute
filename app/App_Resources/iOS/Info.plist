@@ -51,7 +51,5 @@
     <string>Gebruik je huidige locatie om interessante plekken dichtbij te vinden</string>
     <key>NSLocationUsageDescription</key>
     <string>Gebruik je huidige locatie om interessante plekken dichtbij te vinden</string>
-    <key>firebase_crashlytics_collection_enabled</key>
-    <string>false</string>
   </dict>
 </plist>

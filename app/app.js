@@ -16,7 +16,7 @@ import CenterLabel from '~/components/CenterLabel'
 import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 import RadListView from 'nativescript-ui-listview/vue';
 import {ApplicationSettings, Application, AndroidApplication } from '@nativescript/core';
-import { android } from '@nativescript/core/application';
+import { android, ios } from '@nativescript/core/application';
 
 import { AudioService } from "~/services/audioService"
 import { ToastService } from '~/services/toastService'
@@ -73,12 +73,25 @@ Application.on(Application.suspendEvent, (args) => {
 
 // quick & dirty setting of initial orientation
 const setCurrentOrientation = () => {
-  let orientation = 'portrait'
+  
+  
+  setTimeout(() => {
+    let orientation = 'portrait'
+    try {
+      if (isIOS) {
+        orientation = ios.orientation
+      }
+      else {
+        orientation = android.orientation
+      }
 
-  // detection of orientation does not work well atm ... 
-
-  store.commit('setOrientation', orientation)
-  console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPs}`)
+   
+    } catch(e) {
+      console.error('orientation could not be gotten from app, using default ', orientation, e)
+    }
+    store.commit('setOrientation', orientation)
+    console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPs}`)
+  }, 10)
 }
 
 Application.on(Application.orientationChangedEvent, (args) => {

@@ -161,10 +161,20 @@ export default {
       return this.screenOrientation === "landscape" ? "right" : "middle";
     },
     marginBottomButtons() {
-      return this.screenOrientation === "landscape" ? 5 : 140;
+      if (isIOS) {
+        return this.screenOrientation === "landscape" ? 5 : 145;
+      }
+      else {
+        return this.screenOrientation === "landscape" ? 5 : 150;
+      }
     },
     marginBottomCards() {
-      return Utils.layout.toDevicePixels(5);
+      if (isIOS) {
+        return Utils.layout.toDevicePixels(5);
+      }
+      else {
+        return Utils.layout.toDevicePixels(5);
+      }
     },
     widthButtons() {
       return this.screenOrientation === "landscape" ? "100%" : "100%";
