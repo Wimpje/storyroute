@@ -1,7 +1,8 @@
-import { Toasty, ToastPosition, ToastDuration, ToastyOptions } from 'nativescript-toasty';
-import { localize } from "nativescript-localize";
+import { Toasty, ToastPosition, ToastDuration, ToastyOptions } from '@triniwiz/nativescript-toasty'
+import { localize } from "@nativescript/localize";
 import { Color } from "@nativescript/core/color";
-import * as firebase from"nativescript-plugin-firebase";
+import { crashlytics } from "@nativescript/firebase/crashlytics";
+
 
 export class ToastService {
   private currentToast;
@@ -20,7 +21,7 @@ export class ToastService {
   }
 
   async error (text, error) {
-    await firebase.crashlytics.sendCrashLog({
+    await crashlytics.sendCrashLog({
       message: text + ' - ' + JSON.stringify(error, null, 2),
       showInConsole: true
     })
@@ -32,7 +33,7 @@ export class ToastService {
       backgroundColor: '#5d0101', // dark red warning like error thingy
       ...opts
     });
-    await firebase.crashlytics.sendCrashLog({
+    await crashlytics.sendCrashLog({
       message: errorMsg,
       showInConsole: true
     })

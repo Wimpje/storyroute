@@ -25,7 +25,7 @@ import RouteListItem from "~/components/RouteListItem";
 import LoadData from "~/components/LoadData";
 
 import * as utils from "~/plugins/utils";
-import * as firebase from "nativescript-plugin-firebase";
+import { firebase } from "@nativescript/firebase"
 
 export default {
   mounted() {

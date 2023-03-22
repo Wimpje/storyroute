@@ -1,46 +1,48 @@
 <template>
-  <StackLayout width="100%" height="100%">
+  <AbsoluteLayout>
     <MapView
       :latitude="latitude"
       :longitude="longitude"
       :zoom="zoom"
       :bearing="bearing"
       :tilt="tilt"
-      :padding="padding"
-    
-      height="100%"
       width="100%"
-      @mapReady="onMapReady"
-      @markerSelect="onMarkerSelect"
-      @markerInfoWindowTapped="onMarkerInfoWindowTapped"
-      @cameraChanged="onCameraChanged"
+      height="100%"
+
+      @ready="onMapReady"
+      @markerTap="onMarkerSelect"
+      @infoWindowTap="onMarkerInfoWindowTapped"
+      @cameraPosition="onCameraChanged"
     ></MapView>
-  </StackLayout>
+    <FlexboxLayout class="btn-img" top="20" justifyContent="space-around" :left="myLocBtnLeftPosition" width="35" height="35" @tap="myLocationButtonTap" >
+      <Image class="myLocation" alignSelf="center" stretch="aspectFill" src="~/assets/images/location_current.png" ></Image>
+    </FlexboxLayout>
+  </AbsoluteLayout>
 </template>
 
 <script>
-import * as geolocation from "nativescript-geolocation";
+import * as geolocation from '@nativescript/geolocation';
+import { Enums } from '@nativescript/core'
 import {
-  MapView,
   Marker,
-  Position,
-  Polyline
-} from "nativescript-google-maps-sdk";
-import { isAndroid, isIOS } from "tns-core-modules/platform";
+  Polyline,
+  CameraUpdate
+} from "@nativescript/google-maps";
+import { isAndroid, isIOS, screen } from "@nativescript/core/platform";
 import { mapGetters } from "vuex";
-import { Color } from "tns-core-modules/color";
+import { Color } from "@nativescript/core/color";
 import mapStyles from "~/assets/mapStyles.js";
 
-import { Image } from "tns-core-modules/ui/image/image";
-import { ImageSource } from "tns-core-modules/image-source";
-import * as application from "tns-core-modules/application";
+import { Image } from "@nativescript/core/ui/image";
+import { ImageSource } from "@nativescript/core/image-source";
+import * as application from "@nativescript/core/application";
 import * as utils from "~/plugins/utils";
+import { crashlytics } from "@nativescript/firebase/crashlytics";
 
 export default {
   props: ["pois", "currentPoi", "padding", "paths"],
   data() {
     return {
-      enableMyLocation: true,
       enableCompass: true,
       enableTilt: true,
       latitude: 52.4958,
@@ -50,16 +52,28 @@ export default {
       tilt: 0,
       markers: [],
       mapView: null,
-      ommenCenter: Position.positionFromLatLng(52.4958, 6.44117),
+      polyLines: [],
+      ommenCenter: { position: { latitude: 52.4958, longitude: 6.44117 } },
       mapAnimationsEnabled: true
     };
   },
   computed: {
+    ...mapGetters({
+      screenOrientation: "screenOrientation"
+    }),
     selectedMarker() {
       if (this.currentPoi) {
         return this.currentPoi;
       } else return null;
-    }
+    },
+    myLocBtnLeftPosition() {
+      if(this.screenOrientation == 'portrait') {
+        return screen.mainScreen.widthDIPs - 60;
+      }
+      else {
+        return 20
+      }
+    },
   },
   watch: {
     paths (newVal) {
@@ -69,65 +83,30 @@ export default {
       }
     }
   },
-  mounted() {
-    // determine if we should use this hook or @loaded... timing sometimes is weird on iOS it seems
-    this.onLoaded();
-  },
   beforeDestroy() {
     console.log("Google map destroyed")
-    if (application.android) {
-      application.android.off(
-        application.AndroidApplication.activityResumedEvent,
-        this.onAndroidActivityResume,
-        this
-      );
-    }
+
   },
   methods: {
-    onAndroidActivityResume(args) {
-      console.log("MAP: ON ANDROID RESUME");
-      if (
-        this.mapView &&
-        this.mapView.nativeView &&
-        this.mapView._context === args.activity
-      ) {
-        this.mapView.nativeView.onResume();
-      }
+    resizeMapHack() {
+      if(!this.mapView) 
+        return
+      
     },
-    enableMyLocationButton(value) {
-      if (isAndroid) {
-          let uiSettings = this.mapView.gMap.getUiSettings();
-          uiSettings.setMyLocationButtonEnabled(value);
-          /* enable my location button on android */
-          this.mapView.gMap.setMyLocationEnabled(value);
-      } else {
-          /* enable my location button on iOS */
-          this.mapView.gMap.myLocationEnabled = value;
-          this.mapView.gMap.settings.myLocationButton = value;
-      }
-    },
-    onLoaded() {
-      console.log("MAP: ONLOADED");
-      if (application.android) {
-        application.android.on(
-          application.AndroidApplication.activityResumedEvent,
-          this.onAndroidActivityResume,
-          this
-        );
-      }
+    getLocation() {
+      console.log("MAP: getLocation");
 
       let that = this;
-      
-
-      geolocation.isEnabled().then(
+      return geolocation.isEnabled().then(
         function(isEnabled) {
           if (!isEnabled) {
             geolocation
-              .enableLocationRequest(true, true)
+              .enableLocationRequest(false, true)
               .then(
                 () => {
                   geolocation
                     .getCurrentLocation({
+                      desiredAccuracy: Enums.Accuracy.high,
                       timeout: 20000
                     })
                     .then(location => {
@@ -140,8 +119,8 @@ export default {
                         console.log(
                           "!isEnabled - got user location, not doing anything..."
                         );
-                        //that.latitude = location.latitude;
-                        //that.longitude = location.longitude;
+                        that.latitude = location.latitude;
+                        that.longitude = location.longitude;
                         //that.zoom = 10;
                         //that.bearing = 0;
                         //that.altitude = 0;
@@ -149,13 +128,13 @@ export default {
                     });
                 },
                 e => {
-                  console.log("Error: " + (e.message || e));
-                  firebase.crashlytics.log("Unable to Enable Location" + (e.message || e));
+                  console.log("Error: ", (e.message || e));
+                  crashlytics.log("Unable to Enable Location", (e.message || e));
                 }
               )
               .catch(ex => {
                 console.log("Unable to Enable Location", ex);
-                firebase.crashlytics.log("Unable to Enable Location" + ex);
+                crashlytics.log("Unable to Enable Location" + ex);
                 this.$toast.show("map.location.enableerror", {
                   shouldLocalize: true
                 });
@@ -163,7 +142,8 @@ export default {
           } else {
             geolocation
               .getCurrentLocation({
-                timeout: 20000
+                timeout: 20000,
+                desiredAccuracy: Enums.Accuracy.high
               })
               .then(location => {
                 if (!location) {
@@ -172,14 +152,11 @@ export default {
                     shouldLocalize: true
                   });
                 } else {
+                  that.latitude = location.latitude;
+                  that.longitude = location.longitude;
                   console.log(
                     "isEnabled - Got user location, not doing anything"
                   );
-                  //that.latitude = location.latitude;
-                  //that.longitude = location.longitude;
-                  //that.zoom = 10;
-                  //that.bearing = 0;
-                  //that.altitude = 0;
                 }
               });
           }
@@ -192,48 +169,19 @@ export default {
     },
     initMapSettings() {
       
-      const gMap = this.mapView.gMap;
+      const gMap = this.mapView;
       // can be done to hide infowindow
       // this.mapview.infoWindowTemplate = ''
-      this.mapView.setStyle(mapStyles.retro);
-
-      if (isAndroid) {
-        let uiSettings = gMap.getUiSettings();
-        uiSettings.setTiltGesturesEnabled(true);
-        uiSettings.setRotateGesturesEnabled(true);
-
-        geolocation.isEnabled().then(enabled => {
-          if(enabled) {
-            uiSettings.setMyLocationButtonEnabled(true);
-            gMap.setMyLocationEnabled(true);
-          }
-        })
-      }
-      if (isIOS) {
-        geolocation.isEnabled().then(enabled => {
-          if(enabled) {
-            gMap.myLocationEnabled = true;
-            gMap.settings.myLocationButton = true;
-          }
-        })
-        gMap.settings.tiltGesturesEnabled = true;
-        this.mapView.on("myLocationTapped", event => {
-          console.log('IOS tapped on "my location" button');
-          geolocation.isEnabled().then(enabled => {
-            if (enabled) {
-              geolocation
-                .getCurrentLocation({
-                  maximumAge: 5000,
-                  timeout: 20000
-                })
-                .then(location => {
-                  console.log("--moving to location", location);
-                  gMap.animateToLocation(location);
-                });
-            }
-          });
-        });
-      }
+      this.mapView.mapStyle = mapStyles.retro
+      
+      gMap.uiSettings.tiltGesturesEnabled = true
+      gMap.uiSettings.rotateGesturesEnabled = true
+      gMap.uiSettings.myLocationButtonEnabled = false
+      gMap.uiSettings.mapToolbarEnabled = false
+      gMap.myLocationEnabled = true;
+      geolocation.isEnabled().then(enabled => {
+        gMap.myLocationEnabled = enabled
+      })
     },
     showTitleForPoint(poi) {
       if (!poi || !poi.id) 
@@ -250,12 +198,9 @@ export default {
         }
       })
     },
-    addMarkerFromPoi(poi, idx) {
-      const poiMarker = new Marker();
-      poiMarker.position = Position.positionFromLatLng(
-        poi.position.latitude,
-        poi.position.longitude
-      );
+    createMarkerFromPoi(poi, idx) {
+      const poiMarker = {}
+      poiMarker.position = {lat: poi.position.latitude, lng: poi.position.longitude}
       if (poi.routePoint) {
         poiMarker.title = `${idx + 1}. ${poi.title}`;
       }
@@ -263,33 +208,20 @@ export default {
         poiMarker.title = poi.title;
       }
       poiMarker.userData = Object.assign({poiIndex: idx}, poi)
-      this.mapView.addMarker(poiMarker);
-
       return poiMarker;
     },
-    resizeMapHack() {
-      if(!this.mapView) 
-        return
-      
-      console.log('google map: doing resize')
-      setTimeout(
-        () =>
-          (this.mapView.height = {
-            unit: "%",
-            value: 0.999
-          }),
-        1
-      );
-    },
+
     // TODO determine if some initialized params can be stored in VUEX (since opening modals/closing re-renders stuff and also repositions map sometimes...)
     onMapReady(args) {
-      this.mapView = args.object;
-      console.log("what is zoom?", this.mapView.zoom);
+      this.mapView = args.map; 
+      console.log("what is zoom?", this.mapView.cameraPosition.zoom);
       // workaround for sizing the map correctly, at least on iOS
       this.resizeMapHack()
-
-      this.initMapSettings()
-
+      
+      this.getLocation().then(() => {
+        this.initMapSettings()
+      })
+      
       this.addPaths()
 
       this.$emit("googleMapReady", true);
@@ -313,44 +245,35 @@ export default {
         pois.sort(distanceBetween)
       }
     },
-    pointWithinBounds(poi) {
-      let bounds = this.mapView.projection.visibleRegion.bounds
-      let pos = Position.positionFromLatLng(poi.position.latitude, poi.position.longitude)
-      if (isAndroid) {
-        return bounds.android.contains(pos)
-      }
-      else if (isIOS) {
-        return bounds.ios.containsCoordinate(pos)
-      }
-    },
     animateToPoint(poi, padding, zoomLevel) {
-      padding = padding || 40;
-      zoomLevel = zoomLevel || 11;
+      padding = padding || 40
+      zoomLevel = zoomLevel || 11
       if (!poi) 
         return
-
-      if (isIOS) {
-
-        let locationToSet = CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude);
-        let updateLocationCamera = GMSCameraUpdate.setTargetZoom(locationToSet, zoomLevel);
-
-        this.mapView.gMap.animateWithCameraUpdate(updateLocationCamera);
-      }
-      if (isAndroid) {
-
-        let cpBuilder = new com.google.android.gms.maps.model.CameraPosition.Builder();
-        cpBuilder.target(
-           new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude)
-        )
-        cpBuilder.zoom(zoomLevel);
-        let cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cpBuilder.build());
-        if (this.mapAnimationsEnabled) {
-          this.mapView.gMap.animateCamera(cameraUpdate);
+      
+      let locationToSet = {lat: poi.position.latitude, lng: poi.position.longitude}
+      this.mapView.animateCamera(CameraUpdate.fromCoordinate(locationToSet, zoomLevel))
+    },
+    myLocationButtonTap() {
+      let that = this
+      
+      geolocation.isEnabled().then(enabled => {
+        if (enabled) {
+          geolocation
+            .getCurrentLocation({
+              maximumAge: 5000,
+              timeout: 20000
+            })
+            .then(location => {
+              console.log("--moving to location", location)
+              const zoom = this.mapView.cameraPosition.zoom
+              let zoomLevel = 12 // zoom < 12 ? zoom : 12
+              const locationToSet = {lat: location.latitude, lng: location.longitude }
+              that.mapView.animateCamera(CameraUpdate.fromCoordinate(locationToSet, zoomLevel));
+            });
         }
-        else {
-          this.mapView.gMap.moveCamera(cameraUpdate);
-        }
-      }
+      });
+
     },
     addPaths() {
       const colors = [
@@ -364,25 +287,27 @@ export default {
       // create route line
       if (this.paths && this.mapView) {
 
-        this.mapView.removeAllShapes();
+        // first remove existing lines
+        console.log(this.polyLines)
+        this.polyLines.forEach(line => this.mapView.removePolyline(line))
+        this.polyLines = []
+
         let idx = 0
-        this.paths.forEach( path => {
+        this.paths.forEach(path => {
           idx++
           // draw the polyline
-          const polyline = new Polyline();
+          const polyline = {}
           console.log("creating a line...", path.length);
-          path.forEach(geoPoint => {
-            const pos = Position.positionFromLatLng(
-              geoPoint.latitude,
-              geoPoint.longitude
-            );
-            polyline.addPoint(pos);
+          polyline.points = path.map(geoPoint => {
+            return { lat: geoPoint.latitude, lng: geoPoint.longitude }
+            
           });
           polyline.visible = true;
           polyline.width = 5;
           polyline.geodesic = false;
           polyline.color = new Color(colors[idx % 5]);
-          this.mapView.addPolyline(polyline);
+          const polyReference = this.mapView.addPolyline(polyline)
+          this.polyLines.push(polyReference)
         })
       }
     },
@@ -394,54 +319,29 @@ export default {
       if(pois.length == 0)
         return
       
-      let bounds, builder;
       padding = padding || 80;
-      if (isIOS) {
-        bounds = GMSCoordinateBounds.alloc().init();
-      }
-      if (isAndroid) {
-         builder = new com.google.android.gms.maps.model.LatLngBounds.Builder();
-      }
-      // iterate markers, and add position
-      pois.forEach((poi) => {
-        if (isAndroid) {
-          builder.include(new com.google.android.gms.maps.model.LatLng(poi.position.latitude, poi.position.longitude));
-        }
-        if (isIOS) 
-          bounds = bounds.includingCoordinate(CLLocationCoordinate2DMake(poi.position.latitude, poi.position.longitude));
-      });
-
-      if(isAndroid) {
-        bounds = builder.build();
-        const cu = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(
-          bounds,
-          padding
-        );
-        console.log("ANDROID moving map to bounds of all points on map");
-        this.mapView.gMap.animateCamera(cu);
-      }
-      if (isIOS) {
-        var update = GMSCameraUpdate.fitBoundsWithPadding(bounds, padding);
-        console.log("IOS moving map to bounds of all points on map");
-        // setting timeout... https://github.com/dapriett/nativescript-google-maps-sdk/issues/106
-        setTimeout(() => {
-          this.mapView.gMap.animateWithCameraUpdate(update);
-        }, 100)
-      }
+      setTimeout(() => {
+        let coordinates = pois.map((poi) => { return { lat: poi.position.latitude, lng: poi.position.longitude }} )
+        this.mapView.animateCamera( CameraUpdate.fromCoordinates(coordinates, padding) )
+      }, 200)
       
     },
     addMapMarkers() {
       console.log(
         " ADDING POINTS: " + (this.pois ? this.pois.length : "EMPTY")
       );
-      this.mapView.removeAllMarkers();
+      
 
       if (this.pois && this.pois.length) {
         let poiIndex = 0
+        
+        // first remove existing markers
+        this.markers.forEach(marker => this.mapView.removeMarker(marker))
         this.markers = []
+
         this.pois.forEach(poi => {
-          const marker = this.addMarkerFromPoi(poi, poiIndex);
-          this.markers.push(marker)
+          const marker = this.createMarkerFromPoi(poi, poiIndex);
+          
           const icon = utils.getPoiIcon(poi);
           if (icon) {
             // TODO cache?
@@ -460,6 +360,8 @@ export default {
             marker.icon = iconImg;
           }
           poiIndex++
+          const markerReference = this.mapView.addMarker(marker)
+          this.markers.push(markerReference)
         });
       }
     },
@@ -470,16 +372,27 @@ export default {
       this.$emit("onMarkerInfoWindowTapped", t);
     },
     onCameraChanged(args) {
-      console.log('Camera changed: ' + JSON.stringify(args.camera));
+      if(!this.mapView) 
+      { 
+        console.log('mapview not ready yet, ignoring event')
+        return;
+      }
       // set zoom to store
-      this.$store.commit('setMapZoom', args.camera.zoom)
+      this.$store.commit('setMapZoom', this.mapView.cameraPosition.zoom)
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-GoogleMap {
-  padding-bottom:100;
+
+.btn-img {
+  border-radius: 20;
+  background-color: white;
+}
+.myLocation {
+  width: 50%;
+  height: 50%;
+  vertical-align: middle;
 }
 </style>

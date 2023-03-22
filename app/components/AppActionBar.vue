@@ -35,14 +35,14 @@
 
 <script>
 import * as utils from "~/plugins/utils";
-import firebase from "nativescript-plugin-firebase";
+import { firebase } from "@nativescript/firebase"
 import { mapGetters } from "vuex";
-import { isAndroid, isIOS } from "tns-core-modules/platform"
-import { Directions } from "nativescript-directions";
-import * as SocialShare from "nativescript-social-share";
-import { localize } from "nativescript-localize";
-import * as dialogs from "tns-core-modules/ui/dialogs";
-import * as application from "tns-core-modules/application";
+import { isAndroid, isIOS } from "@nativescript/core/platform"
+import { Directions } from "@nativescript/directions";
+import * as SocialShare from "@nativescript/social-share";
+import { localize } from "@nativescript/localize";
+import * as application from '@nativescript/core';
+import {Theme } from "@nativescript/theme"
 
 export default {
   data() {
@@ -70,13 +70,13 @@ export default {
     menuIcon() {
       if(this.shouldShowBack) {
         // application.systemAppearance() crashes iOS atm TODO make bug report
-        if(isAndroid && application.systemAppearance() === 'dark')
+        if(isAndroid && Theme.getMode() === 'dark')
           return 'res://action_back_white'
         else 
           return 'res://action_back_black'
       }
       else {
-        if(isAndroid && application.systemAppearance() === 'dark')
+        if(isAndroid && Theme.getMode() === 'dark')
           return 'res://action_menu_white'
         else {
           return 'res://action_menu_black'

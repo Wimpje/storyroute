@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { localize } from "nativescript-localize";
+import { localize } from "@nativescript/localize";
 import * as utils from "~/plugins/utils";
 
 export default {

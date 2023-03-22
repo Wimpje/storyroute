@@ -20,9 +20,10 @@
 </template>
 
 <script>
-import * as geolocation from "nativescript-geolocation";
-import { Accuracy } from "tns-core-modules/ui/enums";
-const firebase = require("nativescript-plugin-firebase/app");
+import * as geolocation from '@nativescript/geolocation';
+import { CoreTypes } from '@nativescript/core'
+import { firebase } from "@nativescript/firebase"
+
 
 class POI {
   constructor(loc) {
@@ -71,7 +72,7 @@ export default {
       let that = this;
       geolocation
         .getCurrentLocation({
-          desiredAccuracy: Accuracy.high,
+          desiredAccuracy: CoreTypes.Accuracy.high,
           maximumAge: 5000,
           timeout: 10000
         })
@@ -100,7 +101,7 @@ export default {
               console.log("Error: " + e.message);
             },
             {
-              desiredAccuracy: Accuracy.high,
+              desiredAccuracy: CoreTypes.Accuracy.high,
               updateDistance: 1,
               updateTime: 3000,
               minimumUpdateTime: 100

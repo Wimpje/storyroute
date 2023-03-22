@@ -11,8 +11,8 @@ import RouteInfo from "~/pages/RouteInfo.vue";
 import ArticleInfo from "~/pages/ArticleInfo.vue";
 import ImageInfo from "~/pages/ImageInfo.vue";
 import * as utils from "~/plugins/utils";
-import * as firebase from"nativescript-plugin-firebase";
-import { localize } from "nativescript-localize";
+import { firebase } from "@nativescript/firebase";
+import { localize } from "@nativescript/localize";
 
 const pages = {
   app: App,

@@ -31,6 +31,7 @@ export const actions = {
   async updatePois({ commit }) {
     const service = new PoiService()
     const docs = await service.getPois(true)
+    docs.forEach(poi => poi.selected = false)
     commit("setPois", docs)
   }
 }

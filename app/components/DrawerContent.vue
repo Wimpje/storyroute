@@ -31,7 +31,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import * as utils from "~/plugins/utils";
-import * as firebase from "nativescript-plugin-firebase";
+import {firebase} from "@nativescript/firebase";
 
 export default {
   data() {

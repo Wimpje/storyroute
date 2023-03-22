@@ -1,48 +1,55 @@
+// import VueDevtools from 'nativescript-vue-devtools'
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex'
+
 import store from './store/index.js'
 import Home from './pages/Home'
 import App from './pages/App'
-import { isIOS, screen } from "tns-core-modules/platform"
-import { Frame, isAndroid } from '@nativescript/core/ui/frame';
-import { localize } from "nativescript-localize";
-import { MapView } from "nativescript-google-maps-sdk";
-import VueDevtools from 'nativescript-vue-devtools'
+import { isIOS, screen } from "@nativescript/core/platform"
+import { Frame } from '@nativescript/core/ui/frame';
+import { localize } from "@nativescript/localize";
+import GoogleMaps from '@nativescript/google-maps/vue'
 import DrawerContent from "./components/DrawerContent";
 import AppActionBar from "./components/AppActionBar";
 import CachedImage from '~/components/CachedImage'
 import CenterLabel from '~/components/CenterLabel'
 import RadSideDrawer from "nativescript-ui-sidedrawer/vue";
 import RadListView from 'nativescript-ui-listview/vue';
-import { android, AndroidApplication } from "tns-core-modules/application";
+import {ApplicationSettings, Application, AndroidApplication } from '@nativescript/core';
+import { android, ios } from '@nativescript/core/application';
+
 import { AudioService } from "~/services/audioService"
-import * as application from "tns-core-modules/application";
 import { ToastService } from '~/services/toastService'
-import { allowSleepAgain } from "nativescript-insomnia";
-import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
-import * as imageModule from 'nativescript-image';
-import ImagePlugin from 'nativescript-image/vue';
+import { allowSleepAgain } from "@nativescript-community/insomnia";
 import * as utils from "~/plugins/utils";
+
+// UI-material components imports
+import BottomNavigation from '@nativescript-community/ui-material-bottom-navigation/vue';
+Vue.use(BottomNavigation);
+import TabsPlugin from '@nativescript-community/ui-material-tabs/vue';
+Vue.use(TabsPlugin);
+import ImageModule from '@nativescript-community/ui-image/vue';
+import * as imageModule from '@nativescript-community/ui-image';
+Vue.use(ImageModule);
 
 Vue.registerElement('VideoPlayer', () => require('nativescript-videoplayer').Video)
 
 // Set up config if not there:
-
 const setupConfigBool = (key, value) => {
-  if (!hasKey(key)) {
+  if (!ApplicationSettings.hasKey(key)) {
     console.log(`Config: creating key ${key}, and setting  it to ${value}`)
-    setBoolean(key, value)
+    ApplicationSettings.setBoolean(key, value)
   }
 }
 
 const setupConfigString = (key, value) => {
-  if (!hasKey(key)) {
+  if (!ApplicationSettings.hasKey(key)) {
     console.log(`Config: creating key ${key}, and setting it to ${value}`)
-    setString(key, value)
+    ApplicationSettings.setString(key, value)
   }
 }
 
-setupConfigBool('googleAnalytics', true)
+//setupConfigBool('googleAnalytics', true)
 setupConfigBool('googleCrashlytics', true)
 setupConfigBool('screenOnWithMap', true)
 setupConfigBool('showDoubleClickHint', true)
@@ -54,32 +61,43 @@ Vue.prototype.$store = store
 Vue.prototype.$toast = new ToastService()
 
 
-application.on(application.launchEvent, (args) => {
+Application.on(Application.launchEvent, (args) => {
     // init settings or something?
     imageModule.initialize({ isDownsampleEnabled: true })
 });
 
-application.on(application.suspendEvent, (args) => {
+Application.on(Application.suspendEvent, (args) => {
   Vue.prototype.$player.pause()
   Vue.prototype.$toast.cancel();
 });
 
 // quick & dirty setting of initial orientation
 const setCurrentOrientation = () => {
-  let orientation = 'portrait'
+  setTimeout(() => {
+    let orientation = 'portrait'
+    try {
+      if (isIOS) {
+        orientation = ios.orientation
+      }
+      else {
+        orientation = android.orientation
+      }
 
-  // detection of orientation does not work well atm ... 
-
-  store.commit('setOrientation', orientation)
-  console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPs}`)
+   
+    } catch(e) {
+      console.error('orientation could not be gotten from app, using default ', orientation, e)
+    }
+    store.commit('setOrientation', orientation)
+    console.log(`init orientation = ${orientation} width: ${screen.mainScreen.widthDIPs} height: ${screen.mainScreen.heightDIPs}`)
+  }, 10)
 }
 
-application.on(application.orientationChangedEvent, (args) => {
+Application.on(Application.orientationChangedEvent, (args) => {
  console.log('rotated!', args.newValue)
  store.commit('setOrientation', args.newValue)
 });
 
-application.on(application.exitEvent, (args) => {
+Application.on(Application.exitEvent, (args) => {
   Vue.prototype.$player.pause();
   Vue.prototype.$player.dispose();
   Vue.prototype.$toast.cancel();
@@ -107,35 +125,27 @@ if (android) {
   });
 }
 
-Vue.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
-Vue.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
+Vue.registerElement('Carousel', () => require('@nstudio/nativescript-carousel').Carousel);
+Vue.registerElement('CarouselItem', () => require('@nstudio/nativescript-carousel').CarouselItem);
 
 Vue.registerElement(
   'CardView',
   () => require('@nstudio/nativescript-cardview').CardView
 );
 
-if (TNS_ENV !== 'production') {
-  Vue.use(VueDevtools)
-}
+
 // Prints Vue logs when --env.production is *NOT* set while building
-Vue.config.silent = (TNS_ENV === 'production')
+Vue.config.silent = !(__DEV__)
 
 Vue.use(RadListView);
 Vue.use(RadSideDrawer);
-Vue.use(ImagePlugin);
 
-
-Vue.registerElement('MapView', () => MapView)
+Vue.use(GoogleMaps)
 
 // some of our own custom components
 Vue.component('AppActionBar', AppActionBar)
 Vue.component('CenterLabel', CenterLabel)
 Vue.component('CachedImage', CachedImage)
-
-if (isIOS) {
-  GMSServices.provideAPIKey("<keyhere>");
-}
 
 Vue.filter("L", localize);
 
@@ -143,7 +153,9 @@ Vue.use(Vuex);
 
 
 utils.initFirebase()
-
+if (__DEV__) {
+  //Vue.use(VueDevtools)
+}
 const vueApp = new Vue({
   store,
   render(h) {

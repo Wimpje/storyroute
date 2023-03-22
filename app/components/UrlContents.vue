@@ -13,8 +13,8 @@
   </StackLayout>
 </template>
 <script>
-import * as firebase from "nativescript-plugin-firebase";
-import * as utils from "@nativescript/core/utils/utils";
+import { firebase } from "@nativescript/firebase"
+import * as utils from "@nativescript/core/utils";
 
 export default {
   components: {},

@@ -1,4 +1,5 @@
-const firebase = require("nativescript-plugin-firebase/app");
+import { firestore } from "@nativescript/firebase";
+import { crashlytics } from "@nativescript/firebase/crashlytics";
 
 export class FirebaseCollectionService {
   collection;
@@ -8,7 +9,7 @@ export class FirebaseCollectionService {
   constructor(name) {
     console.log('initialized FirebaseCollectionService for', name)
     this.name = name
-    this.collection = firebase.firestore().collection(name)
+    this.collection = firestore.collection(name)
   }
 
   public async getDocument(id: String) {
@@ -40,7 +41,7 @@ export class FirebaseCollectionService {
       })
     }
     catch (e) {
-      firebase.crashlytics.log(e)
+      crashlytics.log(e)
       console.error(e);
     }
     console.log('... retrieved: ', this.documents.length)
