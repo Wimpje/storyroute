@@ -6,7 +6,6 @@
         row="0"
         :pois="listPois"
         :paths="paths"
-        :padding="padding"
         @googleMapReady="onMapReady"
         @markerSelect="scrollToPoint"
       />
@@ -39,7 +38,7 @@
         :width="cardsContainerWidth"
         :height="cardsContainerHeight"
         :marginLeft="screenOrientation === 'landscape' ? 0 : 5"
-        :marginTop="screenOrientation === 'landscape' ? 5 : 0"
+        :marginBottom="marginBottomCards"
         :verticalAlignment="verticalAlignment"
         :horizontalAlignment="horizontalAlignment"
       >
@@ -47,15 +46,11 @@
           for="(poi, index) in listPois"
           ref="listView"
           :orientation="orientation"
-          selectionBehavior="Press"
           @loaded="listviewLoaded = true"
-          :height="screenOrientation === 'landscape' ? '100%' : 150"
-          :width="screenOrientation === 'landscape' ? 150 : '100%'"
+          :height="imageHeight"
+          :width="imageWidth"
           @scrollDragEnded="onScrolled"
           multipleSelection="false"
-          @itemSelected="onItemSelected"
-          @itemDeselected="onItemDeselected"
-          @itemDeselecting="onItemDeselecting"
           @itemTap="showPointInfoFromList"
         >
           <v-template>
@@ -74,12 +69,13 @@
                   >
                   </Label>
                   <CachedImage
-                    verticalAlignment="bottom"
+                    verticalAlignment="top"
                     row="1"
                     col="0"
                     :source="getPoiImage(poi)"
-                    stretch="aspectFill"
+                    stretch="focusCrop"
                     padding="3"
+                    height="80"
                     :class="poi.selected ? 'image selected' : 'image'"
                     placeholder="~/assets/images/placeholder.png"
                   ></CachedImage>
@@ -89,12 +85,13 @@
                     :text="'message.tapAgainForInfo' | L"
                     row="1"
                     col="0"
+                    height="80"
                     class="overlayLabel"
                     textWrap="true"
                     textAlignment="center"
                     verticalAlignment="middle"
                     horizontalAlignment="middle"
-                  />
+                  ></Label>
                 </GridLayout>
               </CardView>
             </GridLayout>
@@ -108,15 +105,13 @@
 <script>
 import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters } from "vuex";
-import { keepAwake, allowSleepAgain } from "nativescript-insomnia";
+import { keepAwake, allowSleepAgain } from "@nativescript-community/insomnia";
 import * as utils from "~/plugins/utils";
-import * as firebase from "nativescript-plugin-firebase";
+import { firebase } from "@nativescript/firebase"
 import { ListViewItemSnapMode } from "nativescript-ui-listview";
 import debounce from "lodash/debounce";
-import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
-import * as utilsModule from "tns-core-modules/utils/utils";
-import { isIOS, isAndroid } from "@nativescript/core/ui/page/page";
-import { ObservableArray } from "tns-core-modules/data/observable-array";
+import { ApplicationSettings, Utils } from "@nativescript/core";
+import { isIOS, isAndroid } from "@nativescript/core";
 
 export default {
   components: {
@@ -131,7 +126,7 @@ export default {
       mapReady: false,
       selectedItem: null,
       dontResize: false,
-      listPois: new ObservableArray(),
+      listPois: [],
       currentCategory: "all",
       ommenCenter: { position: { latitude: 52.4958, longitude: 6.44117 } },
       categories: ["all", "stolpersteine", "routes", "planes", "rest"],
@@ -140,7 +135,7 @@ export default {
   },
   beforeDestroy() {
     console.log("DESTROY");
-    if (getBoolean("screenOnWithMap")) {
+    if (ApplicationSettings.getBoolean("screenOnWithMap")) {
       allowSleepAgain().then(function() {
         console.log("go to sleep little baby");
       });
@@ -151,34 +146,33 @@ export default {
       pois: "getPois",
       screenOrientation: "screenOrientation"
     }),
-    padding() {
-      if (this.screenOrientation === "landscape") {
-        // left = scroll
-        const rightPadding = isIOS
-          ? 150
-          : utilsModule.layout.toDevicePixels(160);
-        // bottom = buttons
-        const bottomPadding = isIOS
-          ? 30
-          : utilsModule.layout.toDevicePixels(30);
-
-        return [0, bottomPadding, 0, rightPadding];
-      } else {
-        const bottomPadding = isIOS
-          ? 170
-          : utilsModule.layout.toDevicePixels(170);
-        return [0, bottomPadding, 0, 0];
-      }
+    imageHeight() {
+      return this.screenOrientation === 'landscape' ? '100%' : 150
+    },
+    imageWidth() {
+      return this.screenOrientation === 'landscape' ? 150 : '100%'
     },
     verticalAlignment() {
       return this.screenOrientation === "landscape" ? "top" : "bottom";
     },
-
     horizontalAlignment() {
       return this.screenOrientation === "landscape" ? "right" : "middle";
     },
     marginBottomButtons() {
-      return this.screenOrientation === "landscape" ? 5 : 140;
+      if (isIOS) {
+        return this.screenOrientation === "landscape" ? 5 : 145;
+      }
+      else {
+        return this.screenOrientation === "landscape" ? 5 : 150;
+      }
+    },
+    marginBottomCards() {
+      if (isIOS) {
+        return Utils.layout.toDevicePixels(5);
+      }
+      else {
+        return 5;
+      }
     },
     widthButtons() {
       return this.screenOrientation === "landscape" ? "100%" : "100%";
@@ -197,8 +191,9 @@ export default {
     paths() {
       if (this.route) return [this.route.path];
       else {
-        if (this.currentCategory === "all" || this.currentCategory === "routes")
+        if (this.currentCategory === "all" || this.currentCategory === "routes") {
           return this.$store.getters.getRoutes.map(route => route.path);
+        }
         else return [];
       }
     },
@@ -208,6 +203,20 @@ export default {
     pageName() {
       return this.route ? "route" : "discover";
     },
+   
+  },
+  watch: {
+    screenOrientation(oldVal, newVal) {
+      // refresh the list to re-render properly
+      console.log("Discover: screenOrientation changed", newVal);
+      this.$nextTick(() => {
+        if (this.$refs.listView) {
+          this.$refs.listView.refresh();
+        }
+      });
+    }
+  },
+  methods: {
     getPoisForView() {
       if (this.route && this.route.pois) {
         let idx = 1;
@@ -233,23 +242,7 @@ export default {
           return true;
         });
       }
-    }
-  },
-  watch: {
-    screenOrientation(oldVal, newVal) {
-      // refresh the list to re-render properly
-      console.log("Discover: screenOrientation changed", newVal);
-      this.$nextTick(() => {
-        if (this.$refs.listView) {
-          this.$refs.listView.refresh();
-        }
-        if (this.$refs.gMap) {
-          this.$refs.gMap.resizeMapHack();
-        }
-      });
-    }
-  },
-  methods: {
+    },
     onLoaded() {
       this.mapReady = false;
       console.log("discover - onloaded");
@@ -260,7 +253,7 @@ export default {
       if (this.pageName === "route") curPage.title = this.route.title;
       this.$store.commit("setCurrentPage", curPage);
 
-      if (getBoolean("screenOnWithMap")) {
+      if (ApplicationSettings.getBoolean("screenOnWithMap")) {
         keepAwake().then(function() {
           console.log("Insomnia is active");
         });
@@ -269,13 +262,13 @@ export default {
     filterCategory(category) {
       console.log("filtering to category", category);
       this.currentCategory = category;
-      // TODO filter functino for listPois
+      // TODO filter function for listPois
 
       // idea: go over getPointsForView, check if they should be included in listPois, if so, check if they are there already
       // if not, push it in, otherwise leave as is.
       // then check rest of listPois array for items that should not be in there.
 
-      this.getPoisForView.forEach(poi => {
+      this.getPoisForView().forEach(poi => {
         const shouldKeep = this.filterCategoryFn(poi);
         const idx = this.listPois.indexOf(poi);
 
@@ -356,10 +349,12 @@ export default {
       const l = this.listPois.length;
       let curPointIndex = 0;
       for (let idx = 0; idx < l; idx++) {
-        const poi = this.listPois.getItem(idx);
+        const poi = this.listPois[idx];
         poi.selected = false;
         if (poi.id === marker.userData.id) {
           curPointIndex = idx;
+          poi.selected = true
+          this.selectedItem = idx
         }
       }
       console.log(
@@ -370,10 +365,8 @@ export default {
           curPointIndex,
           false,
           ListViewItemSnapMode.Center
-        );
-        this.$refs.listView.nativeView.selectItemAt(curPointIndex)
-
-      });
+        )
+      })
     },
     showPointInfo(poi) {
       console.log("should load", poi.title);
@@ -409,52 +402,43 @@ export default {
         this.dontResize = true;
       });
     },
-    onItemDeselecting({ index }) {
-      if (isAndroid) return;
-      console.log("itemDeselecting", index);
-      this.selectedItem = null;
-      const item = this.listPois.getItem(index);
-      item.selected = false;
-      this.listPois.setItem(index, item);
-    },
     onItemDeselected({ index }) {
-      if (isIOS) return;
       console.log("itemDeselected", index);
       this.selectedItem = null;
-      const item = this.listPois.getItem(index);
-      item.selected = false;
-      this.listPois.setItem(index, item);
+      const item = this.listPois[index];
+      item.selected = false
+      this.$refs.listView.refresh()
     },
     onItemSelected({ index }) {
-      console.log("itemSelected", index);
-      this.selectedItem = index;
-
-      if (isIOS) this.listPois.forEach(poi => (poi.selected = false));
-
-      const item = this.listPois.getItem(index);
-      item.selected = true;
-      this.listPois.setItem(index, item);
-      this.$refs.gMap.showTitleForPoint(item);
+      console.log("itemSelected", index)
+      this.selectedItem = index
+      const item = this.listPois[index]
+      this.$refs.gMap.showTitleForPoint(item)
       this.$refs.gMap.animateToPoint(
         item,
         50,
         Math.max(13, this.$store.getters.mapZoom)
-      );
+      )
+      item.selected = true
+      this.$refs.listView.refresh()
     },
     showPointInfoFromList(event) {
+      this.listPois.forEach((poi) => poi.selected = false)
       if (this.selectedItem !== null) {
-        if (this.selectedItem == event.index) {
-          if (isIOS) this.$refs.listView.nativeView.deselectAll();
-
+        if (this.selectedItem === event.index) {
+         
           this.selectedItem = null;
-          if (isIOS) {
-            setTimeout(() => {
-              this.listPois.getItem(event.index).selected = false;
-            }, 100);
-          }
+          
           console.log("should load:", event.item.title);
           this.showPointInfo(event.item);
+          this.onItemDeselected(event)
         }
+        else {
+          this.onItemSelected(event)
+        }
+      }
+      else {
+        this.onItemSelected(event)
       }
     },
     zoomToMarkerByScroll(scrollOffset) {
@@ -470,7 +454,7 @@ export default {
         newScrollIndex = this.listPois.length - 1; // overflow issue
       }
       if (this.scrollIndex != newScrollIndex) {
-        const activePoi = this.listPois.getItem(newScrollIndex);
+        const activePoi = this.listPois[newScrollIndex];
         if (!activePoi) {
           console.error("could not determine active poi!");
           return;
@@ -523,18 +507,24 @@ export default {
     },
     onMapReady() {
       console.log("discover reports: mapready");
-      this.listPois.push(this.getPoisForView);
-      this.$refs.listView.refresh();
-      this.$refs.gMap.addMapMarkers();
-      this.mapReady = true;
+      this.listPois = this.getPoisForView();
 
-      if (!this.dontResize) {
-        console.log("resizing map");
-        this.$refs.gMap.fitMapToPois(this.listPois);
-      } else {
-        console.log("no resizing, coming from point");
-        this.dontResize = false;
-      }
+      this.$refs.listView.refresh()
+      // timeouts suck
+      setTimeout(() => {
+        this.$refs.gMap.addMapMarkers()
+
+        this.mapReady = true;
+        if (!this.dontResize) {
+          console.log("resizing map");
+          this.$refs.gMap.fitMapToPois(this.listPois);
+        } else {
+          console.log("no resizing, coming from point");
+          this.dontResize = false;
+        }
+
+      }, 100)
+   
     }
   }
 };

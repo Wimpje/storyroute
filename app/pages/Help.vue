@@ -20,14 +20,12 @@
 </template>
 
 <script>
-import * as application from "tns-core-modules/application";
 import Theme from "@nativescript/theme";
-import * as firebase from "nativescript-plugin-firebase";
-import { getBoolean, setBoolean } from "tns-core-modules/application-settings";
-import * as utils from "~/plugins/utils";
+import { firebase } from "@nativescript/firebase"
 import { mapGetters, mapActions } from "vuex";
-import * as email from "nativescript-email";
-import { localize } from "nativescript-localize";
+import * as email from "@nativescript/email";
+import { localize } from "@nativescript/localize";
+import { crashlytics } from "@nativescript/firebase/crashlytics";
 
 export default {
   mounted() {
@@ -45,7 +43,7 @@ export default {
     }),
    
     isDebug() {
-      return TNS_ENV !== 'production'
+      return __DEV__
     },
     contactEmail() {
       if(this.contact && this.contact.urls) {
@@ -70,7 +68,7 @@ export default {
           }).then(result => {
             console.log('email compose closed')
           }).catch(err => {
-            firebase.crashlytics.log("email send error " + err)
+            crashlytics.log("email send error " + err)
             console.error(err)
           })
         }

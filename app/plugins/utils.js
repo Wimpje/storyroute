@@ -1,12 +1,10 @@
-import { getRootView } from "tns-core-modules/application"
+import { Application, Span, FormattedString, ApplicationSettings } from '@nativescript/core'
 import { Frame } from '@nativescript/core/ui/frame';
 import store from '~/store/index.js'
 import Vue from 'nativescript-vue'
-import { Span } from "text/span";
-import { FormattedString } from "text/formatted-string"
-import { getBoolean, setBoolean, setString, hasKey } from "tns-core-modules/application-settings";
 
-const firebase = require("nativescript-plugin-firebase");
+import { firebase } from "@nativescript/firebase";
+import { crashlytics } from "@nativescript/firebase/crashlytics";
 
 let fbIsInitialized = false
 let fbInit = null
@@ -22,8 +20,8 @@ export const initFirebase = () => {
   console.log('FB: utils starting init ')
   fbInit = firebase.init({
     iOSEmulatorFlush: true,
-    analyticsCollectionEnabled: getBoolean('googleAnalytics'), // enabled
-    crashlyticsCollectionEnabled: getBoolean('googleCrashlytics'), // enabled
+    analyticsCollectionEnabled: ApplicationSettings.getBoolean('googleAnalytics'), // enabled
+    crashlyticsCollectionEnabled: ApplicationSettings.getBoolean('googleCrashlytics'), // enabled
     onAuthStateChanged: data => {
       console.log("FB: auth state changed: ", data)
       store.dispatch('setUser', data)
@@ -56,26 +54,26 @@ export const loadFirebaseData = () => {
       })
       .catch(error => {
         // TODO handle errors on connections
-        firebase.crashlytics.log("FB: issue with logging in: " + error)
+        crashlytics.log("FB: issue with logging in: " + error)
         console.error("FB: issue with logging in: " + error);
       });
   })
   .catch(error => {
     console.error("FB: Error initializing " + error)
-    firebase.crashlytics.log("FB: Error initializing: " + error)
+    crashlytics.log("FB: Error initializing: " + error)
     // TODO this should cause a modal popup, with a 'try again later'
   });
 }
 
 export const showDrawer = () => {
-  let drawerNativeView = getRootView();
+  let drawerNativeView = Application.getRootView();
   if (drawerNativeView && drawerNativeView.showDrawer) {
     drawerNativeView.showDrawer();
   }
 }
 
 export const closeDrawer = () => {
-  let drawerNativeView = getRootView();
+  let drawerNativeView = Application.getRootView();
   if (drawerNativeView && drawerNativeView.showDrawer) {
     drawerNativeView.closeDrawer();
   }

@@ -5,13 +5,12 @@
     :failureImageUri="noimageName"
     :placeholderImageUri="placeholder"
     :showProgressBar="showProgressBar"
-    @loaded="imageLoaded">
+    @finalImageSet="imageLoaded">
   </NSImg>
 </template>
 
 <script>
 // TODO - store in filesystem for subsequent app loads ... 
-import { Cache } from "tns-core-modules/ui/image-cache";
 
 export default {
   props: ["placeholder", "source", "noimage", "showProgressBar"],
@@ -45,9 +44,7 @@ export default {
   },
   methods: {
     imageLoaded(args) {
-      console.log('image loaded!', this.source)
       this.imageLoading = false;
-      //this.$emit('image_loaded', args.object)
     }
   }
 }

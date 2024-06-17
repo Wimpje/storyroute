@@ -32,7 +32,7 @@
             class="carouselLabel m-b-10 p-5"
             verticalAlignment="bottom"
             horizontalAlignment="center"
-          />
+          ></Label>
         </GridLayout>
       </CarouselItem>
     </Carousel>
