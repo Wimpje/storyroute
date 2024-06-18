@@ -1,6 +1,7 @@
 {
-  "app.name": "75 years of freedom - Ommen",
+  "app.name": "Rondom Ommen",
   "75 jaar bevrijding": "75 years of freedom",
+  "cco": "Cultuurhistorisch Centrum Ommen",
   "nav": {
     "routes": "Routes",
     "route": "Route",
@@ -28,8 +29,8 @@
   },
   "email": {
     "appnotfound": "Could not find an email app, please send an email to: ",
-    "subject": "Question / feedback 75 years of freedom app",
-    "body": "Hi, I have some feedback or a question about the 75 years of freedom app"
+    "subject": "Question / feedback Rondom Ommen app",
+    "body": "Hi, I have some feedback or a question about the Rondom Ommen app"
   },
   "map": {
     "location": {
@@ -62,7 +63,7 @@
     "contact": "Contact info"
   },
   "drawer": {
-    "title": "75 year liberty - Ommen"
+    "title": "Around Ommen"
   },
   "route": {
     "moreinfo": "More info",

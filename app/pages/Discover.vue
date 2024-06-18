@@ -107,7 +107,9 @@ import GoogleMap from "~/components/GoogleMap.vue";
 import { mapGetters } from "vuex";
 import { keepAwake, allowSleepAgain } from "@nativescript-community/insomnia";
 import * as utils from "~/plugins/utils";
-import { firebase } from "@nativescript/firebase"
+import { firebase } from "@nativescript/firebase-core"
+import '@nativescript/firebase-analytics';
+
 import { ListViewItemSnapMode } from "nativescript-ui-listview";
 import debounce from "lodash/debounce";
 import { ApplicationSettings, Utils } from "@nativescript/core";
@@ -370,7 +372,7 @@ export default {
     },
     showPointInfo(poi) {
       console.log("should load", poi.title);
-      firebase.analytics
+      firebase().analytics()
         .logEvent({
           key: "load_point",
           parameters: [

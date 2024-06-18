@@ -25,7 +25,9 @@ import RouteListItem from "~/components/RouteListItem";
 import LoadData from "~/components/LoadData";
 
 import * as utils from "~/plugins/utils";
-import { firebase } from "@nativescript/firebase"
+import { firebase } from "@nativescript/firebase-core"
+import '@nativescript/firebase-analytics';
+
 
 export default {
   mounted() {
@@ -54,7 +56,7 @@ export default {
     },
     loadRoute(event) {
       console.log("should load", event.item.title);
-      firebase.analytics.logEvent({
+      firebase().analytics().logEvent({
         key: "load_route",
         parameters: [ // optional
           {

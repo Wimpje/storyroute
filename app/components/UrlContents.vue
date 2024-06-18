@@ -13,7 +13,9 @@
   </StackLayout>
 </template>
 <script>
-import { firebase } from "@nativescript/firebase"
+import { firebase } from "@nativescript/firebase-core"
+import '@nativescript/firebase-analytics';
+
 import * as utils from "@nativescript/core/utils";
 
 export default {
@@ -24,7 +26,7 @@ export default {
       console.log("more info");
     },
     openUrl(url) {
-      firebase.analytics
+      firebase().analytics()
         .logEvent({
           key: "url_click",
           parameters: [

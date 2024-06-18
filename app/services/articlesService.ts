@@ -1,6 +1,7 @@
-import { firestore } from "@nativescript/firebase";
-import { crashlytics } from "@nativescript/firebase/crashlytics";
-
+import { firebase } from "@nativescript/firebase-core";
+import '@nativescript/firebase-firestore';
+import '@nativescript/firebase-crashlytics'; 
+const firestore = firebase().firestore();
 
 // can probably be abstracted even more (since the name of the collection is all that is different from routes / news / whatever colelction)
 export class ArticlesService {
@@ -28,7 +29,7 @@ export class ArticlesService {
       })
     }
     catch (e) {
-      crashlytics.log(e)
+      firebase().crashlytics().log(e)
 
       console.error(e);
     }

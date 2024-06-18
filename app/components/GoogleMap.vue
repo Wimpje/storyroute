@@ -37,7 +37,9 @@ import { Image } from "@nativescript/core/ui/image";
 import { ImageSource } from "@nativescript/core/image-source";
 import * as application from "@nativescript/core/application";
 import * as utils from "~/plugins/utils";
-import { crashlytics } from "@nativescript/firebase/crashlytics";
+import { firebase } from "@nativescript/firebase-core";
+import '@nativescript/firebase-crashlytics'; 
+
 
 export default {
   props: ["pois", "currentPoi", "padding", "paths"],
@@ -129,7 +131,7 @@ export default {
                 },
                 e => {
                   console.log("Error: ", (e.message || e));
-                  crashlytics.log("Unable to Enable Location", (e.message || e));
+                  firebase().crashlytics().log("Unable to Enable Location", (e.message || e));
                 }
               )
               .catch(ex => {

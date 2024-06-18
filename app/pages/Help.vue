@@ -21,11 +21,12 @@
 
 <script>
 import Theme from "@nativescript/theme";
-import { firebase } from "@nativescript/firebase"
+import { firebase } from "@nativescript/firebase-core"
+import '@nativescript/firebase-crashlytics'; 
 import { mapGetters, mapActions } from "vuex";
 import * as email from "@nativescript/email";
 import { localize } from "@nativescript/localize";
-import { crashlytics } from "@nativescript/firebase/crashlytics";
+
 
 export default {
   mounted() {
@@ -68,7 +69,7 @@ export default {
           }).then(result => {
             console.log('email compose closed')
           }).catch(err => {
-            crashlytics.log("email send error " + err)
+            firebase().crashlytics().log("email send error " + err)
             console.error(err)
           })
         }

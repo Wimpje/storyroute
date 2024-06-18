@@ -3,31 +3,33 @@ import { Frame } from '@nativescript/core/ui/frame';
 import store from '~/store/index.js'
 import Vue from 'nativescript-vue'
 
-import { firebase } from "@nativescript/firebase";
-import { crashlytics } from "@nativescript/firebase/crashlytics";
+import { firebase } from "@nativescript/firebase-core";
+import '@nativescript/firebase-crashlytics'; 
+import '@nativescript/firebase-auth'; // only needs to be imported 1x
+import '@nativescript/firebase-analytics'; // only needs to be imported 1x
 
 let fbIsInitialized = false
-let fbInit = null
+let fbApp = null
 export const firebaseInitialized = () => {
   return fbIsInitialized
 }
 
 export const initFirebase = () => {
-  if (fbIsInitialized) {
+  if (fbIsInitialized && fbApp) {
     console.log('FB: utils firebase already initialized ')
-    fbInit = Promise.resolve()
+    return
   }
   console.log('FB: utils starting init ')
-  fbInit = firebase.init({
-    iOSEmulatorFlush: true,
-    analyticsCollectionEnabled: ApplicationSettings.getBoolean('googleAnalytics'), // enabled
-    crashlyticsCollectionEnabled: ApplicationSettings.getBoolean('googleCrashlytics'), // enabled
-    onAuthStateChanged: data => {
-      console.log("FB: auth state changed: ", data)
-      store.dispatch('setUser', data)
-    }
-  }).then(() => {
+  fbApp = firebase().initializeApp({}).then(() => {
     fbIsInitialized = true
+    firebase().auth().addAuthStateChangeListener(data => {
+        console.log("FB: auth state changed: ", data)
+        store.dispatch('setUser', data)
+    })
+
+    firebase().analytics().setAnalyticsCollectionEnabled(ApplicationSettings.getBoolean('googleAnalytics'))
+    firebase().crashlytics().setCrashlyticsCollectionEnabled(ApplicationSettings.getBoolean('googleCrashlytics'))
+    
     console.log("FB: initialized, you can load data and log in and stuff")
   })
   .catch((err) => {
@@ -42,10 +44,7 @@ export const loadFirebaseData = () => {
     initFirebase()
   
   return fbInit.then((resp) => {
-    firebase.login(
-      {
-        type: firebase.LoginType.ANONYMOUS
-      })
+    firebase().auth().signInAnonymously()
       .then(user => {
         store.dispatch("getPois")
         console.log('FB: getPois called after logging in')
@@ -54,13 +53,13 @@ export const loadFirebaseData = () => {
       })
       .catch(error => {
         // TODO handle errors on connections
-        crashlytics.log("FB: issue with logging in: " + error)
+        firebase().crashlytics().log("FB: issue with logging in: " + error)
         console.error("FB: issue with logging in: " + error);
       });
   })
   .catch(error => {
     console.error("FB: Error initializing " + error)
-    crashlytics.log("FB: Error initializing: " + error)
+    firebase().crashlytics().log("FB: Error initializing: " + error)
     // TODO this should cause a modal popup, with a 'try again later'
   });
 }

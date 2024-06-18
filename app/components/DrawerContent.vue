@@ -31,7 +31,8 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import * as utils from "~/plugins/utils";
-import {firebase} from "@nativescript/firebase";
+import {firebase} from "@nativescript/firebase-core";
+import '@nativescript/firebase-analytics'
 
 export default {
   data() {
@@ -57,7 +58,7 @@ export default {
       return String.fromCharCode(code);
     },
     goToPage(item) {
-      firebase.analytics.logEvent({
+      firebase().analytics().logEvent({
         key: "drawer_nav",
         parameters: [ // optional
           {

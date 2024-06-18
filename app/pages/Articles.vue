@@ -6,13 +6,13 @@
 
         <MDTabStrip>
             <MDTabStripItem  
-                v-for="(category, idx) in categories"
+                v-for="(category) in categories"
                 :key="category">
               <Label :text="'article.'+category | L"></Label>
             </MDTabStripItem>
         </MDTabStrip>
 
-        <MDTabContentItem v-for="(category, idx) in categories"  :key="category">
+        <MDTabContentItem v-for="(category) in categories"  :key="category">
             <GridLayout class="m-10">
               <RadListView for="item in articles[category]" height="100%" @itemTap="loadArticle">
                 <v-template>
@@ -65,7 +65,8 @@ import { isAndroid, isIOS } from "@nativescript/core/platform";
 
 import LoadData from "~/components/LoadData";
 import { mapGetters } from "vuex";
-import { firebase } from "@nativescript/firebase"
+import { firebase } from "@nativescript/firebase-core"
+import '@nativescript/firebase-analytics';
 
 const moment = require("moment");
 
@@ -134,7 +135,7 @@ export default {
     },
     loadArticle({ item }) {
       this.currentItem = item;
-      firebase.analytics.logEvent({
+      firebase().analytics().logEvent({
         key: "load_article",
         parameters: [ // optional
           {
