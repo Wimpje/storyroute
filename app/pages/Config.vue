@@ -91,7 +91,7 @@ export default {
       set(val) {
         console.log("toggleCrashConfig", val);
         ApplicationSettings.setBoolean("googleCrashlytics", val);
-        crashlytics.setCrashlyticsCollectionEnabled(val);
+        firebase().crashlytics().setCrashlyticsCollectionEnabled(val);
       }
     },
     isDebug() {
@@ -150,7 +150,7 @@ export default {
       Theme.toggleMode(); // to toggle between the modes
     },
     crash() {
-      crashlytics.crash();
+      firebase().crashlytics().crash();
     }
   }
 };

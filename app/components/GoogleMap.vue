@@ -131,12 +131,12 @@ export default {
                 },
                 e => {
                   console.log("Error: ", (e.message || e));
-                  firebase().crashlytics().log("Unable to Enable Location", (e.message || e));
+                  firebase().crashlytics().log("Unable to Enable Location " +  (e.message || e));
                 }
               )
               .catch(ex => {
                 console.log("Unable to Enable Location", ex);
-                crashlytics.log("Unable to Enable Location" + ex);
+                firebase().crashlytics().log("Unable to Enable Location" + ex);
                 this.$toast.show("map.location.enableerror", {
                   shouldLocalize: true
                 });
