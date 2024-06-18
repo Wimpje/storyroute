@@ -58,19 +58,10 @@ export default {
       return String.fromCharCode(code);
     },
     goToPage(item) {
-      firebase().analytics().logEvent({
-        key: "drawer_nav",
-        parameters: [ // optional
-          {
-            key: "to_page",
-            value: item.name
-          }
-          ]
-      }).then(
-          function () {
-            console.log("analytics - logged drawer_nav");
-          }
-      );
+      firebase().analytics().logEvent('drawer_nav', {
+          key: "to_page",
+          value: item.name
+      })
       this.$myNavigateTo(item);
       utils.closeDrawer();
     }

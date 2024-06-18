@@ -373,27 +373,11 @@ export default {
     showPointInfo(poi) {
       console.log("should load", poi.title);
       firebase().analytics()
-        .logEvent({
-          key: "load_point",
-          parameters: [
-            // optional
-            {
-              key: "source",
-              value: this.pageName
-            },
-            {
-              key: "point_id",
-              value: poi.id
-            },
-            {
-              key: "point_name",
-              value: poi.title
-            }
-          ]
+        .logEvent("load_point",{
+          "source":this.pageName,
+          "point_id":poi.id,
+          "point_name":poi.title
         })
-        .then(function() {
-          console.log("analytics - logged load_point");
-        });
       this.$myNavigateTo("pointinfo", {
         props: {
           point: poi,

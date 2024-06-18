@@ -130,13 +130,10 @@ export const mutations = {
   setCurrentPage(state, page) {
     state.currentPage = page
   
-    firebase().analytics().setScreenName({
-      screenName: page.name
-    }).then(
-        function () {
-          console.log("Screen name set", page.name);
-        }
-    );
+    firebase().analytics().handleUserActivity({
+      event: 'navigation',
+      page: page.name
+    })
     
   },
   bottomNavigatedTo(state, index) {

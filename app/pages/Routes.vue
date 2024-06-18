@@ -56,22 +56,10 @@ export default {
     },
     loadRoute(event) {
       console.log("should load", event.item.title);
-      firebase().analytics().logEvent({
-        key: "load_route",
-        parameters: [ // optional
-          {
-            key: "route_id",
-            value: event.item.id
-          },
-          {
-            key: "route_name",
-            value: event.item.title
-          }]
-      }).then(
-          function () {
-            console.log("analytics - logged load_route");
-          }
-      );
+      firebase().analytics().logEvent("load_route", {
+        "route_id": event.item.id,
+        "route_name": event.item.title
+      });
 
       this.$myNavigateTo('routeinfo', {
         props: {

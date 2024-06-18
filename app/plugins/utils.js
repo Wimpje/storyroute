@@ -36,14 +36,14 @@ export const initFirebase = () => {
     fbIsInitialized = false
     console.error("FB: error initializing data", err)
   })
-  return fbInit
+  return fbApp
 }
 
 export const loadFirebaseData = () => {
   if (!fbIsInitialized)
     initFirebase()
   
-  return fbInit.then((resp) => {
+  return fbApp.then((resp) => {
     firebase().auth().signInAnonymously()
       .then(user => {
         store.dispatch("getPois")

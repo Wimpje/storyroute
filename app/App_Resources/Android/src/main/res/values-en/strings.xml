@@ -26,7 +26,7 @@
   <string name="_route_directions_Z2fEBra">"Directions"</string>
   <string name="_route_start_1k1oqJ">"Start"</string>
   <string name="_route_moreinfo_ZeWsVn">"More info"</string>
-  <string name="_drawer_title_Z1GOBux">"75 year liberty - Ommen"</string>
+  <string name="_drawer_title_Z1GOBux">"Around Ommen"</string>
   <string name="_help_contact_Z1BKgHm">"Contact info"</string>
   <string name="_help_credits_Z1wbyuT">"Credits"</string>
   <string name="_dialog_cancelAction_ZOILYF">"Cancel"</string>
@@ -45,8 +45,8 @@
   <string name="_map_noappfound_XuPyK">"No maps app found to plan route with"</string>
   <string name="_map_location_error_Z12s6Yy">"Error getting location (heeft de app toestemming?)"</string>
   <string name="_map_location_nolocation_Zz4FIL">"Location could not be retrieved (does app have location access?)"</string>
-  <string name="_email_body_1uUYAx">"Hi, I have some feedback or a question about the 75 years of freedom app"</string>
-  <string name="_email_subject_Z1am4mv">"Question / feedback 75 years of freedom app"</string>
+  <string name="_email_body_1uUYAx">"Hi, I have some feedback or a question about the Rondom Ommen app"</string>
+  <string name="_email_subject_Z1am4mv">"Question / feedback Rondom Ommen app"</string>
   <string name="_email_appnotfound_rg4qJ">"Could not find an email app, please send an email to: "</string>
   <string name="_btn_removeDownloadAll_Z1HrJg9">"remove downloads"</string>
   <string name="_btn_refreshDownloadAll_2akLCj">"refresh downloads"</string>
@@ -69,8 +69,9 @@
   <string name="_nav_discover_8Yo9z">"Discover"</string>
   <string name="_nav_route_Z15QoBP">"Route"</string>
   <string name="_nav_routes_1BKuwv">"Routes"</string>
+  <string name="cco">"Cultuurhistorisch Centrum Ommen"</string>
   <string name="_75_jaar_bevrijding_Z2wmU9D">"75 years of freedom"</string>
-  <string name="_app_name_1k3Sbz">"75 years of freedom - Ommen"</string>
-  <string name="app_name">"75 years of freedom - Ommen"</string>
-  <string name="title_activity_kimera">"75 years of freedom - Ommen"</string>
+  <string name="_app_name_1k3Sbz">"Rondom Ommen"</string>
+  <string name="app_name">"Rondom Ommen"</string>
+  <string name="title_activity_kimera">"Rondom Ommen"</string>
 </resources>

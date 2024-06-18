@@ -135,26 +135,11 @@ export default {
     },
     loadArticle({ item }) {
       this.currentItem = item;
-      firebase().analytics().logEvent({
-        key: "load_article",
-        parameters: [ // optional
-          {
-            key: "article_cat",
-            value: item.category
-          },
-          {
-            key: "article_id",
-            value: item.id
-          },
-          {
-            key: "article_name",
-            value: item.title
-          }]
-      }).then(
-          function () {
-            console.log("analytics - logged load_article");
-          }
-      );
+      firebase().analytics().logEvent('load_article', {
+        "article_cat": item.category,
+        "article_id": item.id,
+        "article_name": item.title
+      })
       // do something based on category? maybe different page? for now no
       this.$myNavigateTo("articleinfo", {
         props: {

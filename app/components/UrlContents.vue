@@ -27,20 +27,10 @@ export default {
     },
     openUrl(url) {
       firebase().analytics()
-        .logEvent({
-          key: "url_click",
-          parameters: [
-            // optional
-            {
-              key: "url",
-              value: url
-            }
-          ]
+        .logEvent('url_click', {
+          key: "url",
+          value: url
         })
-        .then(function() {
-          console.log("analytics - logged url_click");
-        });
-
       utils.openUrl(url);
     }
   },

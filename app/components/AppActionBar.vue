@@ -112,22 +112,10 @@ export default {
       if(actionObj.type) {
         SocialShare.shareText(localize(`share.${actionObj.type}`) + ` - ${actionObj.title} @ https://rondomommen.nl/${actionObj.type}/${actionObj.id}` );
         console.log('sharing this')
-        firebase().analytics().logEvent({
-          key: "share_action",
-          parameters: [ // optional
-            {
-              key: "type",
-              value: actionObj.type
-            },
-            {
-              key: "title",
-              value: actionObj.title
-            }]
-        }).then(
-            function () {
-              console.log("analytics - logged share");
-            }
-        );
+        firebase().analytics().logEvent('share_action', {
+            key: "title",
+            value: actionObj.title
+        })
       }
       else {
         console.error('something wrong trying to share')
@@ -168,22 +156,10 @@ export default {
         return
 
       console.log("open maps application to go to:", );
-      firebase().analytics().logEvent({
-        key: "open_map",
-        parameters: [ // optional
-          {
-            key: "type",
-            value: actionObj.type
-          },
-          {
-            key: "point_name",
-            value: actionObj.title
-          }]
-      }).then(
-          function () {
-            console.log("analytics - logged open_map");
-          }
-      );
+      firebase().analytics().logEvent('open_map', {
+        key: "point_name",
+        value: actionObj.title
+      });
       let directions = new Directions();
       directions.available().then(avail => {
         if (avail) {
