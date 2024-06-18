@@ -1,5 +1,7 @@
-import { firestore } from "@nativescript/firebase";
-import { crashlytics } from "@nativescript/firebase/crashlytics";
+import { firebase } from "@nativescript/firebase-core";
+import '@nativescript/firebase-firestore';
+import '@nativescript/firebase-crashlytics'; 
+const firestore = firebase().firestore();
 
 export class FirebaseCollectionService {
   collection;
@@ -41,7 +43,7 @@ export class FirebaseCollectionService {
       })
     }
     catch (e) {
-      crashlytics.log(e)
+      firebase().crashlytics().log(e)
       console.error(e);
     }
     console.log('... retrieved: ', this.documents.length)

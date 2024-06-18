@@ -35,7 +35,8 @@
 
 <script>
 import * as utils from "~/plugins/utils";
-import { firebase } from "@nativescript/firebase"
+import { firebase } from "@nativescript/firebase-core"
+import '@nativescript/firebase-analytics'
 import { mapGetters } from "vuex";
 import { isAndroid, isIOS } from "@nativescript/core/platform"
 import { Directions } from "@nativescript/directions";
@@ -109,9 +110,9 @@ export default {
     shareAction() {
       const actionObj = this.createActionObject()
       if(actionObj.type) {
-        SocialShare.shareText(localize(`share.${actionObj.type}`) + ` - ${actionObj.title} @ https://75jaarbevrijdingommenapp.nl/${actionObj.type}/${actionObj.id}` );
+        SocialShare.shareText(localize(`share.${actionObj.type}`) + ` - ${actionObj.title} @ https://rondomommen.nl/${actionObj.type}/${actionObj.id}` );
         console.log('sharing this')
-        firebase.analytics.logEvent({
+        firebase().analytics().logEvent({
           key: "share_action",
           parameters: [ // optional
             {
@@ -167,7 +168,7 @@ export default {
         return
 
       console.log("open maps application to go to:", );
-      firebase.analytics.logEvent({
+      firebase().analytics().logEvent({
         key: "open_map",
         parameters: [ // optional
           {

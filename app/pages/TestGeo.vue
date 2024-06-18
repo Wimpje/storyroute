@@ -22,8 +22,6 @@
 <script>
 import * as geolocation from '@nativescript/geolocation';
 import { CoreTypes } from '@nativescript/core'
-import { firebase } from "@nativescript/firebase"
-
 
 class POI {
   constructor(loc) {

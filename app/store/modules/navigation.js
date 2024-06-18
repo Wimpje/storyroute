@@ -11,7 +11,7 @@ import RouteInfo from "~/pages/RouteInfo.vue";
 import ArticleInfo from "~/pages/ArticleInfo.vue";
 import ImageInfo from "~/pages/ImageInfo.vue";
 import * as utils from "~/plugins/utils";
-import { firebase } from "@nativescript/firebase";
+import { firebase } from "@nativescript/firebase-core";
 import { localize } from "@nativescript/localize";
 
 const pages = {
@@ -130,7 +130,7 @@ export const mutations = {
   setCurrentPage(state, page) {
     state.currentPage = page
   
-    firebase.analytics.setScreenName({
+    firebase().analytics().setScreenName({
       screenName: page.name
     }).then(
         function () {

@@ -54,8 +54,7 @@
 
 <script>
 import Theme from "@nativescript/theme";
-import { firebase } from "@nativescript/firebase"
-import { crashlytics } from "@nativescript/firebase/crashlytics";
+import { firebase } from "@nativescript/firebase-core"
 
 import { ApplicationSettings } from "@nativescript/core";
 import * as utils from "~/plugins/utils";
@@ -105,7 +104,7 @@ export default {
       set(val) {
         console.log("toggle analytics", val);
         ApplicationSettings.setBoolean("googleAnalytics", val);
-        firebase.analytics.setAnalyticsCollectionEnabled(val);
+        firebase().analytics().setAnalyticsCollectionEnabled(val);
       }
     }
   },

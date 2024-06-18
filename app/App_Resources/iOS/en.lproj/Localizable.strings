@@ -24,7 +24,7 @@
 "_route_directions_Z2fEBra" = "Directions";
 "_route_start_1k1oqJ" = "Start";
 "_route_moreinfo_ZeWsVn" = "More info";
-"_drawer_title_Z1GOBux" = "75 year liberty - Ommen";
+"_drawer_title_Z1GOBux" = "Around Ommen";
 "_help_contact_Z1BKgHm" = "Contact info";
 "_help_credits_Z1wbyuT" = "Credits";
 "_dialog_cancelAction_ZOILYF" = "Cancel";
@@ -43,8 +43,8 @@
 "_map_noappfound_XuPyK" = "No maps app found to plan route with";
 "_map_location_error_Z12s6Yy" = "Error getting location (heeft de app toestemming?)";
 "_map_location_nolocation_Zz4FIL" = "Location could not be retrieved (does app have location access?)";
-"_email_body_1uUYAx" = "Hi, I have some feedback or a question about the 75 years of freedom app";
-"_email_subject_Z1am4mv" = "Question / feedback 75 years of freedom app";
+"_email_body_1uUYAx" = "Hi, I have some feedback or a question about the Rondom Ommen app";
+"_email_subject_Z1am4mv" = "Question / feedback Rondom Ommen app";
 "_email_appnotfound_rg4qJ" = "Could not find an email app, please send an email to: ";
 "_btn_removeDownloadAll_Z1HrJg9" = "remove downloads";
 "_btn_refreshDownloadAll_2akLCj" = "refresh downloads";
@@ -67,5 +67,6 @@
 "_nav_discover_8Yo9z" = "Discover";
 "_nav_route_Z15QoBP" = "Route";
 "_nav_routes_1BKuwv" = "Routes";
+"cco" = "Cultuurhistorisch Centrum Ommen";
 "_75_jaar_bevrijding_Z2wmU9D" = "75 years of freedom";
-"_app_name_1k3Sbz" = "75 years of freedom - Ommen";
+"_app_name_1k3Sbz" = "Rondom Ommen";

@@ -1,106 +1,107 @@
 {
-  "app.name": "75 jaar bevrijding - Ommen",
-  "nav": {
-    "routes": "Routes",
-    "route": "Route",
-    "discover": "Ontdek",
-    "articles": "Nieuws & meer",
-    "pointinfo": "Locatie info",
-    "articleinfo": "Artikel",
-    "routeinfo": "Route info",
-    "config": "Instellingen",
-    "imageinfo": "Afbeelding",
-    "help": "Help & contact",
-    "doubletap": "Druk 2x op terug om app te sluiten"
-  },
-  "route": {
-    "moreinfo": "Meer info",
-    "start": "Start",
-    "directions": "Routebeschrijving"
-  },
-  "drawer": {
-    "title": "75 jaar bevrijding - Ommen"
-  },
-  "email": {
-    "appnotfound": "Kon geen email app vinden, stuur aub zelf een email naar:",
-    "subject": "Vraag / feedback 75 jaar vrijheid app",
-    "body": "Dag, ik heb een vraag of feedback over de 75 jaar vrijheid app"
-  },
-  "point": {
-    "info": "info",
-    "more": "meer"
-  },
-  "discover": {
-    "selectedPoiHint": "tik opnieuw voor meer info",
-    "headerText": "Swipe langs alle punten",
-    "footerText": "Swipe terug",
-    "category": {
-      "all": "alles",
-      "rest": "rustpunten",
-      "planes": "vliegtuigen",
-      "routes": "routes",
-      "stolpersteine": "stolpersteine"
-    } 
-  },
-  "article": {
-    "news": "Nieuws",
-    "event": "Activiteiten",
-    "story": "Verhalen"
-  },
-  "btn": {
-    "close": "sluiten",
-    "back": "terug",
-    "backIos": "ᐸ terug",
-    "goto": "navigeer hierheen",
-    "reload": "probeer opnieuw te laden",
-    "startRoute": "start route",
-    "openmaps": "ga hierheen met externe maps app",
-    "share": "share",
-    "refreshDownloadAll": "ververs downloads",
-    "removeDownloadAll": "verwijder downloads"
-  },
-  "map": {
-    "location": {
-      "nolocation": "Locatie kon niet worden opgehaald (heeft de app toestemming?)",
-      "error": "Fout bij het ophalen van locatie (heeft de app toestemming?)"
-    },
-    "noappfound": "Geen maps app gevonden om een route mee te plannen"
-  },
-  "share": {
-    "point": "Ik heb een interessante plek gevonden met deze app!",
-    "route": "Ik heb een leuke route gevonden met deze app!",
-    "article": "Ik heb een interessant artikel gevonden met deze app!",
-    "how":"Hoe wil je dit delen?"
-  },
-  "message": {
-    "englishNotYetSupportedTitle": "Language not (fully) supported",
-    "englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
-    "englishNotYetSupportedButton": "OK",
-    "loadingTroubleInitial": "Het duurt even om de data te laden, wellicht een trage internetverbinding, aub nog even geduld...",
-    "loadingTrouble": "Er is een probleem met het ophalen van de gegevens, is er internet?",
-    "loadingTroubleFinal": "Er is een probleem opgetreden, ik kan het helaas niet verhelpen. Probeer het later nog eens.",
-    "tapAgainForInfo": "Tik hier nog eens voor meer info",
-    "imageinfo": "U kunt inzoomen op de afbeelding door op de afbeelding met twee vingers van elkaar af te vegen."
-  },
-  "config": {
-    "crashInfo": "Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!",
-    "analyticsInfo": "Toestemming gebruiksinformatie te verzamelen (geen persoonlijke informatie). Dat helpt ons de app te verbeteren!",
-    "downloadAll": "Download alle bestanden en routes. Niet nodig, maar handig als je geen of weinig mobiele data kunt gebruiken.",
-    "refreshDownloadAll": "Ververs alle gedownloade bestanden en routes (om problemen te verhelpen & nieuwe routes op te halen)",
-    "removeDownloadAll": "Verwijder alle gedownloadede bestanden & routes",
-    "help": "Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon.",
-    "screenon": "Houd het scherm ingeschakeld als de kaart gebruikt wordt."
-  },
-  "help": {
-    "credits": "Mede mogelijk gemaakt door",
-    "contact": "Contact informatie"
-  },
-  "dialog":{
-    "chooseAction": "Kies een actie",
-    "cancelAction": "Annuleren"
-  },
-  "ios.info.plist": {
-    "NSLocationUsageDescription": "Gebruik je huidige locatie om interessante plekken dichtbij te vinden",
-    "NSLocationWhenInUseUsageDescription": "Gebruik je huidige locatie om interessante plekken dichtbij te vinden"
-  }
+	"app.name": "Rondom Ommen",
+	"cco": "Cultuurhistorisch Centrum Ommen",
+	"nav": {
+		"routes": "Routes",
+		"route": "Route",
+		"discover": "Ontdek",
+		"articles": "Nieuws & meer",
+		"pointinfo": "Locatie info",
+		"articleinfo": "Artikel",
+		"routeinfo": "Route info",
+		"config": "Instellingen",
+		"imageinfo": "Afbeelding",
+		"help": "Help & contact",
+		"doubletap": "Druk 2x op terug om app te sluiten"
+	},
+	"route": {
+		"moreinfo": "Meer info",
+		"start": "Start",
+		"directions": "Routebeschrijving"
+	},
+	"drawer": {
+		"title": "Rondom Ommen"
+	},
+	"email": {
+		"appnotfound": "Kon geen email app vinden, stuur aub zelf een email naar:",
+		"subject": "Vraag / feedback Rondom Ommen app",
+		"body": "Dag, ik heb een vraag of feedback over de Rondom Ommen app"
+	},
+	"point": {
+		"info": "info",
+		"more": "meer"
+	},
+	"discover": {
+		"selectedPoiHint": "tik opnieuw voor meer info",
+		"headerText": "Swipe langs alle punten",
+		"footerText": "Swipe terug",
+		"category": {
+			"all": "alles",
+			"rest": "rustpunten",
+			"planes": "vliegtuigen",
+			"routes": "routes",
+			"stolpersteine": "stolpersteine"
+		} 
+	},
+	"article": {
+		"news": "Nieuws",
+		"event": "Activiteiten",
+		"story": "Verhalen"
+	},
+	"btn": {
+		"close": "sluiten",
+		"back": "terug",
+		"backIos": "ᐸ terug",
+		"goto": "navigeer hierheen",
+		"reload": "probeer opnieuw te laden",
+		"startRoute": "start route",
+		"openmaps": "ga hierheen met externe maps app",
+		"share": "share",
+		"refreshDownloadAll": "ververs downloads",
+		"removeDownloadAll": "verwijder downloads"
+	},
+	"map": {
+		"location": {
+			"nolocation": "Locatie kon niet worden opgehaald (heeft de app toestemming?)",
+			"error": "Fout bij het ophalen van locatie (heeft de app toestemming?)"
+		},
+		"noappfound": "Geen maps app gevonden om een route mee te plannen"
+	},
+	"share": {
+		"point": "Ik heb een interessante plek gevonden met deze app!",
+		"route": "Ik heb een leuke route gevonden met deze app!",
+		"article": "Ik heb een interessant artikel gevonden met deze app!",
+		"how":"Hoe wil je dit delen?"
+	},
+	"message": {
+		"englishNotYetSupportedTitle": "Language not (fully) supported",
+		"englishNotYetSupportedMessage": "Our apologies, only parts of the app are translated. We are working on a better support for English. Please reach out to us if you'd like a translation in a different language.",
+		"englishNotYetSupportedButton": "OK",
+		"loadingTroubleInitial": "Het duurt even om de data te laden, wellicht een trage internetverbinding, aub nog even geduld...",
+		"loadingTrouble": "Er is een probleem met het ophalen van de gegevens, is er internet?",
+		"loadingTroubleFinal": "Er is een probleem opgetreden, ik kan het helaas niet verhelpen. Probeer het later nog eens.",
+		"tapAgainForInfo": "Tik hier nog eens voor meer info",
+		"imageinfo": "U kunt inzoomen op de afbeelding door op de afbeelding met twee vingers van elkaar af te vegen."
+	},
+	"config": {
+		"crashInfo": "Toestemming om crash informatie te verzamelen. Dat helpt ons bugs vinden!",
+		"analyticsInfo": "Toestemming gebruiksinformatie te verzamelen (geen persoonlijke informatie). Dat helpt ons de app te verbeteren!",
+		"downloadAll": "Download alle bestanden en routes. Niet nodig, maar handig als je geen of weinig mobiele data kunt gebruiken.",
+		"refreshDownloadAll": "Ververs alle gedownloade bestanden en routes (om problemen te verhelpen & nieuwe routes op te halen)",
+		"removeDownloadAll": "Verwijder alle gedownloadede bestanden & routes",
+		"help": "Hier kunt u enkele instellingen aanpassen, en eventueel routes alvast downloaden naar uw telefoon.",
+		"screenon": "Houd het scherm ingeschakeld als de kaart gebruikt wordt."
+	},
+	"help": {
+		"credits": "Mede mogelijk gemaakt door",
+		"contact": "Contact informatie"
+	},
+	"dialog":{
+		"chooseAction": "Kies een actie",
+		"cancelAction": "Annuleren"
+	},
+	"ios.info.plist": {
+		"NSLocationUsageDescription": "Gebruik je huidige locatie om interessante plekken dichtbij te vinden",
+		"NSLocationWhenInUseUsageDescription": "Gebruik je huidige locatie om interessante plekken dichtbij te vinden"
+	}
 }
