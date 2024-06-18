@@ -1,7 +1,7 @@
 import { NativeScriptConfig } from '@nativescript/core'
 
 export default {
-  id: 'nl.nosmallthing.sr-rondomommen',
+  id: 'nl.nosmallthing.srrondomommen',
   appPath: 'app',
   appResourcesPath: 'app/App_Resources',
   android: {
