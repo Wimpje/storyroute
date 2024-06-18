@@ -1,1 +1,2 @@
 $NSFirebaseAnalyticsWithoutAdIdSupport = true
+platform :ios, '13.0'
